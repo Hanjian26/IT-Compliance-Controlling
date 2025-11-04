@@ -138,7 +138,8 @@ $level = $user->level ?? null;
             @foreach ($data->links()->elements[0] as $page => $url)
             <li style="display: inline-block;">
                 <a href="{{ $url }}"
-                    style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{ $page }}</a>
+                    style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{
+                    $page }}</a>
             </li>
             @endforeach
         </ul>
@@ -201,7 +202,13 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 15px;">
-                <label for="edit_auditor">Auditor<span style="color: red;">*</span>:</label>
+                <label for="edit_auditor">Auditor <span style="color: red;">*</span>:</label>
+                <input type="text" name="auditor" id="edit_auditor" required
+                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label for="edit_auditor">Auditor <span style="color: red;">*</span>:</label>
                 <input type="text" name="auditor" id="edit_auditor" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
             </div>
@@ -361,7 +368,7 @@ $level = $user->level ?? null;
 
 <!-- Script -->
 <script>
-function openPopup() {
+    function openPopup() {
     document.getElementById('popupForm').style.display = 'flex';
 }
 
