@@ -89,7 +89,8 @@
             @foreach ($data->links()->elements[0] as $page => $url)
             <li style="display: inline-block;">
                 <a href="{{ $url }}"
-                    style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{ $page }}</a>
+                    style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{
+                    $page }}</a>
             </li>
             @endforeach
         </ul>
@@ -231,9 +232,17 @@
 
 <!-- Script -->
 <script>
-function openPopup() {
+    function openPopup() {
     document.getElementById('popupForm').style.display = 'flex';
+    
+    fetch("{{ route('memo.penemuan.generateNomor') }}")
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('nomor').value = data.nomor;
+        })
+        .catch(err => console.error(err));
 }
+
 
 function closePopup() {
     document.getElementById('popupForm').style.display = 'none';

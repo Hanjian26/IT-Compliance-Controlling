@@ -50,7 +50,7 @@ class SendAuditH7Reminder extends Command
 
     protected function sendReminder($audit, $jenis)
     {
-        $emailTujuan = 'hanjian.listanto26@gmail.com'; // ganti sesuai kebutuhan
+        $emailTujuan = 'hanjian.listanto26@gmail.com'; // ganti sesudai kebutuhan
 
         try {
             Mail::to($emailTujuan)->send(new AuditReminderMail($audit, $jenis));

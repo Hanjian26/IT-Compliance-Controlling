@@ -189,6 +189,7 @@
                     <a href="{{ route('memo.index') }}">Memo Kebijakan</a>
                     <a href="{{ route('memo.administrasi') }}">Memo Administrasi</a>
                     <a href="{{ route('memo.permintaan.data') }}">Memo Permintaan Data</a>
+                    <a href="{{ route('memo.all') }}">Memo Too All IT</a>
                     <a href="{{ route('memo.audit') }}">Memo Audit</a>
                     <a href="{{ route('memo.penemuan') }}">Memo Penemuan</a>
                 </div>

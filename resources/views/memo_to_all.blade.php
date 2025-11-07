@@ -2,7 +2,7 @@
 @section('title', 'IT Compliance')
 @section('content')
 
-<h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">Memo Administrasi</h2>
+<h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">Memo To All IT</h2>
 
 <!-- Container Utama -->
 <!-- Tombol Tambah Dokumen -->
@@ -32,7 +32,6 @@
     @foreach ($data as $key => $item)
     <tr>
       <td style="padding: 10px; font-size: 12px;">{{ $data->firstItem() + $key }}</td>
-      <!-- Tipe Memo (ex: kebijakan/administrasi etc.-->
       <td style="padding: 10px; font-size: 12px;">{{ $item->tipe_memo }}</td>
       <!-- Score Memo (ex: internal/external -->
       <td style="padding: 10px; font-size: 12px;">{{ $item->scope_memo }}</td>
@@ -61,8 +60,8 @@
           </a>
 
           <!-- Hapus -->
-          <form action="{{ route('memo.administrasi.destroy', $item->id) }}" method="POST"
-            onsubmit="return confirmDelete()" style="display: inline;">
+          <form action="{{ route('memo.all.destroy', $item->id) }}" method="POST" onsubmit="return confirmDelete()"
+            style="display: inline;">
             @csrf
             @method('DELETE')
             <button type="submit" title="Hapus"
@@ -103,7 +102,7 @@
   background-color: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center;">
   <div
     style="background-color: white; padding: 40px; border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
-    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; text-align:center;"><u>Edit Memo Administrasi</u>
+    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; text-align:center;"><u>Edit Memo To All IT</u>
     </h3>
     <form id="editMemoForm" method="POST" enctype="multipart/form-data">
       @csrf
@@ -111,7 +110,7 @@
 
       <div style="margin-bottom: 15px;">
         <label for="edit_tipe_memo">Tipe Memo<span style="color: red;">*</span>:</label>
-        <input type="text" name="tipe_memo" id="edit_tipe_memo" value="Administrasi" readonly
+        <input type="text" name="tipe_memo" id="edit_tipe_memo" value="All IT" readonly
           style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; cursor: not-allowed;">
       </div>
 
@@ -170,11 +169,11 @@
     style="background-color: white; padding: 40px; border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
     <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; text-align:center;"><u>Tambah Memo Administrasi</u>
     </h3>
-    <form action="{{ route('memo.administrasi.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('memo.all.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div style="margin-bottom: 15px;">
         <label for="tipe_memo">Tipe Memo<span style="color: red;">*</span>:</label>
-        <input type="text" name="tipe_memo" id="tipe_memo" value="Administrasi" readonly
+        <input type="text" name="tipe_memo" id="tipe_memo" value="All IT" readonly
           style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; cursor: not-allowed;">
       </div>
 
@@ -230,7 +229,7 @@
   function openPopup() {
     document.getElementById('popupForm').style.display = 'flex';
     
-    fetch("{{ route('memo.administrasi.generateNomor') }}")
+    fetch("{{ route('memo.all.generateNomor') }}")
         .then(res => res.json())
         .then(data => {
             document.getElementById('nomor').value = data.nomor;
@@ -247,7 +246,7 @@
   }
 
   function editMemo(id) {
-  fetch(`/admin/memo-administrasi/${id}/edit`, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+  fetch(`/admin/memo-all/${id}/edit`, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
     .then(res => res.json())
     .then(data => {
       document.getElementById('edit_tipe_memo').value = data.tipe_memo;
@@ -257,7 +256,7 @@
       document.getElementById('edit_perihal').value = data.perihal;
 
       const form = document.getElementById('editMemoForm');
-      form.action = `/admin/memo-administrasi/${id}`;
+      form.action = `/admin/memo-all/${id}`;
       document.getElementById('editForm').style.display = 'flex';
     })
     .catch(err => console.error(err));

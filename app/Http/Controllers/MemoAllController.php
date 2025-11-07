@@ -9,14 +9,14 @@ use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 use App\Helpers\KodeMemoHelper;
 
-class MemoPenemuanController extends Controller
+class MemoAllController extends Controller
 {
     public function index()
     {
-          $data = Memos::where('tipe_memo', 'Penemuan')
+          $data = Memos::where('tipe_memo', 'All IT')
             ->orderBy('tanggal_terbit', 'asc')
             ->paginate(5);
-            return view('memo_penemuan', compact('data'));
+            return view('memo_to_all', compact('data'));
     }
 
     public function store(Request $request)
@@ -46,7 +46,7 @@ class MemoPenemuanController extends Controller
 
         $memo->save();
 
-        activity('memo_penemuan')
+        activity('memo_all')
             ->causedBy(Auth::user())
             ->performedOn($memo)
             ->withProperties([
@@ -54,7 +54,7 @@ class MemoPenemuanController extends Controller
                 'nama' => Auth::user()->nama,
                 'nik' => Auth::user()->nik,
             ])
-            ->log('Menambahkan memo penemuan');
+            ->log('Menambahkan Memo To All IT');
 
         return redirect()->back()->with('success', 'Memo berhasil ditambahkan!');
     }
@@ -63,7 +63,7 @@ class MemoPenemuanController extends Controller
     {
         $memo = Memos::findOrFail($id);
 
-        activity('memo_penemuan')
+        activity('memo_all')
             ->causedBy(Auth::user())
             ->performedOn($memo)
             ->withProperties([
@@ -71,7 +71,7 @@ class MemoPenemuanController extends Controller
                 'nama' => Auth::user()->nama,
                 'nik' => Auth::user()->nik,
             ])
-            ->log('Menghapus memo penemuan');
+            ->log('Menghapus memo to all IT');
 
         if ($memo->file_dokumen && Storage::disk('public')->exists('dokumen/' . $memo->file_dokumen)) {
             Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
@@ -79,14 +79,14 @@ class MemoPenemuanController extends Controller
 
         $memo->delete();
 
-        return redirect()->route('memo.penemuan')->with('success', 'Dokumen berhasil dihapus.');
+        return redirect()->route('memo.all')->with('success', 'Dokumen berhasil dihapus.');
     }
 
     public function edit($id)
     {
         $memo = Memos::findOrFail($id);
 
-        activity('memo_penemuan')
+        activity('memo_all')
             ->causedBy(Auth::user())
             ->performedOn($memo)
             ->withProperties([
@@ -94,7 +94,7 @@ class MemoPenemuanController extends Controller
                 'nama' => Auth::user()->nama,
                 'nik' => Auth::user()->nik,
             ])
-            ->log('Melihat detail memo penemuan untuk diedit');
+            ->log('Melihat detail memo to all it untuk diedit');
 
         return response()->json($memo);
     }
@@ -106,7 +106,7 @@ class MemoPenemuanController extends Controller
             'scope_memo' => 'required|string|max:255',
             'nomor' => 'required|string|max:255',
             'tanggal_terbit' => 'required|date',
-           'perihal'        => 'nullable|string',
+            'perihal'        => 'nullable|string',
             'file_dokumen' => 'nullable|mimes:pdf,doc,docx,zip|max:10240',
         ]);
 
@@ -130,7 +130,7 @@ class MemoPenemuanController extends Controller
 
         $memo->save();
 
-        activity('memo_penemuan')
+        activity('memo_all')
             ->causedBy(Auth::user())
             ->performedOn($memo)
             ->withProperties([
@@ -138,13 +138,14 @@ class MemoPenemuanController extends Controller
                 'nama' => Auth::user()->nama,
                 'nik' => Auth::user()->nik,
             ])
-            ->log('Memperbarui memo penemuan');
+            ->log('Memperbarui memo to all IT');
 
-        return redirect()->route('memo.penemuan')->with('success', 'Memo berhasil diperbarui!');
+        return redirect()->route('memo.all')->with('success', 'Memo berhasil diperbarui!');
     }
-             public function generateNomor()
+
+      public function generateNomor()
     {
-        $nomor = KodeMemoHelper::generate('Penemuan');
+        $nomor = KodeMemoHelper::generate('All IT');
         return response()->json(['nomor' => $nomor]);
     }
 }

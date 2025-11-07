@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Memos;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
+use App\Helpers\KodeMemoHelper;
 
 class MemoPermintaanDataController extends Controller
 {
@@ -32,7 +33,7 @@ class MemoPermintaanDataController extends Controller
         $memo = new Memos();
         $memo->tipe_memo = $request->tipe_memo;
         $memo->scope_memo = $request->scope_memo;
-        $memo->nomor = $request->nomor;
+        $memo->nomor = KodeMemoHelper::generate($request->tipe_memo);
         $memo->tanggal_terbit = $request->tanggal_terbit;
         $memo->perihal = $request->perihal;
 
@@ -140,5 +141,10 @@ class MemoPermintaanDataController extends Controller
             ->log('Memperbarui memo permintaan data');
 
         return redirect()->route('memo.permintaan.data')->with('success', 'Memo berhasil diperbarui!');
+    }
+         public function generateNomor()
+    {
+        $nomor = KodeMemoHelper::generate('permintaan data');
+        return response()->json(['nomor' => $nomor]);
     }
 }
