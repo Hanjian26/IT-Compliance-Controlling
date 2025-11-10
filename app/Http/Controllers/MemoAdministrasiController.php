@@ -33,7 +33,7 @@ class MemoAdministrasiController extends Controller
         $memo = new Memos();
         $memo->tipe_memo = $request->tipe_memo;
         $memo->scope_memo = $request->scope_memo;
-        $memo->nomor = KodeMemoHelper::generate($request->tipe_memo);
+        $memo->nomor = KodeMemoHelper::generate($request->tipe_memo, $request->tanggal_terbit);
         $memo->tanggal_terbit = $request->tanggal_terbit;
         $memo->perihal = $request->perihal;
 
@@ -143,9 +143,13 @@ class MemoAdministrasiController extends Controller
         return redirect()->route('memo.administrasi')->with('success', 'Memo berhasil diperbarui!');
     }
 
-      public function generateNomor()
-    {
-        $nomor = KodeMemoHelper::generate('Administrasi');
-        return response()->json(['nomor' => $nomor]);
-    }
+public function generateNomor(Request $request)
+{
+    $tanggal = $request->query('tanggal'); // ambil ?tanggal= dari URL
+
+    return response()->json([
+        'nomor' => KodeMemoHelper::generate('Administrasi', $tanggal)
+    ]);
+}
+
 }

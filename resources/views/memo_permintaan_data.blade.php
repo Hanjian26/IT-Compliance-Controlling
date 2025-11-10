@@ -128,14 +128,17 @@
       </div>
 
       <div style="margin-bottom: 15px;">
+        <label for="edit_tanggal_terbit">Tanggal Terbit<span style="color: red;">*</span>:</label>
+        <input type="date" name="tanggal_terbit" id="edit_tanggal_terbit" lang="id" min="2000-01-01" max="2099-12-31"
+          onkeydown="return false" required onchange="generateNomorFromTanggalEdit()"
+          style="width: 100%; padding: 8px;">
+      </div>
+
+      <div style="margin-bottom: 15px;">
         <label for="edit_nomor">Nomor<span style="color: red;">*</span>:</label>
         <input type="text" name="nomor" id="edit_nomor" required style="width: 100%; padding: 8px;">
       </div>
-      <div style="margin-bottom: 15px;">
-        <label for="edit_tanggal_terbit">Tanggal Terbit<span style="color: red;">*</span>:</label>
-        <input type="date" name="tanggal_terbit" id="edit_tanggal_terbit" lang="id" min="2000-01-01" max="2099-12-31"
-          onkeydown="return false" required style="width: 100%; padding: 8px;">
-      </div>
+
       <div style="margin-bottom: 15px;">
         <label for="edit_perihal">Perihal<span style="color: red;">*</span>:</label>
         <textarea name="perihal" id="edit_perihal" rows="3" style="width: 100%; padding: 8px;"></textarea>
@@ -190,15 +193,17 @@
       </div>
 
       <div style="margin-bottom: 15px;">
+        <label for="tanggal_terbit">Tanggal Terbit<span style="color: red;">*</span>:</label>
+        <input type="date" name="tanggal_terbit" id="tanggal_terbit" required onchange="generateNomorFromTanggal()"
+          lang="id" min="2000-01-01" max="2099-12-31" onkeydown="return false" style="width:100%; padding:8px;"
+          autocomplete="off">
+      </div>
+
+      <div style="margin-bottom: 15px;">
         <label for="nomor">Nomor<span style="color: red;">*</span>:</label>
         <input type="text" name="nomor" id="nomor" required style="width: 100%; padding: 8px;">
       </div>
 
-      <div style="margin-bottom: 15px;">
-        <label for="tanggal_terbit">Tanggal Terbit<span style="color: red;">*</span>:</label>
-        <input type="date" name="tanggal_terbit" id="tanggal_terbit" required lang="id" min="2000-01-01"
-          max="2099-12-31" onkeydown="return false" style="width:100%; padding:8px;" autocomplete="off">
-      </div>
 
       <div style="margin-bottom: 15px;">
         <label for="edit_perihal">Perihal<span style="color: red;"></span>:</label>
@@ -229,14 +234,33 @@
 <script>
   function openPopup() {
     document.getElementById('popupForm').style.display = 'flex';
-    
-    fetch("{{ route('memo.permintaan.data.generateNomor') }}")
+  
+}
+
+function generateNomorFromTanggal() {
+    const tgl = document.getElementById('tanggal_terbit').value;
+    if (!tgl) return;
+
+    fetch("{{ route('memo.permintaan.data.generateNomor') }}?tanggal=" + tgl)
         .then(res => res.json())
         .then(data => {
             document.getElementById('nomor').value = data.nomor;
         })
         .catch(err => console.error(err));
 }
+
+function generateNomorFromTanggalEdit() {
+    const tgl = document.getElementById('edit_tanggal_terbit').value;
+    if (!tgl) return;
+
+    fetch("{{ route('memo.permintaan.data.generateNomor') }}?tanggal=" + tgl)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('edit_nomor').value = data.nomor;
+        })
+        .catch(err => console.error(err));
+}
+
   function closePopup() {
     document.getElementById('popupForm').style.display = 'none';
   }

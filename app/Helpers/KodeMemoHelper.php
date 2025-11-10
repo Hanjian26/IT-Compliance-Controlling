@@ -9,20 +9,13 @@ class KodeMemoHelper
 {
     /**
      * Generate kode memo otomatis berdasarkan tipe memo.
-     *
-     * Format:
-     * - Administrasi : 0001/ITC/IX/2024
-     * - Permintaan Data : ITC/001/XI/2024
-     * - Audit : 0001/ITC-A/III/2025
-     * - Penemuan : 0001/ITC-B/II/2025
-     * - Kebijakan : 0001_ITC_IX_2024
-     * - All IT : 004/ITC-IDM-HO/II/2025 
      */
-    public static function generate($tipe = 'Administrasi')
+    public static function generate($tipe = 'Administrasi', $tanggal)
     {
-        $now = Carbon::now();
-        $year = $now->year;
-        $month = $now->month;
+        // Parse tanggal dari input user (YYYY-MM-DD)
+        $date = Carbon::parse($tanggal);
+        $year = $date->year;
+        $month = $date->month;
 
         // Konversi bulan ke angka romawi
         $romanMonths = [
@@ -31,49 +24,44 @@ class KodeMemoHelper
         ];
         $romanMonth = $romanMonths[$month];
 
-        // Set default values
+        // Default format
         $kodeTengah = 'ITC';
         $digit = 4;
         $separator = '/';
 
+        // Tentukan format berdasarkan tipe memo
         switch (strtolower($tipe)) {
             case 'administrasi':
-                // Format: 0001/ITC/XI/2025
                 $kodeTengah = 'ITC';
                 $digit = 4;
                 $separator = '/';
                 break;
 
             case 'permintaan data':
-                // Format: ITC/001/XI/2025
                 $kodeTengah = 'ITC';
                 $digit = 3;
                 $separator = '/';
                 break;
 
-            case 'All IT':
-                // Format: 004/ITC-IDM-HO/II/2025 (pakai underscore)
+            case 'all it':
                 $kodeTengah = 'ITC-IDM-HO';
                 $digit = 3;
                 $separator = '/';
                 break;
 
             case 'audit':
-                // Format: 0001/ITC-A/XI/2025
                 $kodeTengah = 'ITC-A';
                 $digit = 4;
                 $separator = '/';
                 break;
 
             case 'penemuan':
-                // Format: 0001/ITC-B/XI/2025
                 $kodeTengah = 'ITC-B';
                 $digit = 4;
                 $separator = '/';
                 break;
 
             case 'kebijakan':
-                // Format: 0001_ITC_XI_2025 (pakai underscore)
                 $kodeTengah = 'ITC';
                 $digit = 4;
                 $separator = '_';
@@ -86,37 +74,51 @@ class KodeMemoHelper
                 break;
         }
 
-        // Ambil memo terakhir dengan tipe dan tahun yang sama
+        /**
+         * AMAN DARI RESET
+         * ---------------------------
+         * Ambil memo terakhir BERDASARKAN TIPE SAJA
+         * TANPA membatasi tahun.
+         * 
+         * Ini memastikan nomor selalu naik:
+         * 0001, 0002, 0003, ... dst
+         */
         $last = Memos::where('tipe_memo', $tipe)
-            ->whereYear('created_at', $year)
             ->orderByDesc('id')
             ->first();
 
-        // Dapatkan nomor terakhir dari format sebelumnya
+        // Ambil nomor terakhir (jika ada)
         if ($last && preg_match('/(\d{3,4})/', $last->nomor, $match)) {
             $lastNumber = (int) $match[1];
         } else {
-            $lastNumber = 0;
+            $lastNumber = 0; // jika belum ada memo
         }
 
-        // Tambah 1 untuk nomor baru
+        // Nomor berikutnya
         $newNumber = $lastNumber + 1;
+
+        // Format nomor (padding 3 atau 4 digit)
         $formattedNumber = str_pad($newNumber, $digit, '0', STR_PAD_LEFT);
 
-        // Bangun format berdasarkan tipe
+        // Build final format
         switch (strtolower($tipe)) {
+
             case 'administrasi':
             case 'audit':
             case 'penemuan':
+                // Contoh: 0001/ITC/XI/2025
                 return "{$formattedNumber}{$separator}{$kodeTengah}{$separator}{$romanMonth}{$separator}{$year}";
 
             case 'permintaan data':
+                // Contoh: ITC/001/XI/2025
                 return "{$kodeTengah}{$separator}{$formattedNumber}{$separator}{$romanMonth}{$separator}{$year}";
-            
-            case 'All IT':
+
+            case 'all it':
+                // Contoh: ITC-IDM-HO/004/II/2025
                 return "{$kodeTengah}{$separator}{$formattedNumber}{$separator}{$romanMonth}{$separator}{$year}";
 
             case 'kebijakan':
+                // Contoh: 0001_ITC_XI_2025
                 return "{$formattedNumber}{$separator}{$kodeTengah}{$separator}{$romanMonth}{$separator}{$year}";
 
             default:
