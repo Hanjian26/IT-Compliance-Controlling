@@ -153,8 +153,8 @@
     {{-- Sidebar --}}
     <aside class="sidebar">
         <div class="logo">
-            <img src="?v=2" alt="Logo" class="logo-icon"
-                style="width: 100px; hei{{ asset('indomaret.png') }}ght: 30px;">
+            <img src="{{ asset('indomaret.png') }}?v=2" alt="Logo" class="logo-icon"
+                style="width: 100px; height: 30px;">
             <span class="logo-text">IT COMPLIANCE</span>
         </div>
 
