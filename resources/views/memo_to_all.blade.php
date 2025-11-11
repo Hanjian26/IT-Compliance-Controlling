@@ -127,14 +127,17 @@
       </div>
 
       <div style="margin-bottom: 15px;">
+        <label for="edit_tanggal_terbit">Tanggal Terbit<span style="color: red;">*</span>:</label>
+        <input type="date" name="tanggal_terbit" id="edit_tanggal_terbit" onchange="generateNomorFromTanggalEdit()"
+          min="2000-01-01" max="2099-12-31" onkeydown="return false" style="width: 100%; padding: 8px;">
+
+      </div>
+
+      <div style="margin-bottom: 15px;">
         <label for="edit_nomor">Nomor<span style="color: red;">*</span>:</label>
         <input type="text" name="nomor" id="edit_nomor" required style="width: 100%; padding: 8px;">
       </div>
-      <div style="margin-bottom: 15px;">
-        <label for="edit_tanggal_terbit">Tanggal Terbit<span style="color: red;">*</span>:</label>
-        <input type="date" name="tanggal_terbit" id="edit_tanggal_terbit" lang="id" min="2000-01-01" max="2099-12-31"
-          onkeydown="return false" required style="width: 100%; padding: 8px;">
-      </div>
+
       <div style="margin-bottom: 15px;">
         <label for="edit_perihal">Perihal<span style="color: red;">*</span>:</label>
         <textarea name="perihal" id="edit_perihal" rows="3" style="width: 100%; padding: 8px;"></textarea>
@@ -167,7 +170,7 @@
   background-color: rgba(0,0,0,0.5); z-index: 999; align-items: center; justify-content: center;">
   <div
     style="background-color: white; padding: 40px; border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
-    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; text-align:center;"><u>Tambah Memo Administrasi</u>
+    <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; text-align:center;"><u>Tambah Memo To All IT</u>
     </h3>
     <form action="{{ route('memo.all.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
@@ -189,15 +192,18 @@
       </div>
 
       <div style="margin-bottom: 15px;">
+        <label for="tanggal_terbit">Tanggal Terbit<span style="color: red;">*</span>:</label>
+        <input type="date" name="tanggal_terbit" id="tanggal_terbit" required lang="id" min="2000-01-01"
+          max="2099-12-31" onkeydown="return false" onchange="generateNomorFromTanggal()"
+          style="width:100%; padding:8px;" autocomplete="off">
+
+      </div>
+
+      <div style="margin-bottom: 15px;">
         <label for="nomor">Nomor<span style="color: red;">*</span>:</label>
         <input type="text" name="nomor" id="nomor" style="width: 100%; padding: 8px;">
       </div>
 
-      <div style="margin-bottom: 15px;">
-        <label for="tanggal_terbit">Tanggal Terbit<span style="color: red;">*</span>:</label>
-        <input type="date" name="tanggal_terbit" id="tanggal_terbit" required lang="id" min="2000-01-01"
-          max="2099-12-31" onkeydown="return false" style="width:100%; padding:8px;" autocomplete="off">
-      </div>
 
       <div style="margin-bottom: 15px;">
         <label for="edit_perihal">Perihal<span style="color: red;"></span>:</label>
@@ -228,8 +234,14 @@
 <script>
   function openPopup() {
     document.getElementById('popupForm').style.display = 'flex';
-    
-    fetch("{{ route('memo.all.generateNomor') }}")
+  
+}
+
+function generateNomorFromTanggal() {
+    const tgl = document.getElementById('tanggal_terbit').value;
+    if (!tgl) return;
+
+    fetch("{{ route('memo.all.generateNomor') }}?tanggal=" + tgl)
         .then(res => res.json())
         .then(data => {
             document.getElementById('nomor').value = data.nomor;
@@ -237,6 +249,17 @@
         .catch(err => console.error(err));
 }
 
+function generateNomorFromTanggalEdit() {
+    const tgl = document.getElementById('edit_tanggal_terbit').value;
+    if (!tgl) return;
+
+    fetch("{{ route('memo.all.generateNomor') }}?tanggal=" + tgl)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('edit_nomor').value = data.nomor;
+        })
+        .catch(err => console.error(err));
+}
   function closePopup() {
     document.getElementById('popupForm').style.display = 'none';
   }

@@ -10,6 +10,18 @@ class KodeMemoHelper
     /**
      * Generate kode memo otomatis berdasarkan tipe memo.
      */
+
+       /**
+     * Generate kode memo otomatis berdasarkan tipe memo.
+     *
+     * Format:
+     * - Administrasi : 0001/ITC/IX/2024
+     * - Permintaan Data : ITC/001/XI/2024
+     * - Audit : 0001/ITC-A/III/2025
+     * - Penemuan : 0001/ITC-B/II/2025
+     * - Kebijakan : 0001_ITC_IX_2024
+     * - All IT : 004/ITC-IDM-HO/II/2025 
+     */
     public static function generate($tipe = 'Administrasi', $tanggal)
     {
         // Parse tanggal dari input user (YYYY-MM-DD)
