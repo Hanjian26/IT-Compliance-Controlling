@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>IT Compliance</title>
@@ -16,17 +17,18 @@
       margin: 0;
     }
 
-   /* Card utama form */
-.form-container {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
-  width: 400px;
+    /* Card utama form */
+    .form-container {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+      width: 400px;
 
-  /* Beri jarak atas dan bawah agar card tidak mepet */
-  margin: 60px auto; /* Atas-Bawah = 60px, Kiri-Kanan otomatis center */
-}
+      /* Beri jarak atas dan bawah agar card tidak mepet */
+      margin: 60px auto;
+      /* Atas-Bawah = 60px, Kiri-Kanan otomatis center */
+    }
 
     .form-container h2 {
       text-align: center;
@@ -67,7 +69,7 @@
       color: white;
       border: none;
       border-radius: 8px;
-      margin-top:10px;
+      margin-top: 10px;
       font-size: 14px;
       transition: background-color 0.3s ease;
     }
@@ -87,38 +89,39 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="form-container">
     <h2>Daftar Akun</h2>
 
     @if(session('error'))
-      <div class="alert">
-        {{ session('error') }}
-      </div>
+    <div class="alert">
+      {{ session('error') }}
+    </div>
     @endif
 
     @if(session('success'))
-      <div class="alert" style="background-color:#ddffdd; border-left:6px solid #4CAF50; color:#4CAF50;">
-        {{ session('success') }}
-      </div>
+    <div class="alert" style="background-color:#ddffdd; border-left:6px solid #4CAF50; color:#4CAF50;">
+      {{ session('success') }}
+    </div>
     @endif
 
     <form id="registerForm" action="{{ url('/register') }}" method="POST" onsubmit="return validateForm()">
       @csrf
       <input type="text" name="nama" id="nama" placeholder="Nama Lengkap" required>
       <input type="text" name="nik" id="nik" placeholder="Nomor Induk Karyawan (NIK) - 10 digit" required>
-            <select name="department" id="department" required>
+      <select name="department" id="department" required>
         <option value="">-- Pilih Department --</option>
-        <option value="SD1">SD1</option>
+        <option value="SD1">SD1 & SSD1</option>
         <option value="SD2PR">SD2 Payroll</option>
         <option value="SD2NPR">SD2 Non Payroll</option>
-        <option value="SD3">SD3</option>
-        <option value="SD4">SD4</option>
-        <option value="SD5">SD5</option>
-        <option value="SD6">SD6</option>
-        <option value="SD7">SD7</option>
-        <option value="SD8">SD8</option>
+        <option value="SD3">SD3 & SSD3</option>
+        <option value="SD4">SD4 & SSD4</option>
+        <option value="SD5">SD5 & SSD5</option>
+        <option value="SD6">SD6 & SSD6</option>
+        <option value="SD7">SD7 & SSD7</option>
+        <option value="SD8">SD8 & SSD8</option>
         <option value="IT Compliance">IT Compliance</option>
         <option value="E-Commerce IDM">E-Commerce IDM</option>
         <option value="E-Commerce IGR">E-Commerce IGR</option>
@@ -142,7 +145,7 @@
       </select>
       <input type="password" name="password" id="password" placeholder="Password" required>
       <input type="email" name="email" id="email" placeholder="Email" required>
-<!-- 
+      <!-- 
       <select name="role" id="role" required>
         <option value="">-- Pilih Role --</option>
         <option value="User">User</option>
@@ -157,8 +160,8 @@
       </select>
 
       <button type="submit">Daftar</button>
-      </form>
-        <form action="{{url('/login') }}">
+    </form>
+    <form action="{{url('/login') }}">
       <button type="submit">Login</button>
     </form>
   </div>
@@ -206,4 +209,5 @@
   </script>
 
 </body>
+
 </html>
