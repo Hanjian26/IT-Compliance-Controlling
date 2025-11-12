@@ -18,6 +18,7 @@ public function index(Request $request)
             $q->where('divisi', 'LIKE', "%{$request->search}%")
               ->orWhere('kegiatan', 'LIKE', "%{$request->search}%")
               ->orWhere('auditor', 'LIKE', "%{$request->search}%")
+              ->orWhere('pic', 'LIKE', "%{$request->search}%")
               ->orWhere('reviewer', 'LIKE', "%{$request->search}%")
               ->orWhere('status', 'LIKE', "%{$request->search}%")
               ->orWhere('keterangan', 'LIKE', "%{$request->search}%");
@@ -37,6 +38,7 @@ public function index(Request $request)
         'kegiatan' => 'required|string|max:255',
         'tanggal_mulai' => 'required|date',
         'tanggal_selesai' => 'nullable|string',
+        'pic' => 'required|string',
         'auditor' => 'required|string',
         'reviewer' => 'required|string',
         'status' => 'required|string',
@@ -49,6 +51,7 @@ public function index(Request $request)
         $audit->kegiatan = $request->kegiatan;
         $audit->tanggal_mulai = $request->tanggal_mulai;
         $audit->tanggal_selesai = $request->tanggal_selesai;
+        $audit->pic = $request->pic;
         $audit->auditor = $request->auditor;
         $audit->reviewer = $request->reviewer;
         $audit->status = $request->status;
@@ -110,6 +113,7 @@ public function index(Request $request)
         'kegiatan' => 'required|string|max:255',
         'tanggal_mulai' => 'required|date',
         'tanggal_selesai' => 'nullable|string',
+        'pic' => 'required|string',
         'auditor' => 'required|string',
         'reviewer' => 'required|string',
         'status' => 'required|string',
@@ -122,6 +126,7 @@ public function index(Request $request)
     $audit->kegiatan = $request->kegiatan;
     $audit->tanggal_mulai = $request->tanggal_mulai;
     $audit->tanggal_selesai = $request->tanggal_selesai;
+    $audit->pic = $request->pic;
     $audit->auditor = $request->auditor;
     $audit->reviewer = $request->reviewer;
     $audit->status = $request->status;

@@ -13,7 +13,7 @@ class TindakAuditDB extends Model
     protected $table = 'tlha_audit';
 
     protected $fillable = [
-        'divisi', 'kegiatan', 'tanggal_mulai', 'tanggal_selesai', 'auditor', 'reviewer', 'status', 'keterangan', 'file_laporans',
+        'divisi', 'kegiatan', 'tanggal_mulai', 'tanggal_selesai', 'pic', 'auditor', 'reviewer', 'status', 'keterangan', 'file_laporans',
     ];
 
     public $timestamps = false;
