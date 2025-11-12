@@ -31,7 +31,7 @@ $level = $user->level ?? null;
         style="width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
     <button type="submit"
         style="background-color: #2196F3; color: white; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
-        🔍 Cari
+        Cari
     </button>
     @if(request('search'))
     <a href="{{ route('audit.tlha') }}"
@@ -52,6 +52,7 @@ $level = $user->level ?? null;
                 <th style="padding: 10px;">Kegiatan</th>
                 <th style="padding: 10px;">Tanggal Mulai</th>
                 <th style="padding: 10px;">Tanggal Selesai</th>
+                <th style="padding: 10px;">PIC</th>
                 <th style="padding: 10px;">Auditor</th>
                 <th style="padding: 10px;">Reviewer</th>
                 <th style="padding: 10px;">Status</th>
@@ -75,7 +76,7 @@ $level = $user->level ?? null;
                     TBA
                     @endif
                 </td>
-
+                <td style="padding: 10px; font-size: 12px;">{{ $item->pic }}</td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->auditor }}</td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->reviewer }}</td>
                 <td
@@ -83,7 +84,7 @@ $level = $user->level ?? null;
                     {{ $item->status }}
                 </td>
 
-                <td style="padding: 10px; font-size: 12px;
+                <td style="text-align:left; padding: 10px; font-size: 12px;
            max-width: 200px; white-space: normal; word-wrap: break-word;">
                     {{ $item->keterangan }}
                 </td>
@@ -202,6 +203,12 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 15px;">
+                <label for="edit_pic">PIC <span style="color: red;">*</span>:</label>
+                <input type="text" name="pic" id="edit_pic" required
+                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
                 <label for="edit_auditor">Auditor <span style="color: red;">*</span>:</label>
                 <input type="text" name="auditor" id="edit_auditor" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
@@ -309,6 +316,12 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 15px;">
+                <label for="pic">PIC<span style="color: red;">*</span>:</label>
+                <input type="text" name="pic" id="pic" required
+                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+            </div>
+
+            <div style="margin-bottom: 15px;">
                 <label for="auditor">Auditor<span style="color: red;">*</span>:</label>
                 <input type="text" name="auditor" id="auditor" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
@@ -383,6 +396,7 @@ function editMemo(id) {
             document.getElementById('edit_kegiatan').value = data.kegiatan;
             document.getElementById('edit_tanggal_mulai').value = data.tanggal_mulai;
             document.getElementById('edit_tanggal_selesai').value = data.tanggal_selesai;
+            document.getElementById('edit_pic').value = data.pic;
             document.getElementById('edit_auditor').value = data.auditor;
             document.getElementById('edit_reviewer').value = data.reviewer;
             document.getElementById('edit_status').value = data.status;
