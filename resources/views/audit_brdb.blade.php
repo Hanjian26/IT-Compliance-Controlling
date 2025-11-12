@@ -22,7 +22,7 @@
 
     <button type="submit"
         style="background-color: #2196F3; color: white; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
-        🔍 Cari
+        Cari
     </button>
 
     @if(request('search'))
@@ -109,7 +109,8 @@
             @foreach ($data->links()->elements[0] as $page => $url)
             <li style="display: inline-block;">
                 <a href="{{ $url }}"
-                    style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{ $page }}</a>
+                    style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{
+                    $page }}</a>
             </li>
             @endforeach
         </ul>
@@ -311,7 +312,7 @@
 
 <!-- Script -->
 <script>
-function openPopup() {
+    function openPopup() {
     document.getElementById('popupForm').style.display = 'flex';
 }
 
