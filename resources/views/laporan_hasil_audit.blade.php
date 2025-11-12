@@ -22,16 +22,15 @@ $level = $user->level ?? null;
     </button>
 </div>
 
-<form method="GET" action="{{ route('audit.lha') }}" 
-      style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
+<form method="GET" action="{{ route('audit.lha') }}"
+    style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
 
-    <input type="text" name="search" placeholder="Cari data..."
-        value="{{ request('search') }}"
+    <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
         style="width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
 
     <button type="submit"
         style="background-color: #2196F3; color: white; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
-        🔍 Cari
+        Cari
     </button>
 
     @if(request('search'))
@@ -40,7 +39,7 @@ $level = $user->level ?? null;
         Reset
     </a>
     @endif
-    </form>
+</form>
 @endif
 
 <!-- Bungkus tabel dengan div agar bisa scroll kanan-kiri -->
@@ -67,21 +66,22 @@ $level = $user->level ?? null;
                 <td style="padding: 10px; font-size: 12px;">{{ $item->divisi }}</td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->kegiatan }}</td>
                 <td style="padding: 10px; font-size: 12px;">
-         {{(\Carbon\Carbon::parse($item->tanggal_mulai)->format('d-M-Y')) }}
-        </td>
-        <td style="padding: 10px; font-size: 12px;">
-        @if ($item->tanggal_selesai)
-            {{(\Carbon\Carbon::parse($item->tanggal_selesai)->format('d-M-Y')) }}
-        @else
-            TBA
-        @endif
-      </td>
+                    {{(\Carbon\Carbon::parse($item->tanggal_mulai)->format('d-M-Y')) }}
+                </td>
+                <td style="padding: 10px; font-size: 12px;">
+                    @if ($item->tanggal_selesai)
+                    {{(\Carbon\Carbon::parse($item->tanggal_selesai)->format('d-M-Y')) }}
+                    @else
+                    TBA
+                    @endif
+                </td>
 
                 <td style="padding: 10px; font-size: 12px;">{{ $item->auditor }}</td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->reviewer }}</td>
-                 <td style="padding: 10px; font-size: 12px; color: {{ $item->status == 'Pending' ? 'red' : 'inherit' }};">
-    {{ $item->status }}
-</td>
+                <td
+                    style="padding: 10px; font-size: 12px; color: {{ $item->status == 'Pending' ? 'red' : 'inherit' }};">
+                    {{ $item->status }}
+                </td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->keterangan }}</td>
                 <td style="padding: 10px; font-size: 11px;">
                     <div
@@ -129,7 +129,8 @@ $level = $user->level ?? null;
             @foreach ($data->links()->elements[0] as $page => $url)
             <li style="display: inline-block;">
                 <a href="{{ $url }}"
-                    style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{ $page }}</a>
+                    style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{
+                    $page }}</a>
             </li>
             @endforeach
         </ul>
@@ -202,14 +203,15 @@ $level = $user->level ?? null;
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
             </div>
 
-        <div style="margin-bottom: 15px;">
-        <label for="edit_status">Status<span style="color: red;">*</span>:</label>
-        <select name="status" id="edit_status" required style="width: 100%; padding: 8px; box-sizing: border-box;">
-        <option value="">-- Pilih Status -- </option>
-        <option value="Pending">Pending</option>
-        <option value="Selesai">Selesai</option>
-      </select>
-      </div>
+            <div style="margin-bottom: 15px;">
+                <label for="edit_status">Status<span style="color: red;">*</span>:</label>
+                <select name="status" id="edit_status" required
+                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+                    <option value="">-- Pilih Status -- </option>
+                    <option value="Pending">Pending</option>
+                    <option value="Selesai">Selesai</option>
+                </select>
+            </div>
 
             <div style="margin-bottom: 15px;">
                 <label for="edit_keterangan">Keterangan:</label>
@@ -303,14 +305,14 @@ $level = $user->level ?? null;
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
             </div>
 
-        <div style="margin-bottom: 15px;">
-        <label for="status">Status<span style="color: red;">*</span>:</label>
-        <select name="status" id="status" required style="width: 100%; padding: 8px; box-sizing: border-box;">
-        <option value="">-- Pilih Status -- </option>
-        <option value="Pending">Pending</option>
-        <option value="Selesai">Selesai</option>
-      </select>
-      </div>
+            <div style="margin-bottom: 15px;">
+                <label for="status">Status<span style="color: red;">*</span>:</label>
+                <select name="status" id="status" required style="width: 100%; padding: 8px; box-sizing: border-box;">
+                    <option value="">-- Pilih Status -- </option>
+                    <option value="Pending">Pending</option>
+                    <option value="Selesai">Selesai</option>
+                </select>
+            </div>
 
             <div style="margin-bottom: 15px;">
                 <label for="keterangan">Keterangan:</label>
@@ -346,7 +348,7 @@ $level = $user->level ?? null;
 
 <!-- Script -->
 <script>
-function openPopup() {
+    function openPopup() {
     document.getElementById('popupForm').style.display = 'flex';
 }
 
@@ -390,7 +392,7 @@ function confirmDelete() {
 </div>
 
 <script>
-// Hilang setelah 3 detik
+    // Hilang setelah 3 detik
 setTimeout(() => {
     const alert = document.getElementById('success-alert');
     if (alert) {
