@@ -57,7 +57,7 @@ Route::prefix('user')->middleware(['auth', 'level:2'])->group(function () {
     Route::get('/', fn () => redirect()->route('user.main_menu'))->name('user.home');
 
     // Main Menu user
-    Route::get('/main_menu', [AuthController::class, 'mainMenu'])->name('user.main_menu');
+    Route::get('/main-menu', [AuthController::class, 'mainMenu'])->name('user.main_menu');
 
     // Template Dokumen (VIEW ONLY)
     Route::get('/template-dokumen', [TemplateDokumenController::class, 'index'])
@@ -72,7 +72,7 @@ Route::prefix('user')->middleware(['auth', 'level:2'])->group(function () {
 // ====================
 Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
     // Main Menu (versi admin)
-    Route::get('/main_menu', [AuthController::class, 'mainMenu'])->name('admin.main_menu');
+    Route::get('/main-menu', [AuthController::class, 'mainMenu'])->name('admin.main_menu');
 
     // Memo Kebijakan
     Route::get('/memo-kebijakan', [MemoKebijakanController::class, 'index'])->name('memo.index');
@@ -143,10 +143,10 @@ Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
     Route::put('/audit-working-paper/{id}', [WorkingPaperController::class, 'update'])->name('audit.wp.update');
 
     // // Jadwal Audit DB
-    Route::get('/tlha_audit', [TindakAuditController::class, 'index'])->name('audit.tlha');
-    Route::post('/tlha_audit', [TindakAuditController::class, 'store'])->name('audit.tlha.store');
-    Route::delete('/tlha_audit/{id}', [TindakAuditController::class, 'destroy'])->name('audit.tlha.destroy');
-    Route::get('/tlha_audit/{id}/edit', [TindakAuditController::class, 'edit'])->name('audit.tlha.edit');
-    Route::put('/tlha_audit/{id}', [TindakAuditController::class, 'update'])->name('audit.tlha.update');
+    Route::get('/tlha-audit', [TindakAuditController::class, 'index'])->name('audit.tlha');
+    Route::post('/tlha-audit', [TindakAuditController::class, 'store'])->name('audit.tlha.store');
+    Route::delete('/tlha-audit/{id}', [TindakAuditController::class, 'destroy'])->name('audit.tlha.destroy');
+    Route::get('/tlha-audit/{id}/edit', [TindakAuditController::class, 'edit'])->name('audit.tlha.edit');
+    Route::put('/tlha-audit/{id}', [TindakAuditController::class, 'update'])->name('audit.tlha.update');
 
 });
