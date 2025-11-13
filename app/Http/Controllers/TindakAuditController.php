@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\TindakAuditDB;
+use App\Models\Department; 
 use Illuminate\Support\Facades\Auth;
 
 class TindakAuditController extends Controller
@@ -22,14 +23,16 @@ public function index(Request $request)
               ->orWhere('reviewer', 'LIKE', "%{$request->search}%")
               ->orWhere('status', 'LIKE', "%{$request->search}%")
               ->orWhere('keterangan', 'LIKE', "%{$request->search}%");
-              
         });
     }
 
     $data = $query->orderBy('divisi', 'asc')->paginate(5);
     $data->appends($request->all());
 
-    return view('tlha_audit', compact('data'));
+    $departments = Department::orderBy('department')->get();
+
+
+    return view('tlha_audit', compact('data', 'departments'));
 }
         public function store(Request $request)
     {
@@ -51,7 +54,7 @@ public function index(Request $request)
         $audit->kegiatan = $request->kegiatan;
         $audit->tanggal_mulai = $request->tanggal_mulai;
         $audit->tanggal_selesai = $request->tanggal_selesai;
-        $audit->pic = $request->pic;
+        $audit->pic = json_encode(explode(', ', $request->pic));
         $audit->auditor = $request->auditor;
         $audit->reviewer = $request->reviewer;
         $audit->status = $request->status;
@@ -126,7 +129,7 @@ public function index(Request $request)
     $audit->kegiatan = $request->kegiatan;
     $audit->tanggal_mulai = $request->tanggal_mulai;
     $audit->tanggal_selesai = $request->tanggal_selesai;
-    $audit->pic = $request->pic;
+    $audit->pic = json_encode(explode(', ', $request->pic));
     $audit->auditor = $request->auditor;
     $audit->reviewer = $request->reviewer;
     $audit->status = $request->status;
