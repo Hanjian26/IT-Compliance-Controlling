@@ -252,7 +252,6 @@
             $levelName = $levelMap[$level] ?? 'Unknown';
             @endphp
             <span class="welcome-text">Selamat Datang, {{ $user->nama }} ({{ $levelName }})</span>
-
             @endauth
         </div>
     </header>
@@ -260,6 +259,7 @@
     {{-- Konten --}}
     <main class="content">
         @yield('content')
+
     </main>
 
     {{-- Dropdown JavaScript --}}
