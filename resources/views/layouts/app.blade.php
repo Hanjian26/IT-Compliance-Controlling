@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="{{ asset('indomaret.png') }}?v=2" type="image/png">
+    <link rel="icon" href="{{ asset('indomaret2.png') }}?v=2" type="image/png">
     <title>@yield('title', 'IT Compliance')</title>
 
     <style>

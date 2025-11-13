@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>IT Compliance</title>
@@ -49,8 +50,8 @@
       gap: 16px;
     }
 
-    #reg{
-      margin-top:-10px;
+    #reg {
+      margin-top: -10px;
     }
 
     .login-container input[type="text"],
@@ -86,15 +87,16 @@
     }
   </style>
 </head>
+
 <body>
 
   <div class="login-container">
     <h2>IT COMPLIANCE</h2>
 
     @if(session('error'))
-      <div class="alert">
-        {{ session('error') }}
-      </div>
+    <div class="alert">
+      {{ session('error') }}
+    </div>
     @endif
 
     <form action="{{ url('/login') }}" method="POST">
@@ -107,4 +109,5 @@
   </div>
 
 </body>
+
 </html>
