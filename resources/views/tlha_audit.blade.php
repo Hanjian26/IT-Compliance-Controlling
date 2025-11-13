@@ -1,6 +1,26 @@
 @extends('layouts.app')
 @section('title', 'IT Compliance')
 @section('content')
+<style>
+    .btn-tambah-pic,
+    .btn-edit-pic {
+        padding: 8px;
+        background-color: #2b2d42;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        margin-top: 10px;
+        font-size: 12px;
+        transition: background-color 0.2s ease;
+    }
+
+    /* Efek hover untuk dua tombol */
+    .btn-tambah-pic:hover,
+    .btn-edit-pic:hover {
+        background-color: #5763e1;
+        cursor: pointer;
+    }
+</style>
 
 @php
 $user = Auth::user();
@@ -76,7 +96,7 @@ $level = $user->level ?? null;
                     TBA
                     @endif
                 </td>
-                <td style="padding: 10px; font-size: 12px;">{{ $item->pic }}</td>
+                <td style="padding: 10px; font-size: 12px;">{{ implode(', ', json_decode($item->pic, true))}}</td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->auditor }}</td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->reviewer }}</td>
                 <td
@@ -90,14 +110,8 @@ $level = $user->level ?? null;
                 </td>
 
                 <td style="padding: 10px; font-size: 11px;">
-                    <div style="padding: 10px;
-    font-size: 11px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap:10px;">
-
-
+                    <div
+                        style="padding: 10px;font-size: 11px;display: flex;justify-content: center;align-items: center;gap:10px;">
                         <!-- Lihat -->
                         <a href="{{ asset('storage/'.$item->file_laporan) }}" target="_blank"
                             style="display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: inherit;">
@@ -171,15 +185,17 @@ $level = $user->level ?? null;
                 <select name="divisi" id="edit_divisi" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
                     <option value="#">-- Pilih Department --</option>
-                    <option value="SD1">SD1</option>
-                    <option value="SD2PR">SD2 Payroll</option>
-                    <option value="SD2NPR">SD2 Non Payroll</option>
-                    <option value="SD3">SD3</option>
-                    <option value="SD4">SD4</option>
-                    <option value="SD5">SD5</option>
-                    <option value="SD6">SD6</option>
-                    <option value="SD7">SD7</option>
-                    <option value="">TBA</option>
+                    <option value="SD1_SSD1">SD1_SSD1</option>
+                    <option value="SD2 Payroll">SD2 Payroll</option>
+                    <option value="SD2 Non Payroll">SD2 Non Payroll</option>
+                    <option value="SD3_SSD3">SD3_SSD3</option>
+                    <option value="SD4_SSD4">SD4_SSD4</option>
+                    <option value="SD5_SSD5">SD5_SSD5</option>
+                    <option value="SD6_SSD6">SD6_SSD6</option>
+                    <option value="SD7_SSD7">SD7_SSD7</option>
+                    <option value="SD8_SSD8">SD8_SSD8</option>
+                    <option value="IT PMO">IT PMO</option>
+                    <option value="IT Compliance">IT Compliance</option>
                 </select>
             </div>
 
@@ -202,11 +218,33 @@ $level = $user->level ?? null;
                     max="2099-12-31" onkeydown="return false" required style="width: 97%; padding: 8px;">
             </div>
 
-            <div style="margin-bottom: 15px;">
-                <label for="edit_pic">PIC <span style="color: red;">*</span>:</label>
-                <input type="text" name="pic" id="edit_pic" required
-                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+            <div style="margin-bottom:15px;">
+                <label>Pilih PIC:</label><br>
+                <select id="edit_dropdownPIC" style="width:89%; padding:8px;">
+                    <option value="#">Pilih PIC</option>
+                    @foreach($departments as $dept)
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+                    @endforeach
+                </select>
+
+                <button type="button" onclick="tambahEditPIC()" class="btn-tambah-pic"
+                    style="padding:8px; color:white; border:none; border-radius:4px; margin-top:10px; font-size:12px;">
+                    Tambah
+                </button>
+
+                <br><br>
+
+                <label>PIC Terpilih:</label>
+                <!-- hidden input untuk dikirim ke server -->
+                <input type="hidden" id="edit_hasilPIC" name="pic">
+
+                <!-- daftar PIC -->
+                <div id="edit_daftarPIC"
+                    style="border:1px solid #ccc; padding:10px; border-radius:5px; background:#f9f9f9; min-height:40px;">
+                </div>
             </div>
+
+
 
             <div style="margin-bottom: 15px;">
                 <label for="edit_auditor">Auditor <span style="color: red;">*</span>:</label>
@@ -280,21 +318,23 @@ $level = $user->level ?? null;
         <form action="{{ route('audit.tlha.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div style="margin-bottom: 15px;">
-                <label for="divisi">Divisi<span style="color: red;">*</span>:</label>
-                <select name="divisi" id="divisi" required style="width: 100%; padding: 8px; box-sizing: border-box;">
-                    <option value="">-- Pilih Department -- </option>
-                    <option value="SD1">SD1</option>
-                    <option value="SD2PR">SD2 Payroll</option>
-                    <option value="SD2NPR">SD2 Non Payroll</option>
-                    <option value="SD3">SD3</option>
-                    <option value="SD4">SD4</option>
-                    <option value="SD5">SD5</option>
-                    <option value="SD6">SD6</option>
-                    <option value="SD7">SD7</option>
-                    <option value="">TBA</option>
+                <label for="edit_divisi">Divisi<span style="color: red;">*</span>:</label>
+                <select name="divisi" id="edit_divisi" required
+                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+                    <option value="#">-- Pilih Department --</option>
+                    <option value="SD1_SSD1">SD1_SSD1</option>
+                    <option value="SD2 Payroll">SD2 Payroll</option>
+                    <option value="SD2 Non Payroll">SD2 Non Payroll</option>
+                    <option value="SD3_SSD3">SD3_SSD3</option>
+                    <option value="SD4_SSD4">SD4_SSD4</option>
+                    <option value="SD5_SSD5">SD5_SSD5</option>
+                    <option value="SD6_SSD6">SD6_SSD6</option>
+                    <option value="SD7_SSD7">SD7_SSD7</option>
+                    <option value="SD8_SSD8">SD8_SSD8</option>
+                    <option value="IT PMO">IT PMO</option>
+                    <option value="IT Compliance">IT Compliance</option>
                 </select>
             </div>
-
 
 
             <div style="margin-bottom: 15px;">
@@ -315,11 +355,32 @@ $level = $user->level ?? null;
                     max="2099-12-31" onkeydown="return false" required style="width: 97%; padding: 8px;">
             </div>
 
-            <div style="margin-bottom: 15px;">
-                <label for="pic">PIC<span style="color: red;">*</span>:</label>
-                <input type="text" name="pic" id="pic" required
-                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+            <div style="margin-bottom:15px;">
+                <label>Pilih PIC:</label><br>
+                <select id="dropdownPIC" style="width:89%; padding:8px;">
+                    <option value="#">Pilih PIC</option>
+                    @foreach($departments as $dept)
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+                    @endforeach
+                </select>
+
+                <button class="btn-tambah-pic" type="button" onclick="tambahPIC()">
+                    Tambah
+                </button>
+
+
+                <br><br>
+
+                <label>PIC Terpilih:</label>
+                <!-- input hidden untuk dikirim ke server -->
+                <input type="hidden" id="hasilPIC" name="pic">
+
+                <!-- tempat menampilkan daftar PIC terpilih -->
+                <div id="daftarPIC"
+                    style="border:1px solid #ccc; padding:10px; border-radius:5px; background:#f9f9f9; min-height:40px;">
+                </div>
             </div>
+
 
             <div style="margin-bottom: 15px;">
                 <label for="auditor">Auditor<span style="color: red;">*</span>:</label>
@@ -380,6 +441,127 @@ $level = $user->level ?? null;
     document.getElementById('popupForm').style.display = 'flex';
 }
 
+let editDaftarPIC = [];
+
+function tambahEditPIC() {
+    const dropdown = document.getElementById('edit_dropdownPIC');
+    const selectedPIC = dropdown.value;
+    const daftarDiv = document.getElementById('edit_daftarPIC');
+    const hasilInput = document.getElementById('edit_hasilPIC');
+
+    if (!editDaftarPIC.includes(selectedPIC)) {
+        editDaftarPIC.push(selectedPIC);
+    } else {
+        alert(selectedPIC + ' sudah dipilih!');
+        return;
+    }
+
+    renderEditDaftarPIC(daftarDiv, hasilInput);
+}
+
+function hapusEditPIC(pic) {
+    const daftarDiv = document.getElementById('edit_daftarPIC');
+    const hasilInput = document.getElementById('edit_hasilPIC');
+
+    editDaftarPIC = editDaftarPIC.filter(item => item !== pic);
+    renderEditDaftarPIC(daftarDiv, hasilInput);
+}
+
+function renderEditDaftarPIC(daftarDiv, hasilInput) {
+    daftarDiv.innerHTML = '';
+
+    editDaftarPIC.forEach(pic => {
+        const badge = document.createElement('span');
+        badge.textContent = pic + ' ';
+        badge.style.display = 'inline-block';
+        badge.style.background = '#edf2f4';
+        badge.style.border = '1px solid #ccc';
+        badge.style.borderRadius = '15px';
+        badge.style.padding = '5px 10px';
+        badge.style.margin = '3px';
+        badge.style.fontSize = '13px';
+
+        const btn = document.createElement('button');
+        btn.textContent = '×';
+        btn.style.marginLeft = '5px';
+        btn.style.color = 'red';
+        btn.style.border = 'none';
+        btn.style.background = 'transparent';
+        btn.style.cursor = 'pointer';
+        btn.onclick = () => hapusEditPIC(pic);
+
+        badge.appendChild(btn);
+        daftarDiv.appendChild(badge);
+    });
+
+    hasilInput.value = editDaftarPIC.join(', ');
+}
+
+
+ let daftarPIC = [];
+
+    function tambahPIC() {
+        const dropdown = document.getElementById('dropdownPIC');
+        const selectedPIC = dropdown.value;
+        const daftarDiv = document.getElementById('daftarPIC');
+        const hasilInput = document.getElementById('hasilPIC');
+
+        // jangan duplikat
+        if (!daftarPIC.includes(selectedPIC)) {
+            daftarPIC.push(selectedPIC);
+        } else {
+            alert(selectedPIC + ' sudah dipilih!');
+            return;
+        }
+
+        // render ulang daftar PIC
+        renderDaftarPIC(daftarDiv, hasilInput);
+    }
+
+    function hapusPIC(pic) {
+        const daftarDiv = document.getElementById('daftarPIC');
+        const hasilInput = document.getElementById('hasilPIC');
+
+        // hapus PIC dari array
+        daftarPIC = daftarPIC.filter(item => item !== pic);
+
+        // render ulang tampilan daftar
+        renderDaftarPIC(daftarDiv, hasilInput);
+    }
+
+    function renderDaftarPIC(daftarDiv, hasilInput) {
+        // bersihkan isi tampilan
+        daftarDiv.innerHTML = '';
+
+        // tampilkan setiap PIC dalam bentuk badge + tombol hapus
+        daftarPIC.forEach(pic => {
+            const badge = document.createElement('span');
+            badge.textContent = pic + ' ';
+            badge.style.display = 'inline-block';
+            badge.style.background = '#edf2f4';
+            badge.style.border = '1px solid #ccc';
+            badge.style.borderRadius = '15px';
+            badge.style.padding = '5px 10px';
+            badge.style.margin = '3px';
+            badge.style.fontSize = '13px';
+
+            const btn = document.createElement('button');
+            btn.textContent = '×';
+            btn.style.marginLeft = '5px';
+            btn.style.color = 'red';
+            btn.style.border = 'none';
+            btn.style.background = 'transparent';
+            btn.style.cursor = 'pointer';
+            btn.onclick = () => hapusPIC(pic);
+
+            badge.appendChild(btn);
+            daftarDiv.appendChild(badge);
+        });
+
+        // simpan ke input hidden agar bisa dikirim ke controller
+        hasilInput.value = daftarPIC.join(', ');
+    }
+
 function closePopup() {
     document.getElementById('popupForm').style.display = 'none';
 }
@@ -389,24 +571,42 @@ function closeEdit() {
 }
 
 function editMemo(id) {
-    fetch(`/admin/tlha_audit/${id}/edit`) // <-- pakai backtick atau string
+    fetch(`/admin/tlha_audit/${id}/edit`)
         .then(res => res.json())
         .then(data => {
             document.getElementById('edit_divisi').value = data.divisi;
             document.getElementById('edit_kegiatan').value = data.kegiatan;
             document.getElementById('edit_tanggal_mulai').value = data.tanggal_mulai;
             document.getElementById('edit_tanggal_selesai').value = data.tanggal_selesai;
-            document.getElementById('edit_pic').value = data.pic;
             document.getElementById('edit_auditor').value = data.auditor;
             document.getElementById('edit_reviewer').value = data.reviewer;
             document.getElementById('edit_status').value = data.status;
             document.getElementById('edit_keterangan').value = data.keterangan;
 
+            // ✅ isi PIC yang sudah ada
+            const daftarDiv = document.getElementById('edit_daftarPIC');
+            const hasilInput = document.getElementById('edit_hasilPIC');
+
+            try {
+                // jika data.pic disimpan sebagai JSON string
+                editDaftarPIC = Array.isArray(data.pic)
+                    ? data.pic
+                    : JSON.parse(data.pic);
+            } catch {
+                // jika data.pic disimpan sebagai string "IT PMO, SD8_SSD8"
+                editDaftarPIC = data.pic
+                    ? data.pic.split(',').map(i => i.trim())
+                    : [];
+            }
+
+            renderEditDaftarPIC(daftarDiv, hasilInput);
+
             const form = document.getElementById('editMemoForm');
-            form.action = `/admin/tlha_audit/${id}`; // <-- perbaiki jadi string
+            form.action = `/admin/tlha_audit/${id}`;
             document.getElementById('editForm').style.display = 'flex';
         });
 }
+
 
 
 function confirmDelete() {
