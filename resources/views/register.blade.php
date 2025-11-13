@@ -113,36 +113,12 @@
       <input type="text" name="nik" id="nik" placeholder="Nomor Induk Karyawan (NIK) - 10 digit" required>
       <select name="department" id="department" required>
         <option value="">-- Pilih Department --</option>
-        <option value="SD1">SD1 & SSD1</option>
-        <option value="SD2PR">SD2 Payroll</option>
-        <option value="SD2NPR">SD2 Non Payroll</option>
-        <option value="SD3">SD3 & SSD3</option>
-        <option value="SD4">SD4 & SSD4</option>
-        <option value="SD5">SD5 & SSD5</option>
-        <option value="SD6">SD6 & SSD6</option>
-        <option value="SD7">SD7 & SSD7</option>
-        <option value="SD8">SD8 & SSD8</option>
-        <option value="IT Compliance">IT Compliance</option>
-        <option value="E-Commerce IDM">E-Commerce IDM</option>
-        <option value="E-Commerce IGR">E-Commerce IGR</option>
-        <option value="IT Network">IT Network</option>
-        <option value="IT Security">IT Security</option>
-        <option value="IT Hardware Service">IT Hardware Service</option>
-        <option value="Database Administartor">Database Administartor</option>
-        <option value="Data Center">Data Center</option>
-        <option value="Project Management Office (PMO)">Project Management Office (PMO)</option>
-        <option value="EIS & IMBI">EIS & IMBI</option>
-        <option value="IDS">IDS</option>
-        <option value="KIS">KIS</option>
-        <option value="IMFS">IMFS</option>
-        <option value="R&D">R&D</option>
-        <option value="Special Project">Special Project</option>
-        <option value="IT Logistik">IT Logistik</option>
-        <option value="VSAT">VSAT</option>
-
-
-
+        @foreach($departments as $dept)
+        <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+        @endforeach
       </select>
+
+
       <input type="password" name="password" id="password" placeholder="Password" required>
       <input type="email" name="email" id="email" placeholder="Email" required>
       <!-- 
