@@ -114,7 +114,7 @@
       <select name="department" id="department" required>
         <option value="">-- Pilih Department --</option>
         @foreach($departments as $dept)
-        <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+        <option value="{{ $dept->id }}">{{ $dept->department }}</option>
         @endforeach
       </select>
 
@@ -130,7 +130,7 @@
       </select> -->
 
       <select name="level" id="level" required>
-        <option value="">-- Pilih Level --</option>
+        <option value="">-- Pilih Role --</option>
         <option value="1">Admin</option>
         <option value="2">User</option>
       </select>
