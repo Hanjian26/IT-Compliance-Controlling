@@ -12,10 +12,12 @@ $level = $user->level ?? null;
 <!-- Tombol Tambah Dokumen -->
 @if ($level == 1)
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-  <button onclick="openPopup()"
+  <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
+    onmouseout="this.style.backgroundColor='#4CAF50'"
     style="background-color: #4CAF50; color: white; padding: 8px 16px; text-decoration: none; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
 
-    <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" />
+
+    {{-- <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" /> --}}
     Tambah Dokumen
   </button>
 </div>
@@ -195,7 +197,7 @@ $level = $user->level ?? null;
   }
 
 function editMemo(id) {
-  fetch(`/admin//${id}/edit`, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
+  fetch(`/admin/template-dokumen/${id}/edit`, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
     .then(res => res.json())
     .then(data => {
         document.getElementById('edit_nama_file').value = data.nama_file;

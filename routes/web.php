@@ -72,6 +72,15 @@ Route::prefix('user')->middleware(['auth', 'level:2'])->group(function () {
 // ====================
 Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
     // Main Menu (versi admin)
+    Route::middleware(['auth', 'level:1'])->group(function () {
+
+    Route::get('/template-dokumen/{id}/edit', [TemplateDokumenController::class, 'edit'])
+        ->name('template.dokumen.edit');
+
+    Route::put('/template-dokumen/{id}', [TemplateDokumenController::class, 'update'])
+        ->name('template.dokumen.update');
+});
+
     Route::get('/main-menu', [AuthController::class, 'mainMenu'])->name('admin.main_menu');
 
     // Memo Kebijakan
