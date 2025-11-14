@@ -7,16 +7,18 @@
 <!-- Container Utama -->
 <!-- Tombol Tambah Dokumen -->
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-  <button onclick="openPopup()"
+  <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
+    onmouseout="this.style.backgroundColor='#4CAF50'"
     style="background-color: #4CAF50; color: white; padding: 8px 16px; text-decoration: none; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
 
-    <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" />
+
+    {{-- <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" /> --}}
     Tambah Dokumen
   </button>
 </div>
 
 <!-- Tabel -->
-<table style="border-collapse: collapse; width: 100%; text-align: center;">
+<table style="border-collapse: collapse; width: 100%; text-align: center; margin-left: 10px;">
   <thead>
     <tr style="background-color: #f2f2f2;">
       <th style="padding: 10px;">No.</th>
