@@ -4,12 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Models\Department; // ✅ Tambahkan ini untuk akses tabel departments
+use App\Models\Department; // 
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Spatie\Activitylog\Models\Activity;
+
 
 class AuthController extends Controller
 {

@@ -15,9 +15,11 @@ $level = $user->level ?? null;
 @if($level != 2)
 
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-    <button onclick="openPopup()"
+    <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
+        onmouseout="this.style.backgroundColor='#4CAF50'"
         style="background-color: #4CAF50; color: white; padding: 8px 16px; text-decoration: none; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-        <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" />
+
+        {{-- <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" /> --}}
         Tambah Laporan Hasil Akhir
     </button>
 </div>
@@ -159,16 +161,10 @@ $level = $user->level ?? null;
                 <label for="edit_divisi">Divisi<span style="color: red;">*</span>:</label>
                 <select name="divisi" id="edit_divisi" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
-                    <option value="#">-- Pilih Department --</option>
-                    <option value="SD1">SD1</option>
-                    <option value="SD2PR">SD2 Payroll</option>
-                    <option value="SD2NPR">SD2 Non Payroll</option>
-                    <option value="SD3">SD3</option>
-                    <option value="SD4">SD4</option>
-                    <option value="SD5">SD5</option>
-                    <option value="SD6">SD6</option>
-                    <option value="SD7">SD7</option>
-                    <option value="">TBA</option>
+                    <option value="#">-- Pilih Divisi --</option>
+                    @foreach($departments as $dept)
+                    <option value="{{ $dept->id }}">{{ $dept->department }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -181,14 +177,14 @@ $level = $user->level ?? null;
             <div style="margin-bottom: 15px;">
                 <label for="edit_tanggal_mulai">Tanggal Mulai<span style="color: red;">*</span>:</label>
                 <input type="date" name="tanggal_mulai" id="edit_tanggal_mulai" lang="id" min="2000-01-01"
-                    max="2099-12-31" onkeydown="return false" required style="width: 100%; padding: 8px;"
-                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+                    max="2099-12-31" onkeydown="return false" required
+                    style="width:100%; padding:8px; box-sizing:border-box;">
             </div>
 
             <div style="margin-bottom: 15px;">
                 <label for="edit_tanggal_selesai">Tanggal Selesai:</label>
                 <input type="date" name="tanggal_selesai" id="edit_tanggal_selesai" lang="id" min="2000-01-01"
-                    max="2099-12-31" onkeydown="return false" required style="width: 100%; padding: 8px;">
+                    max="2099-12-31" onkeydown="return false" required style="width: 97%; padding: 8px;">
             </div>
 
             <div style="margin-bottom: 15px;">
@@ -251,7 +247,7 @@ $level = $user->level ?? null;
               overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
 
         <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; text-align:center;">
-            <u>Tambah Working Paper</u>
+            <u>Tambah Laporan Hasil Akhir</u>
         </h3>
 
         <form action="{{ route('audit.lha.store') }}" method="POST" enctype="multipart/form-data">
@@ -260,15 +256,9 @@ $level = $user->level ?? null;
                 <label for="divisi">Divisi<span style="color: red;">*</span>:</label>
                 <select name="divisi" id="divisi" required style="width: 100%; padding: 8px; box-sizing: border-box;">
                     <option value="">-- Pilih Department -- </option>
-                    <option value="SD1">SD1</option>
-                    <option value="SD2PR">SD2 Payroll</option>
-                    <option value="SD2NPR">SD2 Non Payroll</option>
-                    <option value="SD3">SD3</option>
-                    <option value="SD4">SD4</option>
-                    <option value="SD5">SD5</option>
-                    <option value="SD6">SD6</option>
-                    <option value="SD7">SD7</option>
-                    <option value="">TBA</option>
+                    @foreach($departments as $dept)
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -284,13 +274,13 @@ $level = $user->level ?? null;
             <div style="margin-bottom: 15px;">
                 <label for="tanggal_mulai">Tanggal Mulai<span style="color: red;">*</span>:</label>
                 <input type="date" name="tanggal_mulai" id="tanggal_mulai" lang="id" min="2000-01-01" max="2099-12-31"
-                    onkeydown="return false" required style="width: 100%; padding: 8px;">
+                    onkeydown="return false" required style="width: 97%; padding: 8px;">
             </div>
 
             <div style="margin-bottom: 15px;">
                 <label for="tanggal_selesai">Tanggal Selesai:</label>
                 <input type="date" name="tanggal_selesai" id="tanggal_selesai" lang="id" min="2000-01-01"
-                    max="2099-12-31" onkeydown="return false" required style="width: 100%; padding: 8px;">
+                    max="2099-12-31" onkeydown="return false" required style="width: 97%; padding: 8px;">
             </div>
 
             <div style="margin-bottom: 15px;">
@@ -383,16 +373,8 @@ function editMemo(id) {
 function confirmDelete() {
     return confirm('Apakah Anda yakin ingin menghapus file ini?');
 }
-</script>
 
-@if (session('success'))
-<div id="success-alert" style="position: fixed; bottom: 20px; right: 20px; background-color: #4CAF50; 
-              color: white; padding: 12px 20px; border-radius: 5px; z-index: 9999;">
-    {{ session('success') }}
-</div>
-
-<script>
-    // Hilang setelah 3 detik
+// Hilang setelah 3 detik
 setTimeout(() => {
     const alert = document.getElementById('success-alert');
     if (alert) {
@@ -401,7 +383,30 @@ setTimeout(() => {
         setTimeout(() => alert.remove(), 500); // hapus dari DOM setelah fade out
     }
 }, 3000);
+
+document.addEventListener('DOMContentLoaded', function() {
+  const dateInputs = document.querySelectorAll('input[type="date"]');
+
+  dateInputs.forEach(input => {
+    input.addEventListener('keydown', e => e.preventDefault());
+    input.addEventListener('paste', e => e.preventDefault());
+
+    input.addEventListener('click', () => {
+      try {
+        input.showPicker();
+      } catch (err) {
+        input.focus();
+      }
+    });
+  });
+});
+
 </script>
+@if (session('success'))
+<div id="success-alert" style="position: fixed; bottom: 20px; right: 20px; background-color: #4CAF50; 
+              color: white; padding: 12px 20px; border-radius: 5px; z-index: 9999;">
+    {{ session('success') }}
+</div>
 @endif
 
 @endsection

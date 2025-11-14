@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\WorkingPaperModel;
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 
 class WorkingPaperController extends Controller
@@ -27,8 +28,9 @@ class WorkingPaperController extends Controller
 
     $data = $query->orderBy('divisi', 'asc')->paginate(5);
     $data->appends($request->all());
+    $departments = Department::orderBy('department', 'asc')->get();
 
-    return view('working_paper', compact('data'));
+    return view('working_paper', compact('data', 'departments'));
 }
 
 
@@ -129,7 +131,7 @@ class WorkingPaperController extends Controller
     $audit->status = $request->status;
     $audit->keterangan = $request->keterangan;
 
-    // 🔥 simpan file baru jika ada
+    //  simpan file baru jika ada
     if ($request->hasFile('file_wp')) {
         $path = $request->file('file_wp')->store('dokumen', 'public');
         $audit->file_wp = $path;

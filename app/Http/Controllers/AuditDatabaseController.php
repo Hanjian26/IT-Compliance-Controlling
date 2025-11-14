@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Models\AuditBRDB;
+use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
 
 class AuditDatabaseController extends Controller
@@ -28,7 +29,9 @@ class AuditDatabaseController extends Controller
     $data = $query->orderBy('divisi', 'asc')->paginate(5);
     $data->appends($request->all());
 
-    return view('audit_brdb', compact('data'));
+      $departments = Department::orderBy('department', 'asc')->get();
+
+    return view('audit_brdb', compact('data', 'departments'));
 }
 
     public function store(Request $request)
