@@ -6,11 +6,13 @@
 
 <!-- Container Utama -->
 <!-- Tombol Tambah Dokumen -->
+
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-    <button onclick="openPopup()"
+    <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
+        onmouseout="this.style.backgroundColor='#4CAF50'"
         style="background-color: #4CAF50; color: white; padding: 8px 16px; text-decoration: none; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
 
-        <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" />
+        {{-- <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" /> --}}
         Tambah Jadwal Audit
     </button>
 </div>
@@ -138,16 +140,10 @@
                 <label for="edit_divisi">Divisi<span style="color: red;">*</span>:</label>
                 <select name="divisi" id="edit_divisi" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
-                    <option value="#">-- Pilih Department --</option>
-                    <option value="SD1">SD1</option>
-                    <option value="SD2PR">SD2 Payroll</option>
-                    <option value="SD2NPR">SD2 Non Payroll</option>
-                    <option value="SD3">SD3</option>
-                    <option value="SD4">SD4</option>
-                    <option value="SD5">SD5</option>
-                    <option value="SD6">SD6</option>
-                    <option value="SD7">SD7</option>
-                    <option value="">TBA</option>
+                    <option value="#">-- Pilih Divisi --</option>
+                    @foreach($departments as $dept)
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+                    @endforeach
                 </select>
             </div>
 
@@ -160,14 +156,14 @@
             <div style="margin-bottom: 15px;">
                 <label for="edit_tanggal_mulai">Tanggal Mulai<span style="color: red;">*</span>:</label>
                 <input type="date" name="tanggal_mulai" id="edit_tanggal_mulai" lang="id" min="2000-01-01"
-                    max="2099-12-31" onkeydown="return false" required style="width: 100%; padding: 8px;"
-                    style="width: 100%; padding: 8px; box-sizing: border-box;">
+                    max="2099-12-31" onkeydown="return false" required style="width: 95%; padding: 8px;"
+                    style="width: 97%; padding: 8px; box-sizing: border-box;">
             </div>
 
             <div style="margin-bottom: 15px;">
                 <label for="edit_tanggal_selesai">Tanggal Selesai:</label>
                 <input type="date" name="tanggal_selesai" id="edit_tanggal_selesai" lang="id" min="2000-01-01"
-                    max="2099-12-31" onkeydown="return false" required style="width: 100%; padding: 8px;">
+                    max="2099-12-31" onkeydown="return false" required style="width: 97%; padding: 8px;">
             </div>
 
             <div style="margin-bottom: 15px;">
@@ -230,16 +226,10 @@
             <div style="margin-bottom: 15px;">
                 <label for="divisi">Divisi<span style="color: red;">*</span>:</label>
                 <select name="divisi" id="divisi" required style="width: 100%; padding: 8px; box-sizing: border-box;">
-                    <option value="">-- Pilih Department -- </option>
-                    <option value="SD1">SD1</option>
-                    <option value="SD2PR">SD2 Payroll</option>
-                    <option value="SD2NPR">SD2 Non Payroll</option>
-                    <option value="SD3">SD3</option>
-                    <option value="SD4">SD4</option>
-                    <option value="SD5">SD5</option>
-                    <option value="SD6">SD6</option>
-                    <option value="SD7">SD7</option>
-                    <option value="">TBA</option>
+                    <option value="">-- Pilih Divisi -- </option>
+                    @foreach($departments as $dept)
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+                    @endforeach
                 </select>
             </div>
 

@@ -30,24 +30,34 @@
       margin-bottom: 32px;
       color: #2b2d42;
       font-size: 24px;
-      position: relative;
-      display: inline-block;
+      width: 100%;
+      /* memastikan teks berada di tengah */
     }
 
     .login-container h2::after {
       content: "";
       display: block;
-      width: 105%;
-      margin: 8px auto 0;
+      width: 100%;
+      /* panjang garis */
+      margin: 10px auto 0;
+      /* auto = memastikan berada di tengah */
       height: 4px;
-      background: linear-gradient(to right, #2b2d42, #8d99ae);
+      background: linear-gradient(to right, rgb(0, 0, 0), rgb(0, 0, 0), rgb(5, 5, 0));
       border-radius: 2px;
     }
+
 
     .login-container form {
       display: flex;
       flex-direction: column;
       gap: 16px;
+    }
+
+    .login-container img {
+      display: block;
+      margin: 0 auto 0px auto;
+      width: 350px;
+      height: auto;
     }
 
     #reg {
@@ -91,6 +101,7 @@
 <body>
 
   <div class="login-container">
+    <img src="{{ asset('indomaret.png') }}" alt="Logo">
     <h2>IT COMPLIANCE</h2>
 
     @if(session('error'))
@@ -99,7 +110,9 @@
     </div>
     @endif
 
+
     <form action="{{ url('/login') }}" method="POST">
+
       @csrf
       <input type="text" name="nik" placeholder="Nomor Induk Karyawan (NIK)" required>
       <input type="password" name="password" placeholder="Password" required>

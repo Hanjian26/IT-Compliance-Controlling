@@ -38,9 +38,11 @@ $level = $user->level ?? null;
 @if($level != 2)
 
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
-    <button onclick="openPopup()"
+    <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
+        onmouseout="this.style.backgroundColor='#4CAF50'"
         style="background-color: #4CAF50; color: white; padding: 8px 16px; text-decoration: none; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-        <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" />
+
+        {{-- <img width="20" height="20" src="https://img.icons8.com/wired/64/add-rule.png" alt="add-icon" /> --}}
         Tambah Tindak Lanjut Hasil Audit
     </button>
 </div>
@@ -185,7 +187,10 @@ $level = $user->level ?? null;
                 <select name="divisi" id="edit_divisi" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
                     <option value="#">-- Pilih Department --</option>
-                    <option value="SD1_SSD1">SD1_SSD1</option>
+                    @foreach($departments as $dept)
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+                    @endforeach
+                    {{-- <option value="SD1_SSD1">SD1_SSD1</option>
                     <option value="SD2 Payroll">SD2 Payroll</option>
                     <option value="SD2 Non Payroll">SD2 Non Payroll</option>
                     <option value="SD3_SSD3">SD3_SSD3</option>
@@ -195,7 +200,7 @@ $level = $user->level ?? null;
                     <option value="SD7_SSD7">SD7_SSD7</option>
                     <option value="SD8_SSD8">SD8_SSD8</option>
                     <option value="IT PMO">IT PMO</option>
-                    <option value="IT Compliance">IT Compliance</option>
+                    <option value="IT Compliance">IT Compliance</option> --}}
                 </select>
             </div>
 
@@ -321,8 +326,11 @@ $level = $user->level ?? null;
                 <label for="edit_divisi">Divisi<span style="color: red;">*</span>:</label>
                 <select name="divisi" id="edit_divisi" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
-                    <option value="#">-- Pilih Department --</option>
-                    <option value="SD1_SSD1">SD1_SSD1</option>
+                    <option value="#">-- Pilih Divisi --</option>
+                    @foreach($departments as $dept)
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
+                    @endforeach
+                    {{-- <option value="SD1_SSD1">SD1_SSD1</option>
                     <option value="SD2 Payroll">SD2 Payroll</option>
                     <option value="SD2 Non Payroll">SD2 Non Payroll</option>
                     <option value="SD3_SSD3">SD3_SSD3</option>
@@ -332,7 +340,7 @@ $level = $user->level ?? null;
                     <option value="SD7_SSD7">SD7_SSD7</option>
                     <option value="SD8_SSD8">SD8_SSD8</option>
                     <option value="IT PMO">IT PMO</option>
-                    <option value="IT Compliance">IT Compliance</option>
+                    <option value="IT Compliance">IT Compliance</option> --}}
                 </select>
             </div>
 
