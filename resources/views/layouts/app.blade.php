@@ -246,15 +246,24 @@
     {{-- Topbar --}}
     <header class="topbar">
         <div class="topbar-content">
+            <!-- Live Time -->
+            <span id="live-time"
+                style="padding-right:390px; font-size: 14px; font-family:sans-serif; font-weight:bold"></span>
             @auth
             @php
             $levelMap = [1 => 'Admin', 2 => 'User'];
             $levelName = $levelMap[$level] ?? 'Unknown';
             @endphp
-            <span class="welcome-text">Selamat Datang, {{ $user->nama }} ({{ $levelName }})</span>
+            <span class="welcome-text">
+                Selamat Datang, {{ $user->nama }} ({{ $levelName }})
+            </span>
+
+
+
             @endauth
         </div>
     </header>
+
 
     {{-- Konten --}}
     <main class="content">
@@ -282,6 +291,26 @@
             });
         });
     });
+
+     function updateLiveTime() {
+        const now = new Date();
+
+        const options = {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
+        document.getElementById('live-time').textContent =
+            now.toLocaleDateString('id-ID', options);
+    }
+
+    setInterval(updateLiveTime, 1000);
+    updateLiveTime();
     </script>
 
     @stack('scripts')
