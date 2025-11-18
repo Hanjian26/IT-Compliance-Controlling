@@ -36,7 +36,7 @@
 </form>
 
 <!-- Bungkus tabel dengan div agar bisa scroll kanan-kiri -->
-<div style="width: 100%; overflow-x: auto; margin-bottom: 15px;">
+<div style="width: 100%; overflow-x: auto; margin-bottom: 15px; margin-left:10px;">
     <table style="border-collapse: collapse; width: 100%; min-width: 1200px; text-align: center;">
         <thead>
             <tr style="background-color: #f2f2f2;">
