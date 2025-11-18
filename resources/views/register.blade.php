@@ -30,6 +30,12 @@
       /* Atas-Bawah = 60px, Kiri-Kanan otomatis center */
     }
 
+    .form-container img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
     .form-container h2 {
       text-align: center;
       margin-bottom: 32px;
@@ -93,6 +99,7 @@
 <body>
 
   <div class="form-container">
+    <img src="{{ asset('indomaret.png') }}" alt="Logo">
     <h2>Daftar Akun</h2>
 
     @if(session('error'))
