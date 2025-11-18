@@ -283,8 +283,7 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="edit_file_laporan">Upload Dokumen (PDF, DOCX, dll)<span
-                        style="color: red;">*</span>:</label>
+                <label for="edit_file_laporan">Upload Dokumen (PDF, DOCX, dll):</label>
                 <input type="file" name="file_laporan" id="edit_file_laporan" accept=".pdf,.doc,.docx,.zip"
                     style="width: 100%; padding: 6px;">
 
@@ -579,7 +578,7 @@ function closeEdit() {
 }
 
 function editMemo(id) {
-    fetch(`/admin/tlha_audit/${id}/edit`)
+    fetch(`/admin/tlha-audit/${id}/edit`)
         .then(res => res.json())
         .then(data => {
             document.getElementById('edit_divisi').value = data.divisi;
@@ -610,7 +609,7 @@ function editMemo(id) {
             renderEditDaftarPIC(daftarDiv, hasilInput);
 
             const form = document.getElementById('editMemoForm');
-            form.action = `/admin/tlha_audit/${id}`;
+            form.action = `/admin/tlha-audit/${id}`;
             document.getElementById('editForm').style.display = 'flex';
         });
 }

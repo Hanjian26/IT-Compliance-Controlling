@@ -163,7 +163,7 @@ $level = $user->level ?? null;
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
                     <option value="#">-- Pilih Divisi --</option>
                     @foreach($departments as $dept)
-                    <option value="{{ $dept->id }}">{{ $dept->department }}</option>
+                    <option value="{{ $dept->department }}">{{ $dept->department }}</option>
                     @endforeach
                 </select>
             </div>
