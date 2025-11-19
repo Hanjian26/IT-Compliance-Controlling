@@ -14,7 +14,7 @@ class MemoAdministrasiController extends Controller
     public function index()
     {
           $data = Memos::where('tipe_memo', 'Administrasi')
-            ->orderBy('tanggal_terbit', 'asc')
+            ->orderBy('tanggal_terbit', 'desc')
             ->paginate(5);
             return view('memo_administrasi', compact('data'));
     }

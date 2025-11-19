@@ -14,7 +14,7 @@ class MemoAllController extends Controller
     public function index()
     {
           $data = Memos::where('tipe_memo', 'All IT')
-            ->orderBy('tanggal_terbit', 'asc')
+            ->orderBy('tanggal_terbit', 'desc')
             ->paginate(5);
             return view('memo_to_all', compact('data'));
     }

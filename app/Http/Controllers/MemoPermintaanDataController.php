@@ -14,7 +14,7 @@ class MemoPermintaanDataController extends Controller
     public function index()
     {
           $data = Memos::where('tipe_memo', 'Permintaan Data')
-            ->orderBy('tanggal_terbit', 'asc')
+            ->orderBy('tanggal_terbit', 'desc')
             ->paginate(5);
             return view('memo_permintaan_data', compact('data'));
     }
