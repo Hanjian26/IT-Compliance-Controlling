@@ -2,10 +2,18 @@
 @section('title', 'IT Compliance')
 @section('content')
 
+@php
+$user = Auth::user();
+$level = $user->level ?? null;
+$levelMap = [1 => 'Admin', 2 => 'User'];
+$levelName = $levelMap[$level] ?? 'Unknown';
+@endphp
+
 <h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">Memo Kebijakan</h2>
 
 <!-- Container Utama -->
 <!-- Tombol Tambah Dokumen -->
+@if($level == 1)
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
   <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
     onmouseout="this.style.backgroundColor='#4CAF50'"
@@ -15,6 +23,7 @@
     Tambah Dokumen
   </button>
 </div>
+@endif
 
 
 <!-- Tabel -->
@@ -53,7 +62,7 @@
               style="display: block;" />
             <!-- <span style="font-size: 12px;">Lihat</span> -->
           </a>
-
+          @if($level == 1)
           <!-- Edit -->
           <a href="javascript:void(0);" onclick="editMemo({{ $item->id }})" title="Edit"
             style="display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: inherit;">
@@ -74,7 +83,7 @@
               <!-- <span>Hapus</span> -->
             </button>
           </form>
-
+          @endif
         </div>
       </td>
 
