@@ -161,6 +161,7 @@
         @php
         $user = Auth::user();
         $level = $user->level ?? null;
+        $department = $user->department ?? null;
         $levelMap = [1 => 'Admin', 2 => 'User'];
         $levelName = $levelMap[$level] ?? 'Unknown';
         @endphp
@@ -175,8 +176,7 @@
                 </span> Dashboard
             </a>
 
-            {{-- Menu khusus Admin --}}
-            @if ($level == 1)
+
             <div class="menu-dropdown">
                 <button class="dropdown-toggle">
                     <span class="icon">
@@ -186,11 +186,16 @@
                     <span class="arrow">▾</span>
                 </button>
                 <div class="dropdown-content">
+
                     <a href="{{ route('memo.index') }}">Memo Kebijakan</a>
+                    {{-- Menu khusus Admin --}}
+                    @if ($level == 1)
+                    {{-- Hanya Admin + department = 19 --}}
+                    @if ($department == 19)
                     <a href="{{ route('memo.administrasi') }}">Memo Administrasi</a>
+                    @endif
+
                     <a href="{{ route('memo.permintaan.data') }}">Memo Permintaan Data</a>
-                    <a href="{{ route('memo.all') }}">Memo Too All IT</a>
-                    <a href="{{ route('memo.audit') }}">Memo Audit</a>
                     <a href="{{ route('memo.penemuan') }}">Memo Penemuan</a>
                 </div>
             </div>
@@ -242,75 +247,72 @@
         </nav>
     </aside>
 
-
     {{-- Topbar --}}
     <header class="topbar">
         <div class="topbar-content">
-            <!-- Live Time -->
             <span id="live-time"
                 style="padding-right:390px; font-size: 14px; font-family:sans-serif; font-weight:bold"></span>
+
             @auth
-            @php
-            $levelMap = [1 => 'Admin', 2 => 'User'];
-            $levelName = $levelMap[$level] ?? 'Unknown';
-            @endphp
             <span class="welcome-text">
                 Selamat Datang, {{ $user->nama }} ({{ $levelName }})
             </span>
-
-
-
             @endauth
         </div>
     </header>
 
 
+    {{-- @php
+    dd(Auth::user());
+    @endphp --}}
+
+
+
     {{-- Konten --}}
     <main class="content">
         @yield('content')
-
     </main>
 
     {{-- Dropdown JavaScript --}}
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-        const toggles = document.querySelectorAll(".dropdown-toggle");
+            const toggles = document.querySelectorAll(".dropdown-toggle");
 
-        toggles.forEach(toggle => {
-            toggle.addEventListener("click", function() {
-                const content = this.nextElementSibling;
-                const arrow = this.querySelector(".arrow");
+            toggles.forEach(toggle => {
+                toggle.addEventListener("click", function() {
+                    const content = this.nextElementSibling;
+                    const arrow = this.querySelector(".arrow");
 
-                if (content.style.display === "flex") {
-                    content.style.display = "none";
-                    arrow.style.transform = "rotate(0deg)";
-                } else {
-                    content.style.display = "flex";
-                    arrow.style.transform = "rotate(180deg)";
-                }
+                    if (content.style.display === "flex") {
+                        content.style.display = "none";
+                        arrow.style.transform = "rotate(0deg)";
+                    } else {
+                        content.style.display = "flex";
+                        arrow.style.transform = "rotate(180deg)";
+                    }
+                });
             });
         });
-    });
 
-     function updateLiveTime() {
-        const now = new Date();
+        function updateLiveTime() {
+            const now = new Date();
 
-        const options = {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        };
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
 
-        document.getElementById('live-time').textContent =
-            now.toLocaleDateString('id-ID', options);
-    }
+            document.getElementById('live-time').textContent =
+                now.toLocaleDateString('id-ID', options);
+        }
 
-    setInterval(updateLiveTime, 1000);
-    updateLiveTime();
+        setInterval(updateLiveTime, 1000);
+        updateLiveTime();
     </script>
 
     @stack('scripts')
