@@ -14,22 +14,21 @@
         </h2>
 
         @if(Str::contains($jenis, 'H-10'))
-        <p>Halo,</p>
-        <p>Audit berikut akan <strong>selesai 10 hari lagi</strong>, tetapi statusnya masih <strong>Pending</strong>:
+        <p>Dear Bpk/Ibu,</p>
+        <p>Audit berikut akan <strong>jatuh tempo dalam 10 hari lagi</strong>
         </p>
         @elseif(Str::contains($jenis, 'H+7'))
-        <p>Halo,</p>
-        <p>Audit berikut <strong>sudah lewat 7 hari</strong> dari tanggal selesai dan masih berstatus
-            <strong>Pending</strong>:
+        <p>Dear Bpk/Ibu,</p>
+        <p>Audit berikut <strong>sudah jatuh tempo 7 hari</strong> dari tanggal selesai yang sudah disepakati
         </p>
         @elseif(Str::contains($jenis, 'H+14'))
-        <p>Halo,</p>
-        <p>Audit berikut <strong>sudah lewat 14 hari</strong> dari tanggal selesai dan masih berstatus
-            <strong>Pending</strong>:
+        <p>Dear Bpk/Ibu,</p>
+        <p>Tindak Laporan Hasil Audit berikut <strong>sudah lewat 14 hari</strong> dari tanggal selesai yang sudah
+            disepakati
         </p>
         @else
-        <p>Halo,</p>
-        <p>Berikut adalah pengingat untuk audit yang masih berstatus <strong>Pending</strong>:</p>
+        <p>Dear Bpk/Ibu,</p>
+        <p>Berikut adalah reminder untuk audit yang masih berstatus <strong>Jatuh Tempo</strong>:</p>
         @endif
 
         <table style="width:100%; border-collapse:collapse; margin-top:15px;">
@@ -58,8 +57,7 @@
         </table>
 
         <p style="margin-top:20px;">
-            Mohon segera <strong>ditindaklanjuti</strong> atau <strong>ubah status audit</strong> agar laporan dapat
-            terselesaikan tepat waktu.
+            Mohon agar segera <strong>ditindaklanjuti</strong> sesuai dengan jadwal yang telah disepakati.
         </p>
 
         <p>Terima kasih,<br><strong>Divisi IT Compliance</strong></p>
