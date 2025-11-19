@@ -24,25 +24,7 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Template Dokumen (admin full CRUD)
-    Route::get('/template-dokumen', [TemplateDokumenController::class, 'index'])->name('template.dokumen');
-    Route::post('/template-dokumen', [TemplateDokumenController::class, 'store'])->name('template.dokumen.store');
-    Route::delete('/template-dokumen/{id}', [TemplateDokumenController::class, 'destroy'])->name('template.dokumen.destroy');
-    Route::get('/template-dokumen/{id}/edit', [TemplateDokumenController::class, 'edit'])->name('template.dokumen.edit');
-    Route::put('/template-dokumen/{id}', [TemplateDokumenController::class, 'update'])->name('template.dokumen.update');
 
-        // Laporan Hasil Audit
-    Route::get('/audit-laporan-hasil-akhir', [LaporanHasilAuditController::class, 'index'])->name('audit.lha');
-    Route::post('/audit-laporan-hasil-akhir', [LaporanHasilAuditController::class, 'store'])->name('audit.lha.store');
-    Route::delete('/audit-laporan-hasil-akhir/{id}', [LaporanHasilAuditController::class, 'destroy'])->name('audit.lha.destroy');
-    Route::get('/audit-laporan-hasil-akhir/{id}/edit', [LaporanHasilAuditController::class, 'edit'])->name('audit.lha.edit');
-    Route::put('/audit-laporan-hasil-akhir/{id}', [LaporanHasilAuditController::class, 'update'])->name('audit.lha.update');
-
-// ====================
-// USER ROUTES
-// prefix: /user
-// role: user
-// ====================
 // ====================
 // USER ROUTES
 // prefix: /user
@@ -59,10 +41,17 @@ Route::prefix('user')->middleware(['auth', 'level:2'])->group(function () {
     // Main Menu user
     Route::get('/main-menu', [AuthController::class, 'mainMenu'])->name('user.main_menu');
 
+    Route::get('/memo-kebijakan', [MemoKebijakanController::class, 'index'])->name('user.memo.index');
+
     // Template Dokumen (VIEW ONLY)
     Route::get('/template-dokumen', [TemplateDokumenController::class, 'index'])
         ->name('user.template.dokumen');
-    // NOTE: TIDAK ADA store/destroy/edit/update untuk user
+
+    // LHA (View Only)
+    Route::get('/audit-laporan-hasil-akhir', [LaporanHasilAuditController::class, 'index'])->name('user.audit.lha');
+
+    // TLHA (View Only)
+    Route::get('/tlha-audit', [TindakAuditController::class, 'index'])->name('user.audit.tlha');
 });
 
 // ====================
@@ -73,17 +62,9 @@ Route::prefix('user')->middleware(['auth', 'level:2'])->group(function () {
 Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
     // Main Menu (versi admin)
     Route::middleware(['auth', 'level:1'])->group(function () {
+      Route::get('/main-menu', [AuthController::class, 'mainMenu'])->name('admin.main_menu');  
 
-    Route::get('/template-dokumen/{id}/edit', [TemplateDokumenController::class, 'edit'])
-        ->name('template.dokumen.edit');
-
-    Route::put('/template-dokumen/{id}', [TemplateDokumenController::class, 'update'])
-        ->name('template.dokumen.update');
-});
-
-    Route::get('/main-menu', [AuthController::class, 'mainMenu'])->name('admin.main_menu');
-
-    // Memo Kebijakan
+// Memo Kebijakan
     Route::get('/memo-kebijakan', [MemoKebijakanController::class, 'index'])->name('memo.index');
     Route::post('/memo-kebijakan', [MemoKebijakanController::class, 'store'])->name('memo.store');
       Route::get('/admin/memo-kebijakan/nomor/generate', [MemoKebijakanController::class, 'generateNomor'])
@@ -151,11 +132,26 @@ Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
     Route::get('/audit-working-paper/{id}/edit', [WorkingPaperController::class, 'edit'])->name('audit.wp.edit');
     Route::put('/audit-working-paper/{id}', [WorkingPaperController::class, 'update'])->name('audit.wp.update');
 
+           // Laporan Hasil Audit
+    Route::get('/audit-laporan-hasil-akhir', [LaporanHasilAuditController::class, 'index'])->name('audit.lha');
+    Route::post('/audit-laporan-hasil-akhir', [LaporanHasilAuditController::class, 'store'])->name('audit.lha.store');
+    Route::delete('/audit-laporan-hasil-akhir/{id}', [LaporanHasilAuditController::class, 'destroy'])->name('audit.lha.destroy');
+    Route::get('/audit-laporan-hasil-akhir/{id}/edit', [LaporanHasilAuditController::class, 'edit'])->name('audit.lha.edit');
+    Route::put('/audit-laporan-hasil-akhir/{id}', [LaporanHasilAuditController::class, 'update'])->name('audit.lha.update');
+
+
     // // Jadwal Audit DB
     Route::get('/tlha-audit', [TindakAuditController::class, 'index'])->name('audit.tlha');
     Route::post('/tlha-audit', [TindakAuditController::class, 'store'])->name('audit.tlha.store');
     Route::delete('/tlha-audit/{id}', [TindakAuditController::class, 'destroy'])->name('audit.tlha.destroy');
     Route::get('/tlha-audit/{id}/edit', [TindakAuditController::class, 'edit'])->name('audit.tlha.edit');
     Route::put('/tlha-audit/{id}', [TindakAuditController::class, 'update'])->name('audit.tlha.update');
+
+    Route::get('/template-dokumen', [TemplateDokumenController::class, 'index'])->name('admin.template.dokumen');
+    Route::post('/template-dokumen', [TemplateDokumenController::class, 'store'])->name('admin.template.dokumen.store');
+    Route::get('/template-dokumen/{id}/edit', [TemplateDokumenController::class, 'edit'])->name('admin.template.dokumen.edit');
+    Route::put('/template-dokumen/{id}', [TemplateDokumenController::class, 'update'])->name('admin.template.dokumen.update');
+    Route::delete('/template-dokumen/{id}', [TemplateDokumenController::class, 'destroy'])->name('admin.template.dokumen.destroy');
+});    
 
 });
