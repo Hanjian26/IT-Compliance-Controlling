@@ -14,15 +14,26 @@ public function index(Request $request)
 {
     $query = TindakAuditDB::query();
 
+    // Ambil user
+    $user = Auth::user();
+
+    // Ambil nama department user
+    $deptName = Department::where('id', $user->department)->value('department');
+
+    // BATAS AKSES: hanya IT Compliance boleh melihat semua data
+    if ($deptName !== "IT Compliance") {
+        $query->where('divisi', $deptName);
+    }
+
+    // Search
     if ($request->search) {
         $query->where(function ($q) use ($request) {
-            $q->where('divisi', 'LIKE', "%{$request->search}%")
-              ->orWhere('kegiatan', 'LIKE', "%{$request->search}%")
+            $q->where('kegiatan', 'LIKE', "%{$request->search}%")
               ->orWhere('auditor', 'LIKE', "%{$request->search}%")
-              ->orWhere('pic', 'LIKE', "%{$request->search}%")
               ->orWhere('reviewer', 'LIKE', "%{$request->search}%")
               ->orWhere('status', 'LIKE', "%{$request->search}%")
-              ->orWhere('keterangan', 'LIKE', "%{$request->search}%");
+              ->orWhere('keterangan', 'LIKE', "%{$request->search}%")
+              ->orWhere('pic', 'LIKE', "%{$request->search}%");
         });
     }
 
@@ -30,7 +41,6 @@ public function index(Request $request)
     $data->appends($request->all());
 
     $departments = Department::orderBy('department')->get();
-
 
     return view('tlha_audit', compact('data', 'departments'));
 }

@@ -27,6 +27,7 @@ $user = Auth::user();
 $level = $user->level ?? null;
 @endphp
 
+
 <!-- Search Bar -->
 
 
@@ -38,6 +39,7 @@ $level = $user->level ?? null;
 @if($level != 2)
 
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+
     <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
         onmouseout="this.style.backgroundColor='#4CAF50'"
         style="background-color: #4CAF50; color: white; padding: 8px 16px; text-decoration: none; border: none; border-radius: 4px; font-size: 14px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
@@ -46,6 +48,9 @@ $level = $user->level ?? null;
         Tambah Tindak Lanjut Hasil Audit
     </button>
 </div>
+
+
+
 
 <form method="GET" action="{{ route('audit.tlha') }}"
     style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
