@@ -21,7 +21,7 @@ class TemplateDokumen extends Model
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
-            ->useLogName('template_dokumen')
+            ->useLogName('template_dokumewn')
             ->logFillable()
             ->setDescriptionForEvent(function (string $eventName) {
                 return "Template Dokumen di-{$eventName}";

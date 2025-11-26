@@ -351,7 +351,7 @@ function closeEdit() {
 }
 
 function editMemo(id) {
-    fetch(`/audit-laporan-hasil-akhir/${id}/edit`) // <-- pakai backtick atau string
+    fetch(`/admin/audit-laporan-hasil-akhir/${id}/edit`) // <-- pakai backtick atau string
         .then(res => res.json())
         .then(data => {
             document.getElementById('edit_divisi').value = data.divisi;
@@ -364,7 +364,7 @@ function editMemo(id) {
             document.getElementById('edit_keterangan').value = data.keterangan;
 
             const form = document.getElementById('editMemoForm');
-            form.action = `/audit-laporan-hasil-akhir/${id}`; // <-- perbaiki jadi string
+            form.action = `/admin/audit-laporan-hasil-akhir/${id}`; // <-- perbaiki jadi string
             document.getElementById('editForm').style.display = 'flex';
         });
 }

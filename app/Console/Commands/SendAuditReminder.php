@@ -65,7 +65,7 @@ class SendAuditReminder extends Command
         $divisi = $audit->divisi ?? 'Tidak diketahui';
 
         // Ganti sesuai kebutuhan (atau gunakan $audit->email_penerima jika ada di DB)
-        $emailTujuan = $audit->email ?? 'hanjian@indomaret.co.id';
+        $emailTujuan = $audit->email ?? 'hanjian.listanto26@gmail.com'; // Sesuaikan email penerima
 
         try {
             // Kirim email (kamu bisa kirim juga data divisi ke Mailable)

@@ -15,20 +15,24 @@
 
         @if(Str::contains($jenis, 'H-10'))
         <p>Dear Bpk/Ibu,</p>
-        <p>Audit berikut akan <strong>jatuh tempo dalam 10 hari lagi</strong>
+        <p>ATindak Laporan Hasil Audit (TLHA) berikut akan <strong>jatuh tempo dalam 10 hari lagi</strong>
         </p>
         @elseif(Str::contains($jenis, 'H+7'))
         <p>Dear Bpk/Ibu,</p>
-        <p>Audit berikut <strong>sudah jatuh tempo 7 hari</strong> dari tanggal selesai yang sudah disepakati
+        <p>Tindak Laporan Hasil Audit (TLHA) berikut <strong>sudah jatuh tempo 7 hari</strong> dari tanggal selesai yang
+            sudah
+            disepakati
         </p>
         @elseif(Str::contains($jenis, 'H+14'))
         <p>Dear Bpk/Ibu,</p>
-        <p>Tindak Laporan Hasil Audit berikut <strong>sudah lewat 14 hari</strong> dari tanggal selesai yang sudah
+        <p>Tindak Laporan Hasil Audit (TLHA) berikut <strong>sudah lewat 14 hari</strong> dari tanggal selesai yang
+            sudah
             disepakati
         </p>
         @else
         <p>Dear Bpk/Ibu,</p>
-        <p>Berikut adalah reminder untuk audit yang masih berstatus <strong>Jatuh Tempo</strong>:</p>
+        <p>Berikut adalah reminder untuk Tindak Laporan Hasil Audit (TLHA) berikut yang masih berstatus <strong>Jatuh
+                Tempo</strong>:</p>
         @endif
 
         <table style="width:100%; border-collapse:collapse; margin-top:15px;">

@@ -82,7 +82,8 @@ class TemplateDokumenController extends Controller
 
         $memo->delete();
 
-        return redirect()->route('template.dokumen')->with('success', 'Template Dokumen berhasil dihapus.');
+        return redirect()->route('admin.template.dokumen')->with('success', 'Template Dokumen berhasil dihapus.');
+
     }
 
     public function edit($id)
@@ -142,6 +143,8 @@ class TemplateDokumenController extends Controller
         ])
         ->log('Memperbarui Template Dokumen');
 
-    return redirect()->route('template.dokumen')->with('success', 'Template Dokumen berhasil diperbarui!');
+    return redirect()->route('admin.template.dokumen')
+    ->with('success', 'Template Dokumen berhasil diperbarui!');
+
 }
 }

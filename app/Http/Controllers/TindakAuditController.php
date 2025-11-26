@@ -79,16 +79,21 @@ public function index(Request $request)
         $audit->save();
         
 
-        activity('tlha_audit')
-            ->causedBy(Auth::user())
-            ->performedOn($audit)
-            ->withProperties([
-                'action' => 'create',
-                'nama' => Auth::user()->nama,
-                'nik' => Auth::user()->nik,
-                'ip' => request()->ip(),
-            ])
-            ->log('Menambahkan TLHA Audit');
+      activity('tlha_audit')
+    ->causedBy(Auth::user())
+    ->performedOn($audit)
+    ->withProperties([
+        'action'      => 'create',
+        'user_id'     => Auth::user()->id,
+        'nama'        => Auth::user()->nama,
+        'nik'         => Auth::user()->nik,
+        'email'       => Auth::user()->email,
+        'department'  => Department::where('id', Auth::user()->department)->value('department'),
+        'ip'          => request()->ip(),
+        'new_data'    => $audit->toArray(),
+    ])
+    ->log('User menambahkan TLHA Audit');
+
 
         return redirect()->back()->with('success', 'TLHA Audit berhasil ditambahkan!');
     }
@@ -99,16 +104,21 @@ public function index(Request $request)
 
         $audit->delete();
 
-        activity('tlha_audit')
-            ->causedBy(Auth::user())
-            ->performedOn($audit)
-            ->withProperties([
-                'action' => 'delete',
-                'nama' => Auth::user()->nama,
-                'nik' => Auth::user()->nik,
-                'ip' => request()->ip(),
-            ])
-            ->log('Menghapus data TLHA audit');
+       activity('tlha_audit')
+    ->causedBy(Auth::user())
+    ->performedOn($audit)
+    ->withProperties([
+        'action'      => 'delete',
+        'user_id'     => Auth::user()->id,
+        'nama'        => Auth::user()->nama,
+        'nik'         => Auth::user()->nik,
+        'email'       => Auth::user()->email,
+        'department'  => Department::where('id', Auth::user()->department)->value('department'),
+        'ip'          => request()->ip(),
+        'deleted_data'=> $audit->toArray(),
+    ])
+    ->log('User menghapus TLHA Audit');
+
 
         return redirect()->route('audit.tlha')->with('success', 'Data TLHA berhasil dihapus.');
     }
@@ -153,16 +163,21 @@ public function index(Request $request)
 
     $audit->save();
 
-    activity('tlha_audit')
-        ->causedBy(Auth::user())
-        ->performedOn($audit)
-        ->withProperties([
-            'action' => 'update',
-            'nama' => Auth::user()->nama,
-            'nik' => Auth::user()->nik,
-            'ip' => request()->ip(),
-        ])
-        ->log('Memperbarui TLHA Audit');
+  activity('tlha_audit')
+    ->causedBy(Auth::user())
+    ->performedOn($audit)
+    ->withProperties([
+        'action'      => 'update',
+        'user_id'     => Auth::user()->id,
+        'nama'        => Auth::user()->nama,
+        'nik'         => Auth::user()->nik,
+        'email'       => Auth::user()->email,
+        'department'  => Department::where('id', Auth::user()->department)->value('department'),
+        'ip'          => request()->ip(),
+        'new_data'    => $audit->toArray(),
+    ])
+    ->log('User memperbarui TLHA Audit');
+
 
     return redirect()->route('audit.tlha')->with('success', 'TLHA Audit berhasil diperbarui!');
 }
