@@ -145,7 +145,8 @@ $levelName = $levelMap[$level] ?? 'Unknown';
 
       <div style="margin-bottom: 15px;">
         <label for="edit_nomor">Nomor<span style="color: red;">*</span>:</label>
-        <input type="text" name="nomor" id="edit_nomor" required style="width: 100%; padding: 8px;">
+        <input type="text" name="nomor" id="edit_nomor" readonly
+          style="cursor: not-allowed; width: 100%; padding: 8px;">
       </div>
 
       <div style="margin-bottom: 15px;">
@@ -153,7 +154,7 @@ $levelName = $levelMap[$level] ?? 'Unknown';
         <textarea name="perihal" id="edit_perihal" rows="3" style="width: 100%; padding: 8px;"></textarea>
       </div>
       <div style="margin-bottom: 20px;">
-        <label for="edit_file_dokumen">Ganti Dokumen (PDF)<span style="color: red;"></span>:</label>
+        <label for="edit_file_dokumen">Upload Dokumen (Max Size: 10 MB)<span style="color: red;"></span>:</label>
         <input type="file" name="file_dokumen" id="file_dokumen" accept=".pdf,.doc,.docx,.zip"
           style="width: 100%; padding: 6px;">
 
@@ -210,7 +211,7 @@ $levelName = $levelMap[$level] ?? 'Unknown';
 
       <div style="margin-bottom: 15px;">
         <label for="nomor">Nomor<span style="color: red;">*</span>:</label>
-        <input type="text" name="nomor" id="nomor" required style="width: 100%; padding: 8px;">
+        <input type="text" name="nomor" id="nomor" readonly style="cursor: not-allowed; width: 100%; padding: 8px;">
       </div>
 
 
@@ -220,7 +221,7 @@ $levelName = $levelMap[$level] ?? 'Unknown';
         <textarea name="perihal" id="perihal" rows="3" style="width: 100%; padding: 8px;"></textarea>
       </div>
       <div style="margin-bottom: 20px;">
-        <label for="file_dokumen">Upload Dokumen (PDF, DOCX, dll)<span style="color: red;">*</span>:</label>
+        <label for="file_dokumen">Upload Dokumen (Max Size: 10 MB)<span style="color: red;">*</span>:</label>
         <input type="file" name="file_dokumen" id="file_dokumen" accept=".pdf,.doc,.docx,.zip"
           style="width: 100%; padding: 6px;">
       </div>

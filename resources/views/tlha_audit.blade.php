@@ -288,7 +288,7 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="edit_file_laporan">Upload Dokumen (PDF, DOCX, dll):</label>
+                <label for="edit_file_laporan">Upload Dokumen (Max Size: 10 MB):</label>
                 <input type="file" name="file_laporan" id="edit_file_laporan" accept=".pdf,.doc,.docx,.zip"
                     style="width: 100%; padding: 6px;">
 
@@ -422,7 +422,7 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="file_laporan">Upload Dokumen (PDF, DOCX, dll)<span style="color: red;">*</span>:</label>
+                <label for="file_laporan">Upload Dokumen (Max Size: 10 MB)<span style="color: red;">*</span>:</label>
                 <input type="file" name="file_laporan" id="file_laporan" accept=".pdf,.doc,.docx,.zip"
                     style="width: 100%; padding: 6px;">
             </div>

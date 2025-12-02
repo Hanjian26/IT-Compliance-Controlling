@@ -216,7 +216,7 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="edit_file_lha">Upload Dokumen (PDF, DOCX, dll)<span style="color: red;">*</span>:</label>
+                <label for="edit_file_lha">Upload Dokumen (Max Size: 10 MB)<span style="color: red;">*</span>:</label>
                 <input type="file" name="file_lha" id="edit_file_lha" accept=".pdf,.doc,.docx,.zip"
                     style="width: 100%; padding: 6px;">
 
@@ -311,7 +311,7 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label for="file_lha">Upload Dokumen (PDF, DOCX, dll)<span style="color: red;">*</span>:</label>
+                <label for="file_lha">Upload Dokumen (Max Size: 10 MB)<span style="color: red;">*</span>:</label>
                 <input type="file" name="file_lha" id="file_lha" accept=".pdf,.doc,.docx,.zip"
                     style="width: 100%; padding: 6px;">
             </div>

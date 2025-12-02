@@ -35,7 +35,7 @@
 
 <!-- Bungkus tabel dengan div agar bisa scroll kanan-kiri -->
 <div style="width: 100%; overflow-x: auto; margin-bottom: 15px;">
-  <table style="border-collapse: collapse; width: 100%; min-width: 1200px; text-align: center;">
+  <table style="border-collapse: collapse; width: 100%; min-width: 1200px; text-align: center; margin-left:5px;">
     <thead>
       <tr style="background-color: #f2f2f2;">
         <th style="padding: 10px;">No.</th>
