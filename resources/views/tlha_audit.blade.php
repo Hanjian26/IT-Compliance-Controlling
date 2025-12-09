@@ -31,7 +31,7 @@ $level = $user->level ?? null;
 <!-- Search Bar -->
 
 
-<h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">Tindak Lanjut Hasil Audit</h2>
+<h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">Tindak Lanjut Hasil Audit (TLHA)</h2>
 
 <!-- Container Utama -->
 <!-- Tombol Tambah Dokumen -->
@@ -77,8 +77,7 @@ $level = $user->level ?? null;
                 <th style="padding: 10px;">No.</th>
                 <th style="padding: 10px;">Divisi</th>
                 <th style="padding: 10px;">Kegiatan</th>
-                <th style="padding: 10px;">Tanggal Mulai</th>
-                <th style="padding: 10px;">Tanggal Selesai</th>
+                <th style="padding: 10px;">Target Penyelesaian</th>
                 <th style="padding: 10px;">PIC</th>
                 <th style="padding: 10px;">Auditor</th>
                 <th style="padding: 10px;">Reviewer</th>
@@ -93,9 +92,9 @@ $level = $user->level ?? null;
                 <td style="padding: 10px; font-size: 12px;">{{ $data->firstItem() + $key }}</td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->divisi }}</td>
                 <td style="padding: 10px; font-size: 12px;">{{ $item->kegiatan }}</td>
-                <td style="padding: 10px; font-size: 12px;">
+                {{-- <td style="padding: 10px; font-size: 12px;">
                     {{(\Carbon\Carbon::parse($item->tanggal_mulai)->format('d-M-Y')) }}
-                </td>
+                </td> --}}
                 <td style="padding: 10px; font-size: 12px;">
                     @if ($item->tanggal_selesai)
                     {{(\Carbon\Carbon::parse($item->tanggal_selesai)->format('d-M-Y')) }}
@@ -215,12 +214,12 @@ $level = $user->level ?? null;
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
             </div>
 
-            <div style="margin-bottom: 15px;">
+            {{-- <div style="margin-bottom: 15px;">
                 <label for="edit_tanggal_mulai">Tanggal Mulai<span style="color: red;">*</span>:</label>
                 <input type="date" name="tanggal_mulai" id="edit_tanggal_mulai" lang="id" min="2000-01-01"
                     max="2099-12-31" onkeydown="return false" required style="width: 97%; padding: 8px;"
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
-            </div>
+            </div> --}}
 
             <div style="margin-bottom: 15px;">
                 <label for="edit_tanggal_selesai">Tanggal Selesai:</label>
@@ -355,12 +354,12 @@ $level = $user->level ?? null;
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
             </div>
 
-
+            {{--
             <div style="margin-bottom: 15px;">
                 <label for="tanggal_mulai">Tanggal Mulai<span style="color: red;">*</span>:</label>
                 <input type="date" name="tanggal_mulai" id="tanggal_mulai" required lang="id" min="2000-01-01"
                     max="2099-12-31" onkeydown="return false" style="width:97%; padding:8px;" autocomplete="off">
-            </div>
+            </div> --}}
             <div style="margin-bottom: 15px;">
                 <label for="tanggal_selesai">Tanggal Selesai:</label>
                 <input type="date" name="tanggal_selesai" id="tanggal_selesai" lang="id" min="2000-01-01"
@@ -588,7 +587,7 @@ function editMemo(id) {
         .then(data => {
             document.getElementById('edit_divisi').value = data.divisi;
             document.getElementById('edit_kegiatan').value = data.kegiatan;
-            document.getElementById('edit_tanggal_mulai').value = data.tanggal_mulai;
+            // document.getElementById('edit_tanggal_mulai').value = data.tanggal_mulai;
             document.getElementById('edit_tanggal_selesai').value = data.tanggal_selesai;
             document.getElementById('edit_auditor').value = data.auditor;
             document.getElementById('edit_reviewer').value = data.reviewer;
