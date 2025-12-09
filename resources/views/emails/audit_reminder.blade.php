@@ -15,7 +15,7 @@
 
         @if(Str::contains($jenis, 'H-10'))
         <p>Dear Bpk/Ibu,</p>
-        <p>ATindak Laporan Hasil Audit (TLHA) berikut akan <strong>jatuh tempo dalam 10 hari lagi</strong>
+        <p>Tindak Laporan Hasil Audit (TLHA) berikut akan <strong>jatuh tempo dalam 10 hari lagi</strong>
         </p>
         @elseif(Str::contains($jenis, 'H+7'))
         <p>Dear Bpk/Ibu,</p>

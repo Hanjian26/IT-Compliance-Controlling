@@ -68,7 +68,7 @@ class SendAuditReminder extends Command
         $emailTujuan = $audit->email ?? 'hanjian.listanto26@gmail.com'; // Sesuaikan email penerima
 
         try {
-            // Kirim email (kamu bisa kirim juga data divisi ke Mailable)
+            // Kirim email  bisa kirim juga data divisi ke Mailable)
             Mail::to($emailTujuan)->send(new AuditReminderMail($audit, $jenis));
 
             // Logging lengkap
