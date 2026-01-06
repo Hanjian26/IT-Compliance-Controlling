@@ -49,7 +49,7 @@ public function index(Request $request)
         $request->validate([
         'divisi'    => 'required|string|max:255',
         'kegiatan' => 'required|string|max:255',
-        'tanggal_mulai' => 'required|date',
+        // 'tanggal_mulai' => 'required|date',
         'tanggal_selesai' => 'nullable|string',
         'pic' => 'required|string',
         'auditor' => 'required|string',
@@ -62,7 +62,7 @@ public function index(Request $request)
         $audit = new TindakAuditDB();
         $audit->divisi = $request->divisi;
         $audit->kegiatan = $request->kegiatan;
-        $audit->tanggal_mulai = $request->tanggal_mulai;
+        // $audit->tanggal_mulai = $request->tanggal_mulai;
         $audit->tanggal_selesai = $request->tanggal_selesai;
         $audit->pic = json_encode(explode(', ', $request->pic));
         $audit->auditor = $request->auditor;
@@ -134,7 +134,7 @@ public function index(Request $request)
     $request->validate([
         'divisi'    => 'required|string|max:255',
         'kegiatan' => 'required|string|max:255',
-        'tanggal_mulai' => 'required|date',
+        // 'tanggal_mulai' => 'required|date',
         'tanggal_selesai' => 'nullable|string',
         'pic' => 'required|string',
         'auditor' => 'required|string',
@@ -147,7 +147,7 @@ public function index(Request $request)
     $audit = TindakAuditDB::findOrFail($id);
     $audit->divisi = $request->divisi;
     $audit->kegiatan = $request->kegiatan;
-    $audit->tanggal_mulai = $request->tanggal_mulai;
+    // $audit->tanggal_mulai = $request->tanggal_mulai;
     $audit->tanggal_selesai = $request->tanggal_selesai;
     $audit->pic = json_encode(explode(', ', $request->pic));
     $audit->auditor = $request->auditor;

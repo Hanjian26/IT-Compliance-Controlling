@@ -13,6 +13,7 @@ $levelName = $levelMap[$level] ?? 'Unknown';
 
 <!-- Container Utama -->
 <!-- Tombol Tambah Dokumen -->
+
 @if($level == 1)
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
   <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
@@ -25,6 +26,22 @@ $levelName = $levelMap[$level] ?? 'Unknown';
 </div>
 @endif
 
+<form method="GET" action="{{ route('memo.index') }}"
+  style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
+  <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
+    style="width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+  <button type="submit"
+    style="background-color: #2196F3; color: white; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
+    Cari
+  </button>
+  @if(request('search'))
+  <a href="{{ route('memo.index') }}"
+    style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">
+    Reset
+  </a>
+  @endif
+
+</form>
 
 <!-- Tabel -->
 <table style="border-collapse: collapse; width: 100%; text-align: center;">

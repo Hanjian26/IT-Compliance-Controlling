@@ -67,7 +67,7 @@ Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
 // Memo Kebijakan
     Route::get('/memo-kebijakan', [MemoKebijakanController::class, 'index'])->name('memo.index');
     Route::post('/memo-kebijakan', [MemoKebijakanController::class, 'store'])->name('memo.store');
-      Route::get('/admin/memo-kebijakan/nomor/generate', [MemoKebijakanController::class, 'generateNomor'])
+    Route::get('/admin/memo-kebijakan/nomor/generate', [MemoKebijakanController::class, 'generateNomor'])
     ->name('memo.kebijakan.generateNomor');
     Route::delete('/memo-kebijakan/{id}', [MemoKebijakanController::class, 'destroy'])->name('memo.destroy');
     Route::get('/memo-kebijakan/{id}/edit', [MemoKebijakanController::class, 'edit'])->name('memo.edit');

@@ -11,13 +11,29 @@ use App\Helpers\KodeMemoHelper;
 
 class MemoKebijakanController extends Controller
 {
-    public function index()
-    {
-          $data = Memos::where('tipe_memo', 'Kebijakan')
-            ->orderBy('tanggal_terbit', 'desc')
-            ->paginate(5);
-            return view('memo_kebijakan', compact('data'));
+  public function index(Request $request)
+{
+    $query = Memos::where('tipe_memo', 'Kebijakan');
+
+    if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->Where('tipe_memo', 'LIKE', "%{$search}%")
+              ->orWhere('scope_memo', 'LIKE', "%{$search}%")
+              ->orWhere('nomor', 'LIKE', "%{$search}%")
+              ->orWhere('tanggal_terbit', 'LIKE', "%{$search}%")
+              ->orWhere('perihal', 'LIKE', "%{$search}%");
+        });
     }
+
+    $data = $query->orderBy('tanggal_terbit', 'desc')
+                  ->paginate(5)
+                  ->withQueryString(); // agar search tetap saat paging
+
+    return view('memo_kebijakan', compact('data'));
+}
+
 
     public function store(Request $request)
     {
