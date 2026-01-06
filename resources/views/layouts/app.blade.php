@@ -272,7 +272,7 @@
         <div class="topbar-content">
             <!-- Live Time -->
             <span id="live-time"
-                style="padding-right:390px; font-size: 14px; font-family:sans-serif; font-weight:bold"></span>
+                style="padding-right:550px; font-size: 14px; font-family:sans-serif; font-weight:bold"></span>
             @auth
             @php
             $levelMap = [1 => 'Admin', 2 => 'User'];
