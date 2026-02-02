@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" href="{{ asset('indomaret2.png') }}?v=2" type="image/png">
-    <title>@yield('title', 'IT Compliance')</title>
+    <title>@yield('title', 'IT Compliance & Controlling')</title>
 
     <style>
         body {
@@ -35,7 +35,8 @@
         .logo-text {
             font-size: 14px;
             font-weight: 600;
-            white-space: nowrap;
+            white-space: normal;
+            line-height: 1.2;
         }
 
         .section-title {
@@ -121,23 +122,41 @@
         }
 
         .topbar {
+            position: fixed;
+            top: 0;
+            left: 262px;
             width: calc(100% - 230px);
             height: 60px;
             background-color: #ffffff;
             border-bottom: 1px solid #ccc;
             display: flex;
             align-items: center;
-            justify-content: flex-end;
-            padding: 0 0px;
-            position: fixed;
-            top: 0;
-            left: 262px;
+            padding: 0 20px;
             z-index: 999;
+
+        }
+
+        .topbar-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 12px;
+        }
+
+        #live-time {
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+            flex-shrink: 0;
+
         }
 
         .welcome-text {
-            padding-right: 100px;
+            padding-left: 100px;
             font-size: 14px;
+            min-width: 0;
+            padding-right: 100px;
         }
 
         .content {
@@ -155,7 +174,7 @@
         <div class="logo">
             <img src="{{ asset('indomaret.png') }}?v=2" alt="Logo" class="logo-icon"
                 style="width: 100px; height: 30px;">
-            <span class="logo-text">IT COMPLIANCE</span>
+            <span class="logo-text">IT Compliance & Controlling</span>
         </div>
 
         @php
@@ -249,6 +268,14 @@
             </a>
             @endif
 
+            @if ($level == 1)
+            <a href="{{ route('admin.track.history') }}" class="menu-item">
+                <span class="icon">
+                    <img width="20" height="20" src="https://img.icons8.com/ios/50/activity-history.png" />
+                </span> Track History
+            </a>
+            @endif
+
             {{-- Admin only: Register User --}}
             @if ($level == 1)
             <a href="{{ url('/register') }}" target="_blank" class="menu-item">
@@ -271,15 +298,14 @@
     <header class="topbar">
         <div class="topbar-content">
             <!-- Live Time -->
-            <span id="live-time"
-                style="padding-right:550px; font-size: 14px; font-family:sans-serif; font-weight:bold"></span>
+            <span id="live-time"></span>
             @auth
             @php
             $levelMap = [1 => 'Admin', 2 => 'User'];
             $levelName = $levelMap[$level] ?? 'Unknown';
             @endphp
             <span class="welcome-text">
-                Selamat Datang, {{ $user->nama }} ({{ $levelName }})
+                {{ $user->nama }} ({{ $levelName }})
             </span>
 
 

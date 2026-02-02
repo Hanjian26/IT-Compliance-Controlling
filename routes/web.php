@@ -13,6 +13,7 @@ use App\Http\Controllers\WorkingPaperController;
 use App\Http\Controllers\LaporanHasilAuditController;
 use App\Http\Controllers\TindakAuditController;
 use App\Http\Controllers\MemoAllController;
+use App\Http\Controllers\HistoryController;
 
 
 
@@ -60,7 +61,8 @@ Route::prefix('user')->middleware(['auth', 'level:2'])->group(function () {
 // role: admin
 // ====================
 Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
-    // Main Menu (versi admin)
+
+// Main Menu (versi admin)
     Route::middleware(['auth', 'level:1'])->group(function () {
       Route::get('/main-menu', [AuthController::class, 'mainMenu'])->name('admin.main_menu');  
 
@@ -132,7 +134,7 @@ Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
     Route::get('/audit-working-paper/{id}/edit', [WorkingPaperController::class, 'edit'])->name('audit.wp.edit');
     Route::put('/audit-working-paper/{id}', [WorkingPaperController::class, 'update'])->name('audit.wp.update');
 
-           // Laporan Hasil Audit
+    // Laporan Hasil Audit
     Route::get('/audit-laporan-hasil-akhir', [LaporanHasilAuditController::class, 'index'])->name('audit.lha');
     Route::post('/audit-laporan-hasil-akhir', [LaporanHasilAuditController::class, 'store'])->name('audit.lha.store');
     Route::delete('/audit-laporan-hasil-akhir/{id}', [LaporanHasilAuditController::class, 'destroy'])->name('audit.lha.destroy');
@@ -152,6 +154,13 @@ Route::prefix('admin')->middleware(['auth', 'level:1'])->group(function () {
     Route::get('/template-dokumen/{id}/edit', [TemplateDokumenController::class, 'edit'])->name('admin.template.dokumen.edit');
     Route::put('/template-dokumen/{id}', [TemplateDokumenController::class, 'update'])->name('admin.template.dokumen.update');
     Route::delete('/template-dokumen/{id}', [TemplateDokumenController::class, 'destroy'])->name('admin.template.dokumen.destroy');
-});    
+
+    // Track History
+    Route::get('/track-history', [HistoryController::class, 'index'])->name('admin.track.history');
+    Route::post('/track-history', [HistoryController::class, 'store'])->name('admin.track.history.store');
+    Route::get('/track-history/{id}/edit', [HistoryController::class, 'edit'])->name('admin.track.history.edit');
+    Route::put('/track-history/{id}', [HistoryController::class, 'update'])->name('admin.track.history.update');
+    Route::delete('/track-history/{id}', [HistoryController::class, 'destroy'])->name('admin.track.history.destroy');
+    });    
 
 });
