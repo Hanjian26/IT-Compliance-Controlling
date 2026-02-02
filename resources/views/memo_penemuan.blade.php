@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'IT Compliance')
+@section('title', 'IT Compliance & Controlling')
 @section('content')
 <h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">Memo Penemuan
 </h2>

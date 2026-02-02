@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 
 Schedule::command('audit:reminder-pending')
-    ->dailyAt('10:15') // Ganti Sesuai yang di inginkan
+    ->dailyAt('09:45') // Ganti Sesuai yang di inginkan
     ->timezone('Asia/Jakarta'); // waktu sesuai WIB
 
 Artisan::command('inspire', function () {

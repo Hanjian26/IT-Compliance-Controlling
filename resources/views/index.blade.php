@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>IT Compliance</title>
+  <title>IT Compliance & Controlling</title>
   <link rel="icon" href="{{ asset('indomaret.png') }}" type="image/png">
 
   <style>
@@ -29,7 +29,7 @@
       text-align: center;
       margin-bottom: 32px;
       color: #2b2d42;
-      font-size: 24px;
+      font-size: 18px;
       width: 100%;
       /* memastikan teks berada di tengah */
     }
@@ -102,7 +102,7 @@
 
   <div class="login-container">
     <img src="{{ asset('indomaret.png') }}" alt="Logo">
-    <h2>IT COMPLIANCE</h2>
+    <h2>IT COMPLIANCE & CONTROLLING</h2>
 
     @if(session('error'))
     <div class="alert">
