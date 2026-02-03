@@ -30,53 +30,30 @@ class AuthController extends Controller
     }
 
     // 🔹 Proses Register
-    public function register(Request $request)
-    {
-        $request->validate([
-            'nik' => 'required|numeric|digits:10|unique:users,nik',
-            'nama' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6',
-            'level' => 'required|numeric',
-            'department' => 'required|integer|exists:departments,id',
+ public function register(Request $request)
+{
+    $request->validate([
+    'nik' => 'required|numeric|digits:10|unique:users,nik',
+    'nama' => 'required|string|max:255',
+    'email' => 'required|email|unique:users,email',
+    'password' => 'required|string|min:6',
+    'department' => 'required|integer|exists:departments,id',
+    'level' => 'required|in:1,2,3',
+    ]);
 
-        ]);
+User::create([
+'nik' => $request->nik,
+'nama' => $request->nama,
+'email' => $request->email,
+'password' => Hash::make($request->password),
+'department' => $request->department,
+'level' => $request->level,
+'supervisor_id' => null,
+]);
 
-        $user = User::create([
-            'nik' => $request->nik,
-            'nama' => $request->nama,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'level' => $request->level,
-            'department' => $request->department,
-        ]);
-
-        // ✅ Log ke file laravel.log
-        Log::info('User mendaftar', [
-            'nik' => $user->nik,
-            'nama' => $user->nama,
-            'email' => $user->email,
-            'level' => $user->level,
-            'department' => $user->department,
-            'ip' => $request->ip(),
-            'waktu' => now()->toDateTimeString(),
-        ]);
-
-        // ✅ Log ke tabel activity_log (Spatie)
-        activity('auth')
-            ->causedBy($user)
-            ->withProperties([
-                'nik' => $user->nik,
-                'nama' => $user->nama,
-                'email' => $user->email,
-                'level' => $user->level,
-                'department' => $user->department,
-                'ip' => $request->ip(),
-            ])
-            ->log('User registered');
-
-        return redirect('/register')->with('success', 'Registrasi berhasil!');
-    }
+    return redirect('/login')
+        ->with('success', 'Registrasi berhasil. Silakan login.');
+}
 
     // 🔹 Proses Login
     public function login(Request $request)
@@ -101,6 +78,8 @@ class AuthController extends Controller
                 return redirect()->route('admin.main_menu');
             } elseif ($user->level == 2) {
                 return redirect()->route('user.main_menu');
+            } elseif ($user->level == 3) {
+                return redirect()->route('staff.main_menu');
             }
 
             return redirect('/')->with('error', 'Role tidak dikenali.');

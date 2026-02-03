@@ -17,23 +17,18 @@
       margin: 0;
     }
 
-    /* Card utama form */
     .form-container {
       background-color: #ffffff;
       padding: 40px;
       border-radius: 16px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
       width: 400px;
-
-      /* Beri jarak atas dan bawah agar card tidak mepet */
       margin: 60px auto;
-      /* Atas-Bawah = 60px, Kiri-Kanan otomatis center */
     }
 
     .form-container img {
       display: block;
       width: 100%;
-      height: auto;
     }
 
     .form-container h2 {
@@ -42,7 +37,6 @@
       color: #2b2d42;
       font-size: 24px;
       position: relative;
-      display: inline-block;
     }
 
     .form-container h2::after {
@@ -77,7 +71,7 @@
       border-radius: 8px;
       margin-top: 10px;
       font-size: 14px;
-      transition: background-color 0.3s ease;
+      cursor: pointer;
     }
 
     .form-container button:hover {
@@ -90,7 +84,6 @@
       padding: 10px;
       margin-bottom: 16px;
       border-radius: 6px;
-      color: #a94442;
       font-size: 14px;
     }
   </style>
@@ -103,21 +96,22 @@
     <h2>Daftar Akun</h2>
 
     @if(session('error'))
-    <div class="alert">
-      {{ session('error') }}
-    </div>
+    <div class="alert">{{ session('error') }}</div>
     @endif
 
     @if(session('success'))
-    <div class="alert" style="background-color:#ddffdd; border-left:6px solid #4CAF50; color:#4CAF50;">
+    <div class="alert" style="background:#ddffdd;border-left:6px solid #4CAF50;color:#2e7d32">
       {{ session('success') }}
     </div>
     @endif
 
-    <form id="registerForm" action="{{ url('/register') }}" method="POST" onsubmit="return validateForm()">
+    <form action="{{ url('/register') }}" method="POST" onsubmit="return validateForm()">
       @csrf
+
       <input type="text" name="nama" id="nama" placeholder="Nama Lengkap" required>
-      <input type="text" name="nik" id="nik" placeholder="Nomor Induk Karyawan (NIK) - 10 digit" required>
+
+      <input type="text" name="nik" id="nik" placeholder="Nomor Induk Karyawan (10 digit)" required>
+
       <select name="department" id="department" required>
         <option value="">-- Pilih Department --</option>
         @foreach($departments as $dept)
@@ -125,65 +119,44 @@
         @endforeach
       </select>
 
+      <select name="level" id="level" required>
+        <option value="">-- Pilih Level --</option>
+        <option value="1">Admin</option>
+        <option value="2">Atasan</option>
+        <option value="3">Staff</option>
+      </select>
+
+
+      <input type="email" name="email" id="email" placeholder="Email" required>
 
       <input type="password" name="password" id="password" placeholder="Password" required>
-      <input type="email" name="email" id="email" placeholder="Email" required>
-      <!-- 
-      <select name="role" id="role" required>
-        <option value="">-- Pilih Role --</option>
-        <option value="User">User</option>
-        <option value="Auditor">Auditor</option>
-        <option value="Reviewer">Reviewer</option>
-      </select> -->
-
-      <select name="level" id="level" required>
-        <option value="">-- Pilih Role --</option>
-        <option value="1">Admin</option>
-        <option value="2">User</option>
-      </select>
 
       <button type="submit">Daftar</button>
     </form>
-    <form action="{{url('/login') }}">
+
+
+    <form action="{{ url('/login') }}">
       <button type="submit">Login</button>
     </form>
   </div>
 
   <script>
     function validateForm() {
-      const nama = document.getElementById('nama').value.trim();
-      const nik = document.getElementById('nik').value.trim();
-      const department = document.getElementById('department').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const password = document.getElementById('password').value.trim();
-      // const role = document.getElementById('role').value;
-      const level = document.getElementById('level').value;
-
-      const nikRegex = /^[0-9]{10}$/; // Hanya 10 angka
+      const nikRegex = /^[0-9]{10}$/;
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-      if (nama === "") {
-        alert("Gagal: Nama tidak boleh kosong!");
+      if (!nikRegex.test(nik.value.trim())) {
+        alert("NIK harus 10 digit angka!");
         return false;
       }
 
-      if (!nikRegex.test(nik)) {
-        alert("Gagal: NIK harus terdiri dari 10 angka!");
+      if (!emailRegex.test(email.value.trim())) {
+        alert("Format email tidak valid!");
         return false;
       }
 
-      if (!emailRegex.test(email)) {
-        alert("Gagal: Format email tidak valid!");
-        return false;
-      }
-
-      if (password.length < 6) {
-        alert("Gagal: Password minimal 6 karakter!");
-        return false;
-      }
-
-      if (level === "") {
-        alert("Gagal: Silakan pilih Level!");
+      if (password.value.length < 6) {
+        alert("Password minimal 6 karakter!");
         return false;
       }
 

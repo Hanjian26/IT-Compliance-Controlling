@@ -194,7 +194,7 @@
                 </span> Dashboard
             </a>
 
-            {{-- Menu khusus Admin --}}
+            {{-- Menu khusus Admin [Ibu Aulia], --}}
             @if ($level == 1)
             <div class="menu-dropdown">
                 <button class="dropdown-toggle">
@@ -256,7 +256,7 @@
             <a href="{{ route('admin.track.history') }}" class="menu-item">
                 <span class="icon">
                     <img width="20" height="20" src="https://img.icons8.com/ios/50/activity-history.png" />
-                </span> Track History
+                </span> History Data
             </a>
             @endif
 
