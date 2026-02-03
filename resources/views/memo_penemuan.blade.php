@@ -60,13 +60,12 @@
                 {{(\Carbon\Carbon::parse($item->tanggal_terbit)->format('d-M-Y')) }}
             </td>
             <td style="padding: 10px; font-size: 12px;">{{ $item->perihal }}</td>
-            <td style="padding: 10px; font-size: 11px;">
-                <div
-                    style="display: inline-flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <td style="padding: 10px; font-size: 12px;">
+                <div style="display: inline-flex; justify-content: center; gap: 10px;">
 
                     <!-- Lihat -->
                     <a href="{{ asset('storage/dokumen/'.$item->file_dokumen) }}" target="_blank"
-                        style="display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: inherit;">
+                        style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
                         <img width="18" height="18" src="https://img.icons8.com/ios/50/visible--v1.png" alt="lihat-icon"
                             style="display: block;" />
                         <!-- <span style="font-size: 12px;">Lihat</span> -->
@@ -74,7 +73,7 @@
 
                     <!-- Edit -->
                     <a href="javascript:void(0);" onclick="editMemo({{ $item->id }})" title="Edit"
-                        style="display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: inherit;">
+                        style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: inherit;">
                         <img width="18" height="18" src="https://img.icons8.com/ios/50/create-new.png" alt="edit-icon"
                             style="display: block;" />
                         <!-- <span style="font-size: 12px;">Edit</span> -->

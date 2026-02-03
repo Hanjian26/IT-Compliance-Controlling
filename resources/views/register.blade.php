@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>IT Compliance</title>
+  <title>IT Compliance & Controlling</title>
   <link rel="icon" href="{{ asset('indomaret.png') }}" type="image/png">
 
   <style>

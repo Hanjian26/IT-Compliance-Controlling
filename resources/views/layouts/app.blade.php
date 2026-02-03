@@ -252,6 +252,15 @@
                 </div>
             </div>
 
+            @if ($level == 1)
+            <a href="{{ route('admin.track.history') }}" class="menu-item">
+                <span class="icon">
+                    <img width="20" height="20" src="https://img.icons8.com/ios/50/activity-history.png" />
+                </span> Track History
+            </a>
+            @endif
+
+
             {{-- Template Dokumen --}}
             @if ($level == 1)
             <a href="{{ route('admin.template.dokumen') }}" class="menu-item">
@@ -260,6 +269,7 @@
                 </span> Template Dokumen
             </a>
             @endif
+
             @if ($level == 2)
             <a href="{{ route('user.template.dokumen') }}" class="menu-item">
                 <span class="icon">
@@ -268,13 +278,7 @@
             </a>
             @endif
 
-            @if ($level == 1)
-            <a href="{{ route('admin.track.history') }}" class="menu-item">
-                <span class="icon">
-                    <img width="20" height="20" src="https://img.icons8.com/ios/50/activity-history.png" />
-                </span> Track History
-            </a>
-            @endif
+
 
             {{-- Admin only: Register User --}}
             @if ($level == 1)
