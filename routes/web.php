@@ -35,6 +35,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegisterForm']);
 Route::post('/register', [AuthController::class, 'register']);
 
+Route::prefix('staff')->middleware(['auth', 'level:3'])->group(function () {
+
+    Route::get('/', fn () => redirect()->route('staff.main_menu'));
+
+    Route::get('/main-menu', [AuthController::class, 'mainMenu'])
+        ->name('staff.main_menu');
+
+});
+
 Route::prefix('user')->middleware(['auth', 'level:2'])->group(function () {
     // redirect /user -> main_menu
     Route::get('/', fn () => redirect()->route('user.main_menu'))->name('user.home');

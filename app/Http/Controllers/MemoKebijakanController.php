@@ -8,6 +8,8 @@ use App\Models\Memos;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 use App\Helpers\KodeMemoHelper;
+use App\Models\TrackHistory;
+
 
 class MemoKebijakanController extends Controller
 {
@@ -61,6 +63,9 @@ class MemoKebijakanController extends Controller
         }
 
         $memo->save();
+        $this->recordHistory($memo, 'menambahkan', 'Masih Develop (Harusnya Pending)');
+
+
 
         activity('memo_kebijakan')
             ->causedBy(Auth::user())
@@ -75,28 +80,20 @@ class MemoKebijakanController extends Controller
         return redirect()->back()->with('success', 'Memo berhasil ditambahkan!');
     }
 
-    public function destroy($id)
-    {
-        $memo = Memos::findOrFail($id);
-
-        activity('memo_kebijakan')
-            ->causedBy(Auth::user())
-            ->performedOn($memo)
-            ->withProperties([
-                'action' => 'delete',
-                'nama' => Auth::user()->nama,
-                'nik' => Auth::user()->nik,
-            ])
-            ->log('Menghapus memo kebijakan');
-
-        if ($memo->file_dokumen && Storage::disk('public')->exists('dokumen/' . $memo->file_dokumen)) {
-            Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
-        }
-
-        $memo->delete();
-
-        return redirect()->route('memo.index')->with('success', 'Dokumen berhasil dihapus.');
+   public function destroy($id)
+{
+    $memo = Memos::findOrFail($id);
+    // Hapus file jika ada
+    if ($memo->file_dokumen && Storage::disk('public')->exists('dokumen/' . $memo->file_dokumen)) {
+        Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
     }
+
+    $memo->delete();
+    $this->recordHistory($memo, 'menghapus', 'Masih Develop (Harusnya Pending)');
+
+
+    return redirect()->route('memo.index')->with('success', 'Dokumen berhasil dihapus.');
+}
 
     public function edit($id)
     {
@@ -145,7 +142,7 @@ class MemoKebijakanController extends Controller
         }
 
         $memo->save();
-
+        $this->recordHistory($memo, 'mengubah', 'Masih Develop (Harusnya Pending)'); // misal $memo->status = 'Pending'
         activity('memo_kebijakan')
             ->causedBy(Auth::user())
             ->performedOn($memo)
@@ -166,4 +163,17 @@ public function generateNomor(Request $request)
         'nomor' => KodeMemoHelper::generate('Kebijakan', $tanggal)
     ]);
 }
+
+private function recordHistory($memo, $action, $status)
+{
+    TrackHistory::create([
+        'tanggal_pengajuan' => now()->toDateString(),
+        'nik' => Auth::user()->nik,
+        'nama' => Auth::user()->nama,
+        'perihal' => Auth::user()->nama . " " . $action . " Data Memo Kebijakan No: " . $memo->nomor,
+        'status' => $status, // Pending, Rejected, Approved
+        'created_at' => now(),
+    ]);
+}
+
 }
