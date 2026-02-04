@@ -10,80 +10,73 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    /**
-     * Primary key settings
-     */
+    /* ================= PRIMARY KEY ================= */
+
     protected $primaryKey = 'nik';
     public $incrementing = false;
-    protected $keyType = 'string';
+    protected $keyType = 'int';
 
-    /**
-     * Mass assignable attributes
-     */
+    /* ================= MASS ASSIGN ================= */
+
     protected $fillable = [
         'nik',
         'nama',
         'email',
         'password',
         'department',
+        'manager_id',
         'level',
-        'supervisor_id',
+        'is_manager',
     ];
 
-    /**
-     * Hidden attributes
-     */
+    /* ================= HIDDEN ================= */
+
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * Cast attributes
-     */
+    /* ================= CAST ================= */
+
     protected $casts = [
         'password' => 'hashed',
+        'is_manager' => 'boolean',
     ];
 
-    /**
-     * Authentication identifier (login pakai NIK)
-     */
+    /* ================= AUTH ================= */
+
     public function getAuthIdentifierName()
     {
         return 'nik';
     }
 
-    /**
-     * 🔼 Atasan (Supervisor / Manager)
-     */
-    public function supervisor()
+    /* ================= RELATION ================
+    = */
+
+    public function manager()
     {
-        return $this->belongsTo(User::class, 'supervisor_id', 'nik');
+        return $this->belongsTo(User::class, 'manager_id', 'nik');
     }
 
-    /**
-     * 🔽 Bawahan (Staff)
-     */
     public function staffs()
     {
-        return $this->hasMany(User::class, 'supervisor_id', 'nik');
+        return $this->hasMany(User::class, 'manager_id', 'nik');
     }
 
-    /**
-     * 🔐 Helper role checker (opsional tapi rapi)
-     */
+    /* ================= ROLE CHECKER ================= */
+
     public function isAdmin()
     {
-        return $this->level == 1;
+        return $this->level === 1;
+    }
+
+    public function isUser()
+    {
+        return $this->level === 2; // view only
     }
 
     public function isManager()
     {
-        return $this->level == 2;
-    }
-
-    public function isStaff()
-    {
-        return $this->level == 3;
+        return $this->is_manager === true;
     }
 }

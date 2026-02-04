@@ -3,7 +3,7 @@
 @section('content')
 
 <h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">History Data</h2>
-<form method="GET" action="{{ route('admin.track.history') }}"
+<form method="GET" action="{{ route('admin.track-history.index') }}"
   style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
   <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
     style="margin-left:45px;width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
@@ -12,7 +12,7 @@
     Cari
   </button>
   @if(request('search'))
-  <a href="{{ route('admin.track.history') }}"
+  <a href="{{ route('admin.track-history.index') }}"
     style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">Reset</a>
   @endif
 

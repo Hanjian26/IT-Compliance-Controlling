@@ -205,13 +205,12 @@
                     <span class="arrow">▾</span>
                 </button>
                 <div class="dropdown-content">
-                    <a href="{{ route('memo.index') }}">Memo Kebijakan</a>
-                    <a href="{{ route('memo.administrasi') }}">Memo Administrasi</a>
-                    <a href="{{ route('memo.permintaan.data') }}">Memo Permintaan Data</a>
-                    {{-- <a href="{{ route('memo.all') }}">Memo Too All IT</a> --}}
-                    {{-- <a href="{{ route('memo.audit') }}">Memo Audit</a> --}}
-                    <a href="{{ route('memo.penemuan') }}">Memo Penemuan</a>
+                    <a href="{{ route('admin.memo.kebijakan.index') }}">Memo Kebijakan</a>
+                    <a href="{{ route('admin.memo-administrasi.index') }}">Memo Administrasi</a>
+                    <a href="{{ route('admin.memo-permintaan-data.index') }}">Memo Permintaan Data</a>
+                    <a href="{{ route('admin.memo-penemuan.index') }}">Memo Penemuan</a>
                 </div>
+
             </div>
             @endif
             @if ($level == 2)
@@ -224,7 +223,7 @@
                     <span class="arrow">▾</span>
                 </button>
                 <div class="dropdown-content">
-                    <a href="{{ route('user.memo.index') }}">Memo Kebijakan</a>
+                    <a href="{{ route('user.memo.kebijakan') }}">Memo Kebijakan</a>
                 </div>
             </div>
             @endif
@@ -244,16 +243,17 @@
                     <a href="{{ route('user.audit.lha') }}">Laporan Hasil Audit</a>
                     <a href="{{ route('user.audit.tlha') }}">Tindak Lanjut Hasil Audit</a>
                     @else
-                    <a href="{{ route('audit.brdb') }}">Jadwal Audit Backup & Restore Database</a>
-                    <a href="{{ route('audit.wp') }}">Working Paper</a>
-                    <a href="{{ route('audit.lha') }}">Laporan Hasil Audit</a>
-                    <a href="{{ route('audit.tlha') }}">Tindak Lanjut Hasil Audit</a>
+                    <a href="{{ route('admin.audit-brdb.index') }}">Jadwal Audit Backup & Restore Database</a>
+                    <a href="{{ route('admin.audit-working-paper.index') }}">Working Paper</a>
+                    <a href="{{ route('admin.audit-laporan-hasil-akhir.index') }}">Laporan Hasil Audit</a>
+                    <a href="{{ route('admin.tlha-audit.index') }}">Tindak Lanjut Hasil Audit</a>
+
                     @endif
                 </div>
             </div>
 
             @if ($level == 1)
-            <a href="{{ route('admin.track.history') }}" class="menu-item">
+            <a href="{{ route('admin.track-history.index') }}" class="menu-item">
                 <span class="icon">
                     <img width="20" height="20" src="https://img.icons8.com/ios/50/activity-history.png" />
                 </span> History Data
@@ -263,7 +263,7 @@
 
             {{-- Template Dokumen --}}
             @if ($level == 1)
-            <a href="{{ route('admin.template.dokumen') }}" class="menu-item">
+            <a href="{{ route('admin.template-dokumen.index') }}" class="menu-item">
                 <span class="icon">
                     <img width="20" height="20" src="https://img.icons8.com/ios/50/template.png" />
                 </span> Template Dokumen

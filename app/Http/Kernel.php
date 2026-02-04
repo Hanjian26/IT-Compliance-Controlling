@@ -6,12 +6,7 @@ use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
 {
-    /**
-     * Global HTTP middleware stack.
-     * Middleware ini dijalankan di setiap request.
-     */
     protected $middleware = [
-        // \App\Http\Middleware\TrustHosts::class,
         \App\Http\Middleware\TrustProxies::class,
         \Illuminate\Http\Middleware\HandleCors::class,
         \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
@@ -20,9 +15,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
     ];
 
-    /**
-     * Middleware groups untuk web & api.
-     */
     protected $middlewareGroups = [
         'web' => [
             \App\Http\Middleware\EncryptCookies::class,
@@ -33,26 +25,18 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
 
-  'api' => [
-    'throttle:api',
-    \Illuminate\Routing\Middleware\SubstituteBindings::class,
-],
-
+        'api' => [
+            'throttle:api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
     ];
 
     /**
-     * Route middleware (dipanggil lewat alias di route).
+     * ✅ SATU-SATUNYA TEMPAT REGISTRASI ALIAS (Laravel 12)
      */
-    protected $routeMiddleware = [
-        'auth'       => \App\Http\Middleware\Authenticate::class,
-        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
-        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can'        => \Illuminate\Auth\Middleware\Authorize::class,
-        'guest'      => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
-        'signed'     => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        'throttle'   => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-        'verified'   => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        'level' => \App\Http\Middleware\AdminMiddleware::class,
+    protected $middlewareAliases = [
+        'auth'    => \App\Http\Middleware\Authenticate::class,
+        'level'   => \App\Http\Middleware\LevelMiddleware::class,
+        'manager' => \App\Http\Middleware\ManagerMiddleware::class,
     ];
 }
