@@ -26,13 +26,8 @@ $levelName = $levelMap[$level] ?? 'Unknown';
 </div>
 @endif
 
-<form method="GET" action="{{ $level == 1 
-          ? route('admin.memo.kebijakan.index') 
-          : route('user.memo.kebijakan') }}"
+<form method="GET" action="{{ $level == 1 ? route('admin.memo.kebijakan.index') : route('user.memo.kebijakan') }}"
   style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
-
-
-
   <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
     style="width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
 
@@ -41,20 +36,20 @@ $levelName = $levelMap[$level] ?? 'Unknown';
     style="background-color: #2196F3; color: white; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
     Cari
   </button>
-
+  @if($level == 1)
   <button type="button" onclick="openPendingPopup()" style="background-color:#FF0000;color:white;padding:8px 14px;
            border:none;border-radius:4px;cursor:pointer;font-size:13px;">
     Memo Pending
   </button>
+  @endif
   @if(request('search'))
   <a href="{{ $level == 1 
-            ? route('admin.memo.kebijakan.index') 
-            : route('user.memo.kebijakan') }}"
+    ? route('admin.memo.kebijakan.index') 
+    : route('user.memo.kebijakan') }}"
     style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">
     Reset
   </a>
   @endif
-
 </form>
 
 <!-- POPUP MEMO PENDING -->
@@ -427,8 +422,6 @@ function openPendingPopup() {
 function closePendingPopup() {
     document.getElementById('pendingPopup').style.display = 'none';
 }
-
-
 
 function confirmDelete() {
 return confirm('Apakah Anda yakin ingin menghapus file ini?');

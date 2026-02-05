@@ -98,7 +98,7 @@ class WorkingPaperController extends Controller
             ])
             ->log('Menghapus data working paper audit');
 
-        return redirect()->route('audit.wp')->with('success', 'Data working paper audit berhasil dihapus.');
+        return redirect()->route('audit.working-paper')->with('success', 'Data working paper audit berhasil dihapus.');
     }
 
      public function edit($id)
@@ -150,7 +150,7 @@ class WorkingPaperController extends Controller
         ])
         ->log('Memperbarui Working Paper Audit');
 
-    return redirect()->route('audit.wp')->with('success', 'Working Paper Audit berhasil diperbarui!');
+    return redirect()->route('audit.working-paper')->with('success', 'Working Paper Audit berhasil diperbarui!');
 }
 
 }

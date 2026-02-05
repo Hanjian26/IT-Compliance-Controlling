@@ -206,9 +206,9 @@
                 </button>
                 <div class="dropdown-content">
                     <a href="{{ route('admin.memo.kebijakan.index') }}">Memo Kebijakan</a>
-                    <a href="{{ route('admin.memo-administrasi.index') }}">Memo Administrasi</a>
-                    <a href="{{ route('admin.memo-permintaan-data.index') }}">Memo Permintaan Data</a>
-                    <a href="{{ route('admin.memo-penemuan.index') }}">Memo Penemuan</a>
+                    <a href="{{ route('admin.memo.administrasi.index') }}">Memo Administrasi</a>
+                    <a href="{{ route('admin.memo.permintaan-data.index') }}">Memo Permintaan Data</a>
+                    <a href="{{ route('admin.memo.penemuan.index') }}">Memo Penemuan</a>
                 </div>
 
             </div>
@@ -228,6 +228,7 @@
             </div>
             @endif
 
+
             {{-- Menu Audit --}}
             <div class="menu-dropdown">
                 <button class="dropdown-toggle">
@@ -240,13 +241,13 @@
                 </button>
                 <div class="dropdown-content">
                     @if($level == 2)
-                    <a href="{{ route('user.audit.lha') }}">Laporan Hasil Audit</a>
-                    <a href="{{ route('user.audit.tlha') }}">Tindak Lanjut Hasil Audit</a>
+                    <a href="{{ route('user.audit.lha.index') }}">Laporan Hasil Audit</a>
+                    <a href="{{ route('user.audit.tlha.index') }}">Tindak Lanjut Hasil Audit</a>
                     @else
-                    <a href="{{ route('admin.audit-brdb.index') }}">Jadwal Audit Backup & Restore Database</a>
-                    <a href="{{ route('admin.audit-working-paper.index') }}">Working Paper</a>
-                    <a href="{{ route('admin.audit-laporan-hasil-akhir.index') }}">Laporan Hasil Audit</a>
-                    <a href="{{ route('admin.tlha-audit.index') }}">Tindak Lanjut Hasil Audit</a>
+                    <a href="{{ route('admin.audit.brdb.index') }}">Jadwal Audit Backup & Restore Database</a>
+                    <a href="{{ route('admin.audit.working-paper.index') }}">Working Paper</a>
+                    <a href="{{ route('admin.audit.laporan-hasil-akhir.index') }}">Laporan Hasil Audit</a>
+                    <a href="{{ route('admin.audit.tlha.index') }}">Tindak Lanjut Hasil Audit</a>
 
                     @endif
                 </div>

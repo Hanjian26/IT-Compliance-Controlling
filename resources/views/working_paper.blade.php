@@ -14,7 +14,7 @@
     Tambah Working Paper
   </button>
 </div>
-<form method="GET" action="{{ route('audit.wp') }}"
+<form method="GET" action="{{ route('admin.audit.working-paper.index') }}"
   style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
 
   <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
@@ -26,7 +26,7 @@
   </button>
 
   @if(request('search'))
-  <a href="{{ route('audit.wp') }}"
+  <a href="{{ route('admin.audit.working-paper.index') }}"
     style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">
     Reset
   </a>
@@ -90,8 +90,8 @@
                 style="display: block;" />
             </a>
             <!-- Hapus -->
-            <form action="{{ route('audit.wp.destroy', $item->id) }}" method="POST" onsubmit="return confirmDelete()"
-              style="display: inline;">
+            <form action="{{ route('admin.audit.working-paper.destroy', $item->id) }}" method="POST"
+              onsubmit="return confirmDelete()" style="display: inline;">
               @csrf
               @method('DELETE')
               <button type="submit" title="Hapus"
@@ -232,7 +232,7 @@
       <u>Tambah Working Paper</u>
     </h3>
 
-    <form action="{{ route('audit.wp.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.audit.working-paper.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div style="margin-bottom: 15px;">
         <label for="divisi">Divisi<span style="color: red;">*</span>:</label>

@@ -16,7 +16,7 @@
         Tambah Jadwal Audit
     </button>
 </div>
-<form method="GET" action="{{ route('audit.brdb') }}"
+<form method="GET" action="{{ route('admin.audit.brdb.index') }}"
     style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
 
     <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
@@ -28,7 +28,7 @@
     </button>
 
     @if(request('search'))
-    <a href="{{ route('audit.brdb') }}"
+    <a href="{{ route('admin.audit.brdb.index') }}"
         style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">
         Reset
     </a>
@@ -86,7 +86,7 @@
                                 alt="edit-icon" style="display: block;" />
                         </a>
                         <!-- Hapus -->
-                        <form action="{{ route('audit.brdb.destroy', $item->id) }}" method="POST"
+                        <form action="{{ route('admin.audit.brdb.destroy', $item->id) }}" method="POST"
                             onsubmit="return confirmDelete()" style="display: inline;">
                             @csrf
                             @method('DELETE')
@@ -221,7 +221,7 @@
             <u>Tambah Jadwal Audit</u>
         </h3>
 
-        <form action="{{ route('audit.brdb.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.audit.brdb.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div style="margin-bottom: 15px;">
                 <label for="divisi">Divisi<span style="color: red;">*</span>:</label>

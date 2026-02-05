@@ -122,8 +122,8 @@
       <select name="level" id="level" required>
         <option value="">-- Pilih Level --</option>
         <option value="1">Admin</option>
-        <option value="2">Atasan</option>
-        <option value="3">Staff</option>
+        <option value="1">Atasan</option>
+        <option value="2">Supervisor</option>
       </select>
 
 

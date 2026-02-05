@@ -1,11 +1,21 @@
 @extends('layouts.app')
 @section('title', 'IT Compliance & Controlling')
 @section('content')
+
+@php
+$user = Auth::user();
+$level = $user->level ?? null;
+$levelMap = [1 => 'Admin', 2 => 'User'];
+$levelName = $levelMap[$level] ?? 'Unknown';
+@endphp
+
+
 <h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">Memo Penemuan
 </h2>
 
 <!-- Container Utama -->
 <!-- Tombol Tambah Dokumen -->
+@if($level == 1)
 <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
     <button onclick="openPopup()" onmouseover="this.style.backgroundColor='#5763e1'"
         onmouseout="this.style.backgroundColor='#4CAF50'"
@@ -15,8 +25,9 @@
         Tambah Dokumen
     </button>
 </div>
+@endif
 
-<form method="GET" action="{{ route('memo.penemuan') }}"
+<form method="GET" action="{{ route('admin.memo.penemuan.index') }}"
     style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
     <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
         style="width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
@@ -24,14 +35,114 @@
         style="background-color: #2196F3; color: white; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
         Cari
     </button>
+
+    @if($level == 1)
+    <button type="button" onclick="openPendingPopup()" style="background-color:#FF0000;color:white;padding:8px 14px;
+           border:none;border-radius:4px;cursor:pointer;font-size:13px;">
+        Memo Pending
+    </button>
+    @endif
+
     @if(request('search'))
-    <a href="{{ route('memo.penemuan') }}"
+    <a href="{{ route('admin.memo.penemuan.index') }}"
         style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">
         Reset
     </a>
     @endif
-
 </form>
+
+<!-- POPUP MEMO PENDING -->
+<div id="pendingPopup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%;
+     background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center;">
+
+    <div style="margin-top:-10%; background:white; padding:80px; border-radius:8px; width:90%; max-width:800px;">
+        <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px;">Memo Pending</h3>
+
+        <table style="border-collapse: collapse; width: 100%; text-align: center;">
+            <thead>
+                <tr style="background:#f2f2f2;">
+                    <th style="padding: 10px;">No</th>
+                    <th style="padding: 10px;">Nama Pengaju</th>
+                    <th style="padding: 10px;">Tanggal Pengajuan</th>
+                    <th style="padding: 10px;">Nomor</th>
+                    <th style="padding: 10px;">Perihal</th>
+                    <th style="padding: 10px;">Permintaan</th>
+                    <th style="padding: 10px;">Status</th>
+
+                    @if($level == 1 && Auth::user()->is_manager)
+                    <th style="padding: 10px;">Aksi</th>
+                    @endif
+
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($pendingData as $item)
+                <tr>
+                    <td style="padding: 10px; font-size: 12px;">{{ $loop->iteration }}</td>
+                    <td style="padding: 10px; font-size: 12px;">
+                        {{ $item->nama_pengaju }}
+                    </td>
+
+                    <td style="padding: 10px; font-size: 12px;">{{
+                        \Carbon\Carbon::parse($item->created_at)->format('d-M-Y') }}
+                    </td>
+                    <td style="padding: 10px; font-size: 12px;">{{ $item->nomor }}</td>
+                    <td style="padding: 10px; font-size: 12px;">{{ $item->perihal }}</td>
+                    <td style="padding: 10px; font-size: 12px;">{{ $item->action_type }}</td>
+
+
+                    <td>
+                        <span
+                            style="background:#FFC107; color:#000; padding:4px 8px; border-radius:10px;  font-size:11px;">
+                            Pending
+                        </span>
+                    </td>
+
+                    {{-- AKSI HANYA UNTUK MANAGER --}}
+                    @if(Auth::user()->is_manager)
+                    <td>
+                        <div style="display:flex; justify-content:center; gap:6px;">
+
+                            <form method="POST" action="{{ route('admin.approval.memo.approve', $item->id) }}">
+                                @csrf
+                                <button
+                                    style="background:#4CAF50; color:white; border:none; padding:4px 10px; border-radius:4px;">
+                                    Approve
+                                </button>
+                            </form>
+
+                            <form method="POST" action="{{ route('admin.approval.memo.reject', $item->id) }}"
+                                onsubmit="return confirm('Tolak memo ini?')">
+                                @csrf
+                                <button
+                                    style="background:#F44336; color:white; border:none; padding:4px 10px; border-radius:4px;">
+                                    Reject
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+                    @endif
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="6" style="text-align:center; padding:15px;">
+                        Tidak ada memo pending
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+
+        </table>
+
+        <div style="text-align:right; margin-top:15px;">
+            <button onclick="closePendingPopup()"
+                style="background-color: #e0e0e0; color: black; padding: 8px 14px; cursor: pointer; border: none; border-radius: 4px; transition: background-color 0.3s ease;"
+                onmouseover="this.style.backgroundColor='#c7c7c7'"
+                onmouseout="this.style.backgroundColor='#e0e0e0'">Tutup</button>
+        </div>
+    </div>
+</div>
 
 
 <!-- Tabel -->
@@ -80,7 +191,7 @@
                     </a>
 
                     <!-- Hapus -->
-                    <form action="{{ route('memo.penemuan.destroy', $item->id) }}" method="POST"
+                    <form action="{{ route('admin.memo.penemuan.destroy', $item->id) }}" method="POST"
                         onsubmit="return confirmDelete()" style="display: inline;">
                         @csrf
                         @method('DELETE')
@@ -197,7 +308,7 @@
         style="background-color: white; padding: 40px; border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
         <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; text-align:center;"><u>Tambah Memo Penemuan</u>
         </h3>
-        <form action="{{ route('memo.penemuan.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.memo.penemuan.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div style="margin-bottom: 15px;">
                 <label for="tipe_memo">Tipe Memo<span style="color: red;">*</span>:</label>
@@ -268,7 +379,7 @@ function generateNomorFromTanggal() {
     const tgl = document.getElementById('tanggal_terbit').value;
     if (!tgl) return;
 
-    fetch("{{ route('memo.penemuan.generateNomor') }}?tanggal=" + tgl)
+    fetch("{{ route('admin.memo.penemuan.generate_nomor') }}?tanggal=" + tgl)
         .then(res => res.json())
         .then(data => {
             document.getElementById('nomor').value = data.nomor;
@@ -280,7 +391,7 @@ function generateNomorFromTanggalEdit() {
     const tgl = document.getElementById('edit_tanggal_terbit').value;
     if (!tgl) return;
 
-    fetch("{{ route('memo.penemuan.generateNomor') }}?tanggal=" + tgl)
+    fetch("{{ route('admin.memo.penemuan.generate_nomor') }}?tanggal=" + tgl)
         .then(res => res.json())
         .then(data => {
             document.getElementById('edit_nomor').value = data.nomor;
@@ -316,6 +427,14 @@ function editMemo(id) {
             document.getElementById('editForm').style.display = 'flex';
         })
         .catch(err => console.error(err));
+}
+
+function openPendingPopup() {
+    document.getElementById('pendingPopup').style.display = 'flex';
+}
+
+function closePendingPopup() {
+    document.getElementById('pendingPopup').style.display = 'none';
 }
 
 function confirmDelete() {

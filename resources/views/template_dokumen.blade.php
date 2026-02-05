@@ -66,7 +66,7 @@ $level = $user->level ?? null;
           </a>
 
           <!-- Hapus -->
-          <form action="{{ route('admin.template.dokumen.destroy', $item->id) }}" method="POST"
+          <form action="{{ route('admin.template-dokumen.destroy', $item->id) }}" method="POST"
             onsubmit="return confirmDelete()" style="display: inline;">
             @csrf
             @method('DELETE')
@@ -146,7 +146,7 @@ $level = $user->level ?? null;
     style="background-color: white; padding: 40px; border-radius: 10px; width: 100%; max-width: 500px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); position: relative;">
     <h3 style="margin-top: 0; margin-bottom: 20px; font-size: 20px; text-align:center;"><u>Tambah Dokumen Template</u>
     </h3>
-    <form action="{{ route('admin.template.dokumen.store') }}" method="POST" enctype="multipart/form-data">
+    <form action="{{ route('admin.template-dokumen.store') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <div style="margin-bottom: 15px;">
         <label for="nama_file">Nama File:</label>

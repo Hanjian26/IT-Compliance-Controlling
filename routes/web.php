@@ -45,17 +45,21 @@ Route::prefix('user')
         Route::get('/main-menu', [AuthController::class, 'mainMenu'])
             ->name('main_menu');
 
+            Route::get('/template-dokumen', [TemplateDokumenController::class, 'index'])
+            ->name('template.dokumen');
+
         Route::get('/memo-kebijakan', [MemoKebijakanController::class, 'index'])
             ->name('memo.kebijakan');
 
-        Route::get('/template-dokumen', [TemplateDokumenController::class, 'index'])
-            ->name('template.dokumen');
+        // ================= AUDIT =================
+        Route::prefix('audit')->name('audit.')->group(function () {
 
-        Route::get('/audit-laporan-hasil-akhir', [LaporanHasilAuditController::class, 'index'])
-            ->name('audit.lha');
+            Route::get('/laporan-hasil-audit', [LaporanHasilAuditController::class, 'index'])
+                ->name('lha.index');
 
-        Route::get('/tlha-audit', [TindakAuditController::class, 'index'])
-            ->name('audit.tlha');
+            Route::get('/tindak-lanjut-hasil-audit', [TindakAuditController::class, 'index'])
+                ->name('tlha.index');
+        });
     });
 
 /*
@@ -70,6 +74,9 @@ Route::prefix('admin')
 
         Route::get('/main-menu', [AuthController::class, 'mainMenu'])
             ->name('main_menu');
+
+        // Route::get('/template-dokumen', [TemplateDokumenController::class, 'index'])
+        //     ->name('template.dokumen');
 
         /*
         |--------------------------------------------------------------------------
@@ -90,25 +97,85 @@ Route::prefix('admin')
                 ->name('generate_nomor');
         });
 
-        /*
-        |--------------------------------------------------------------------------
-        | MEMO LAIN (TANPA DELETE LANGSUNG – ANTI BYPASS)
-        |--------------------------------------------------------------------------
-        */
-        Route::resource('memo-administrasi', MemoAdministrasiController::class)
-            ->except(['show', 'destroy']);
+    Route::prefix('memo-administrasi')->name('memo.administrasi.')->group(function () {
+        Route::get('/', [MemoAdministrasiController::class, 'index'])->name('index');
+        Route::post('/', [MemoAdministrasiController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [MemoAdministrasiController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [MemoAdministrasiController::class, 'update'])->name('update');
 
-        Route::resource('memo-permintaan-data', MemoPermintaanDataController::class)
-            ->except(['show', 'destroy']);
+        // ❗ DELETE HANYA LEWAT CONTROLLER INI (ADA APPROVAL LOGIC)
+        Route::delete('/{id}', [MemoAdministrasiController::class, 'destroy'])
+            ->name('destroy');
 
-        Route::resource('memo-audit', MemoAuditController::class)
-            ->except(['show', 'destroy']);
+        Route::get('/nomor/generate', [MemoAdministrasiController::class, 'generateNomor'])
+            ->name('generate_nomor');
+    });
 
-        Route::resource('memo-penemuan', MemoPenemuanController::class)
-            ->except(['show', 'destroy']);
+        Route::prefix('memo-permintaan-data')->name('memo.permintaan-data.')->group(function () {
+            Route::get('/', [MemoPermintaanDataController::class, 'index'])->name('index');
+            Route::post('/', [MemoPermintaanDataController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [MemoPermintaanDataController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [MemoPermintaanDataController::class, 'update'])->name('update');
 
-        Route::resource('memo-all', MemoAllController::class)
-            ->except(['show', 'destroy']);
+            // ❗ DELETE HANYA LEWAT CONTROLLER INI (ADA APPROVAL LOGIC)
+            Route::delete('/{id}', [MemoPermintaanDataController::class, 'destroy'])
+                ->name('destroy');
+
+            Route::get('/nomor/generate', [MemoPermintaanDataController::class, 'generateNomor'])
+                ->name('generate_nomor');
+    });
+
+        Route::prefix('memo-penemuan')->name('memo.penemuan.')->group(function () {
+            Route::get('/', [MemoPenemuanController::class, 'index'])->name('index');
+            Route::post('/', [MemoPenemuanController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [MemoPenemuanController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [MemoPenemuanController::class, 'update'])->name('update');         
+            // ❗ DELETE HANYA LEWAT CONTROLLER INI (ADA APPROVAL LOGIC)
+            Route::delete('/{id}', [MemoPenemuanController::class, 'destroy'])
+                ->name('destroy');
+
+            Route::get('/nomor/generate', [MemoPenemuanController::class, 'generateNomor'])
+                ->name('generate_nomor');
+        });
+
+        // Menu Audit
+        Route::prefix('audit-brdb')->name('audit.brdb.')->group(function () {
+            Route::get('/', [AuditDatabaseController::class, 'index'])->name('index');
+            Route::post('/', [AuditDatabaseController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [AuditDatabaseController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [AuditDatabaseController::class, 'update'])->name('update');
+            Route::delete('/{id}', [AuditDatabaseController::class, 'destroy'])->name('destroy');
+    });
+
+        // Menu Working Paper   
+        Route::prefix('audit-working-paper')->name('audit.working-paper.')->group(function () {
+            Route::get('/', [WorkingPaperController::class, 'index'])->name('index');
+            Route::post('/', [WorkingPaperController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [WorkingPaperController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [WorkingPaperController::class, 'update'])->name('update');
+            Route::delete('/{id}', [WorkingPaperController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('audit-laporan-hasil-akhir')->name('audit.laporan-hasil-akhir.')->group(function () {
+            Route::get('/', [LaporanHasilAuditController::class, 'index'])->name('index');
+            Route::post('/', [LaporanHasilAuditController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [LaporanHasilAuditController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [LaporanHasilAuditController::class, 'update'])->name('update');
+            Route::delete('/{id}', [LaporanHasilAuditController::class, 'destroy'])->name('destroy');
+        });
+
+        Route::prefix('audit-tlha')->name('audit.tlha.')->group(function () {
+            Route::get('/', [TindakAuditController::class, 'index'])->name('index');
+            Route::post('/', [TindakAuditController::class, 'store'])->name('store');
+            Route::get('/{id}/edit', [TindakAuditController::class, 'edit'])->name('edit');
+            Route::put('/{id}', [TindakAuditController::class, 'update'])->name('update');
+            Route::delete('/{id}', [TindakAuditController::class, 'destroy'])->name('destroy');
+        });
+
+        // Route::resource('memo-audit', MemoAuditController::class)
+        //     ->except(['show', 'destroy']);
+        // Route::resource('memo-all', MemoAllController::class)
+        //     ->except(['show', 'destroy']);
 
         /*
         |--------------------------------------------------------------------------
@@ -140,16 +207,16 @@ Route::prefix('admin')
         | AUDIT MODULE
         |--------------------------------------------------------------------------
         */
-        Route::resource('audit-brdb', AuditDatabaseController::class)->except(['show']);
-        Route::resource('audit-working-paper', WorkingPaperController::class)->except(['show']);
-        Route::resource('audit-laporan-hasil-akhir', LaporanHasilAuditController::class)->except(['show']);
-        Route::resource('tlha-audit', TindakAuditController::class)->except(['show']);
+      
+
+ 
 
         /*
         |--------------------------------------------------------------------------
         | TEMPLATE & HISTORY
         |--------------------------------------------------------------------------
         */
+        
         Route::resource('template-dokumen', TemplateDokumenController::class)->except(['show']);
         Route::resource('track-history', HistoryController::class)->except(['show']);
     });

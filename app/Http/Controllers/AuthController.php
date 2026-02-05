@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Department;
 
 class AuthController extends Controller
 {
@@ -60,34 +61,37 @@ return view('main_menu');
      * ========================= */
     public function showRegisterForm()
     {
-        return view('register');
+    $departments = Department::orderBy('department')->get();
+
+    return view('register', compact('departments'));
     }
 
     /* =========================
      * REGISTER PROCESS
      * ========================= */
-    public function register(Request $request)
-    {
-        $request->validate([
-            'nik'      => 'required|unique:users,nik',
-            'nama'     => 'required',
-            'departments'     => 'required',
-            'email'    => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-            'level'    => 'required|in:1,2',
-        ]);
+  public function register(Request $request)
+{
+    $request->validate([
+        'nik'        => 'required|unique:users,nik',
+        'nama'       => 'required',
+        'department' => 'required',
+        'email'      => 'required|email|unique:users,email',
+        'password'   => 'required|min:6',
+        'level'      => 'required|in:1,2',
+    ]);
 
-        User::create([
-            'nik'      => $request->nik,
-            'nama'     => $request->nama,
-            'departments'     => $request->nama,
-            'email'    => $request->email,
-            'password' => bcrypt($request->password),
-            'level'    => $request->level,
-        ]);
+    User::create([
+        'nik'        => $request->nik,
+        'nama'       => $request->nama,
+        'department' => $request->department, // ← 19
+        'email'      => $request->email,
+        'password'   => bcrypt($request->password),
+        'level'      => $request->level,
+    ]);
 
-        return redirect('/login')->with('success', 'User berhasil dibuat');
-    }
+    return redirect('/login')->with('success', 'User berhasil dibuat');
+}
+
 
     /* =========================
      * LOGOUT

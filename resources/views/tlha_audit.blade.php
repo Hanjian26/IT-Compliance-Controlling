@@ -52,7 +52,7 @@ $level = $user->level ?? null;
 
 
 
-<form method="GET" action="{{ route('audit.tlha') }}"
+<form method="GET" action="{{ route('admin.audit.tlha.index') }}"
     style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
     <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
         style="width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
@@ -61,7 +61,7 @@ $level = $user->level ?? null;
         Cari
     </button>
     @if(request('search'))
-    <a href="{{ route('audit.tlha') }}"
+    <a href="{{ route('admin.audit.tlha.index') }}"
         style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">
         Reset
     </a>
@@ -133,7 +133,7 @@ $level = $user->level ?? null;
                                 alt="edit-icon" style="display: block;" />
                         </a>
                         <!-- Hapus -->
-                        <form action="{{ route('audit.tlha.destroy', $item->id) }}" method="POST"
+                        <form action="{{ route('admin.audit.tlha.destroy', $item->id) }}" method="POST"
                             onsubmit="return confirmDelete()" style="display: inline;">
                             @csrf
                             @method('DELETE')
@@ -323,7 +323,7 @@ $level = $user->level ?? null;
         </h3>
 
 
-        <form action="{{ route('audit.tlha.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.audit.tlha.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div style="margin-bottom: 15px;">
                 <label for="edit_divisi">Divisi<span style="color: red;">*</span>:</label>
@@ -582,7 +582,7 @@ function closeEdit() {
 }
 
 function editMemo(id) {
-    fetch(`/admin/tlha-audit/${id}/edit`)
+    fetch(`/admin/audit-tlha/${id}/edit`)
         .then(res => res.json())
         .then(data => {
             document.getElementById('edit_divisi').value = data.divisi;
@@ -613,7 +613,7 @@ function editMemo(id) {
             renderEditDaftarPIC(daftarDiv, hasilInput);
 
             const form = document.getElementById('editMemoForm');
-            form.action = `/admin/tlha-audit/${id}`;
+            form.action = `/admin/audit-tlha/${id}`;
             document.getElementById('editForm').style.display = 'flex';
         });
 }
