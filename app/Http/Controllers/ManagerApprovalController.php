@@ -9,24 +9,20 @@ use Illuminate\Support\Facades\Storage;
 class ManagerApprovalController extends Controller
 {
     /**
-     * APPROVE MEMO
+     * APPROVE
      */
     public function approve($id)
     {
         $memo = Memos::findOrFail($id);
         $user = Auth::user();
 
-        // Guard: hanya memo pending
         if ($memo->status !== 'pending') {
             abort(400, 'Memo sudah diproses');
         }
 
         switch ($memo->action_type) {
 
-            /**
-             * CREATE
-             * Nomor SUDAH ADA (dibuat saat create)
-             */
+            // ✅ CREATE → sahkan memo
             case 'create':
                 $memo->update([
                     'status'      => 'approved',
@@ -35,10 +31,7 @@ class ManagerApprovalController extends Controller
                 ]);
                 break;
 
-            /**
-             * UPDATE
-             * Terapkan perubahan dari pending_changes
-             */
+            // ✅ UPDATE → terapkan perubahan
             case 'update':
                 $memo->update(array_merge(
                     $memo->pending_changes ?? [],
@@ -51,17 +44,13 @@ class ManagerApprovalController extends Controller
                 ));
                 break;
 
-            /**
-             * DELETE
-             * Hapus file & data SETELAH approve
-             */
+            // ✅ DELETE → hapus fisik
             case 'delete':
                 if ($memo->file_dokumen) {
                     Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
                 }
 
                 $memo->delete();
-
                 return back()->with('success', 'Memo berhasil dihapus');
         }
 
@@ -69,24 +58,44 @@ class ManagerApprovalController extends Controller
     }
 
     /**
-     * REJECT MEMO
-     * (Sesuai requirement Anda: reject = delete fisik)
+     * REJECT (KONTEKSTUAL)
      */
     public function reject($id)
     {
         $memo = Memos::findOrFail($id);
 
-        // Guard tambahan (opsional tapi aman)
         if ($memo->status !== 'pending') {
             abort(400, 'Memo sudah diproses');
         }
 
-        if ($memo->file_dokumen) {
-            Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
+        switch ($memo->action_type) {
+
+            // ❌ CREATE → memo tidak pernah ada
+            case 'create':
+                if ($memo->file_dokumen) {
+                    Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
+                }
+                $memo->delete();
+                break;
+
+            // 🔄 UPDATE → rollback
+            case 'update':
+                $memo->update([
+                    'pending_changes' => null,
+                    'status'          => 'approved',
+                    'action_type'     => null,
+                ]);
+                break;
+
+            // 🔄 DELETE → rollback (INI YANG SEBELUMNYA SALAH)
+            case 'delete':
+                $memo->update([
+                    'status'      => 'approved',
+                    'action_type' => null,
+                ]);
+                break;
         }
 
-        $memo->delete();
-
-        return back()->with('warning', 'Memo ditolak dan dihapus');
+        return back()->with('warning', 'Permintaan ditolak');
     }
 }

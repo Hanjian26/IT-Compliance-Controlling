@@ -72,6 +72,7 @@ $levelName = $levelMap[$level] ?? 'Unknown';
           <th style="padding: 10px;">Tanggal Pengajuan</th>
           <th style="padding: 10px;">Nomor</th>
           <th style="padding: 10px;">Perihal</th>
+          <th style="padding: 10px;">Permintaan</th>
           <th style="padding: 10px;">Status</th>
 
           @if($level == 1 && Auth::user()->is_manager)
@@ -92,6 +93,7 @@ $levelName = $levelMap[$level] ?? 'Unknown';
           </td>
           <td style="padding: 10px; font-size: 12px;">{{ $item->nomor }}</td>
           <td style="padding: 10px; font-size: 12px;">{{ $item->perihal }}</td>
+          <td style="padding: 10px; font-size: 12px;">{{ $item->action_type }}</td>
 
 
           <td>

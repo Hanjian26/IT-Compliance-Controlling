@@ -126,60 +126,100 @@ public function store(Request $request)
     );
 }
 
+public function edit($id)
+{
+    $memo = Memos::findOrFail($id);
+
+    return response()->json([
+        'id'             => $memo->id,
+        'tipe_memo'      => $memo->tipe_memo,
+        'scope_memo'     => $memo->scope_memo,
+        'nomor'          => $memo->nomor,
+        'tanggal_terbit' => $memo->tanggal_terbit
+                                ? $memo->tanggal_terbit->format('Y-m-d')
+                                : null,
+        'perihal'        => $memo->perihal,
+    ]);
+}
+
+
 
     /* =====================================================
      * UPDATE
      * ===================================================== */
-    public function update(Request $request, $id)
-    {
-        $memo = Memos::findOrFail($id);
-        $user = Auth::user();
+public function update(Request $request, $id)
+{
+    $memo = Memos::findOrFail($id);
+    $user = Auth::user();
 
-        $request->validate([
-            'scope_memo'     => 'required',
-            'tanggal_terbit' => 'required|date',
-            'perihal'        => 'nullable',
-            'file_dokumen'   => 'nullable|mimes:pdf,doc,docx,zip|max:10240',
-        ]);
+    $request->validate([
+        'scope_memo'     => 'required',
+        'tanggal_terbit' => 'required|date',
+        'perihal'        => 'nullable',
+        'file_dokumen'   => 'nullable|mimes:pdf,doc,docx,zip|max:10240',
+    ]);
 
-        // 👨‍💼 Admin bawahan → pending
-        if ($user->manager_id) {
-            $memo->update([
-                'pending_changes' => [
-                    'scope_memo'     => $request->scope_memo,
-                    'tanggal_terbit' => $request->tanggal_terbit,
-                    'perihal'        => $request->perihal,
-                ],
-                'status' => 'pending',
-                'action_type' => 'update',
-            ]);
+    /*
+    |--------------------------------------------------------------------------
+    | ADMIN BAWAHAN → REQUEST UPDATE (PENDING)
+    |--------------------------------------------------------------------------
+    */
+    if (!$user->is_manager && !is_null($user->manager_id)) {
 
-            return back()->with('info', 'Perubahan menunggu approval atasan');
-        }
-
-        // 👑 Manager → langsung update
-        if ($request->hasFile('file_dokumen')) {
-            if ($memo->file_dokumen) {
-                Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
-            }
-
-            $file = $request->file('file_dokumen');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('dokumen', $filename, 'public');
-            $memo->file_dokumen = $filename;
-        }
-
-        $memo->update([
+        $pendingChanges = [
             'scope_memo'     => $request->scope_memo,
             'tanggal_terbit' => $request->tanggal_terbit,
             'perihal'        => $request->perihal,
-            'status'         => 'approved',
-            'approved_by'    => $user->nik,
-            'approved_at'    => now(),
+        ];
+
+        // Jika upload file, simpan dulu (BELUM replace file lama)
+        if ($request->hasFile('file_dokumen')) {
+            $file = $request->file('file_dokumen');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('dokumen', $filename, 'public');
+
+            $pendingChanges['file_dokumen'] = $filename;
+        }
+
+        $memo->update([
+            'pending_changes' => $pendingChanges,
+            'status'          => 'pending',
+            'action_type'     => 'update',
         ]);
 
-        return back()->with('success', 'Memo berhasil diperbarui');
+        return back()->with('info', 'Perubahan menunggu approval atasan');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAGER → UPDATE LANGSUNG
+    |--------------------------------------------------------------------------
+    */
+    if ($request->hasFile('file_dokumen')) {
+        if ($memo->file_dokumen) {
+            Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
+        }
+
+        $file = $request->file('file_dokumen');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->storeAs('dokumen', $filename, 'public');
+
+        $memo->file_dokumen = $filename;
+    }
+
+    $memo->update([
+        'scope_memo'     => $request->scope_memo,
+        'tanggal_terbit' => $request->tanggal_terbit,
+        'perihal'        => $request->perihal,
+        'status'         => 'approved',
+        'approved_by'    => $user->nik,
+        'approved_at'    => now(),
+        'pending_changes'=> null,
+    ]);
+
+    return back()->with('success', 'Memo berhasil diperbarui');
+}
+
 
     /* =====================================================
      * DELETE
