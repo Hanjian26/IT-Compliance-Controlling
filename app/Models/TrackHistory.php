@@ -12,11 +12,16 @@ class TrackHistory extends Model
 
     protected $table = 'track_history';
 
+
+    public $timestamps = false;
+
     protected $fillable = [
+        'tanggal_pengajuan',
         'nik',
         'nama',
-        'aktivitas',
-        'created_at'
+        'perihal',
+        'status',
+        'created_at',
     ];
 
     public function getActivitylogOptions(): LogOptions

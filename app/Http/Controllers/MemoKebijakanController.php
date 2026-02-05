@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Memos;
 use App\Helpers\KodeMemoHelper;
+use App\Helpers\TrackHistoryHelper;
+
 
 class MemoKebijakanController extends Controller
 {
@@ -117,6 +119,12 @@ public function store(Request $request)
     }
 
     $memo->save();
+    TrackHistoryHelper::log(
+        'menambahkan',
+        $memo->nomor,
+        $memo->status === 'pending' ? 'Pending' : 'Approved'
+    );
+
 
     return back()->with(
         'success',
@@ -187,6 +195,13 @@ public function update(Request $request, $id)
             'action_type'     => 'update',
         ]);
 
+         // === TRACK HISTORY ===
+        TrackHistoryHelper::log(
+            'mengubah',
+            $memo->nomor,
+            'Pending'
+        );
+
         return back()->with('info', 'Perubahan menunggu approval atasan');
     }
 
@@ -216,6 +231,12 @@ public function update(Request $request, $id)
         'approved_at'    => now(),
         'pending_changes'=> null,
     ]);
+
+    TrackHistoryHelper::log(
+        'mengubah',
+        $memo->nomor,
+        'Approved'
+    );
 
     return back()->with('success', 'Memo berhasil diperbarui');
 }
@@ -247,6 +268,13 @@ public function destroy($id)
             'action_type' => 'delete',
         ]);
 
+        TrackHistoryHelper::log(
+            'mengajukan untuk menghapus',
+            $memo->nomor,
+            'Pending'
+        );
+
+
         return back()->with('info', 'Permintaan hapus menunggu approval atasan');
     }
 
@@ -254,8 +282,17 @@ public function destroy($id)
     if ($memo->file_dokumen) {
         Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
     }
+    // === TRACK HISTORY ===
+    TrackHistoryHelper::log(
+        'menghapus',
+        $memo->nomor,
+        'Approved'
+    );
 
     $memo->delete();
+
+
+        
 
     return back()->with('success', 'Memo berhasil dihapus');
 }

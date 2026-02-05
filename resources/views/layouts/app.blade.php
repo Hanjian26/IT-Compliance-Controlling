@@ -163,6 +163,12 @@
             margin-left: 230px;
             padding: 80px 20px 20px 20px;
         }
+
+        a {
+            color: black;
+            font-style: none;
+            text-decoration: none
+        }
     </style>
 
     @stack('styles')

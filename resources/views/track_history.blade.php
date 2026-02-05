@@ -24,7 +24,7 @@
   <thead>
     <tr style="background-color: #f2f2f2;">
       <th style="padding: 10px;">No.</th>
-      <th style="padding: 10px;">Tanggal Pengajuan</th>
+      <th style="padding: 10px;">Tanggal Aksi</th>
       <th style="padding: 10px;">NIK</th>
       <th style="padding: 10px;">Nama</th>
       <th style="padding: 10px;">Perihal</th>
@@ -36,7 +36,7 @@
     <tr>
       <td style="padding: 10px; font-size: 12px;">{{ $data->firstItem() + $key }}</td>
       <td style="padding: 10px; font-size: 12px;">
-        {{(\Carbon\Carbon::parse($item->tanggal_pengajuan)->format('d-M-Y')) }}
+        {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y H:i:s') }}
       </td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->nik }}</td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->nama }}</td>

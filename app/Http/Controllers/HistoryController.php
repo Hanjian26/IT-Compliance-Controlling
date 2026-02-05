@@ -19,7 +19,7 @@ public function index(Request $request)
         $search = $request->search;
 
         $query->where(function ($q) use ($search) {
-            $q->Where('no', 'LIKE', "%{$search}%")
+            $q->Where('id', 'LIKE', "%{$search}%")
               ->orWhere('tanggal_pengajuan', 'LIKE', "%{$search}%")
               ->orWhere('nik', 'LIKE', "%{$search}%")
               ->orWhere('nama', 'LIKE', "%{$search}%")
