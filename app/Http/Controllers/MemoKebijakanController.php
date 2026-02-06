@@ -120,7 +120,7 @@ public function store(Request $request)
 
     $memo->save();
     TrackHistoryHelper::log(
-        'menambahkan',
+        'mengajukan untuk menambahkan',
         $memo->nomor,
         $memo->status === 'pending' ? 'Pending' : 'Approved'
     );
@@ -197,7 +197,7 @@ public function update(Request $request, $id)
 
          // === TRACK HISTORY ===
         TrackHistoryHelper::log(
-            'mengubah',
+            'mengajukan perubahan',
             $memo->nomor,
             'Pending'
         );

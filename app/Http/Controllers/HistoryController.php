@@ -28,7 +28,7 @@ public function index(Request $request)
         });
     }
 
-            $data = $query->orderBy('tanggal_pengajuan', 'desc')
+            $data = $query->orderBy('tanggal_pengajuan', 'asc')
                         ->paginate(5)
                         ->withQueryString(); // agar search tetap saat paging
 
