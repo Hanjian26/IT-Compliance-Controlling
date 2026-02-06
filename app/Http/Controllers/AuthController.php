@@ -62,8 +62,12 @@ return view('main_menu');
     public function showRegisterForm()
     {
     $departments = Department::orderBy('department')->get();
+    $manager_id = User::where('level', 1)
+    ->where('is_manager', 1)
+    ->orderBy('nama')
+    ->get();
 
-    return view('register', compact('departments'));
+    return view('register', compact('departments', 'manager_id'));
     }
 
     /* =========================
@@ -78,6 +82,7 @@ return view('main_menu');
         'email'      => 'required|email|unique:users,email',
         'password'   => 'required|min:6',
         'level'      => 'required|in:1,2',
+        'manager_id' => 'nullable|exists:users,nik',
     ]);
 
     User::create([
@@ -87,6 +92,7 @@ return view('main_menu');
         'email'      => $request->email,
         'password'   => bcrypt($request->password),
         'level'      => $request->level,
+        'manager_id' => $request->manager_id,
     ]);
 
     return redirect('/login')->with('success', 'User berhasil dibuat');
