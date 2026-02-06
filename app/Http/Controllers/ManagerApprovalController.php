@@ -142,14 +142,20 @@ class ManagerApprovalController extends Controller
              * REJECT UPDATE
              * REJECT DELETE
              */
-            case 'update':
-            case 'delete':
-                $memo->update([
-                    'pending_changes' => null,
-                    'status'          => 'rejected',
-                    'action_type'     => null,
-                ]);
-                break;
+ case 'update':
+    $memo->update([
+        'pending_changes' => null,
+        'status'          => 'approved', // ⬅️ KEMBALIKAN
+        'action_type'     => null,
+    ]);
+    break;
+
+case 'delete':
+    $memo->update([
+        'status'      => 'approved', // ⬅️ BATAL HAPUS
+        'action_type' => null,
+    ]);
+    break;
         }
 
         return back()->with('warning', 'Permintaan ditolak');

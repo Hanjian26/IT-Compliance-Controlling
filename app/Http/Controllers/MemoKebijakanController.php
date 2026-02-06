@@ -138,17 +138,23 @@ public function edit($id)
 {
     $memo = Memos::findOrFail($id);
 
+    $data = $memo->pending_changes
+        ? array_merge(
+            $memo->only(['tipe_memo','scope_memo','nomor','tanggal_terbit','perihal']),
+            $memo->pending_changes
+        )
+        : $memo;
+
     return response()->json([
         'id'             => $memo->id,
-        'tipe_memo'      => $memo->tipe_memo,
-        'scope_memo'     => $memo->scope_memo,
+        'tipe_memo'      => $data['tipe_memo'],
+        'scope_memo'     => $data['scope_memo'],
         'nomor'          => $memo->nomor,
-        'tanggal_terbit' => $memo->tanggal_terbit
-                                ? $memo->tanggal_terbit->format('Y-m-d')
-                                : null,
-        'perihal'        => $memo->perihal,
+        'tanggal_terbit' => \Carbon\Carbon::parse($data['tanggal_terbit'])->format('Y-m-d'),
+        'perihal'        => $data['perihal'],
     ]);
 }
+
 
 
 
