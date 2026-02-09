@@ -6,6 +6,7 @@
   <title>IT Compliance & Controlling</title>
   <link rel="icon" href="{{ asset('indomaret.png') }}" type="image/png">
 
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -102,6 +103,7 @@
 
   <div class="login-container">
     <img src="{{ asset('indomaret.png') }}" alt="Logo">
+
     <h2>IT COMPLIANCE & CONTROLLING</h2>
 
     @if(session('error'))
