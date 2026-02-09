@@ -30,7 +30,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [AuthController::class, 'showRegisterForm']);
 Route::post('/register', [AuthController::class, 'register']);
 
-<<<<<<< HEAD
+Route::post('/store-pin', [AuthController::class, 'storePin'])
+    ->middleware('auth')
+    ->name('pin.store');
+
 /*
 |--------------------------------------------------------------------------
 | USER ROUTES (LEVEL 2 – VIEW ONLY)
@@ -40,20 +43,6 @@ Route::prefix('user')
     ->middleware(['auth', 'level:2'])
     ->name('user.')
     ->group(function () {
-=======
-Route::prefix('staff')->middleware(['auth', 'level:3'])->group(function () {
-
-    Route::get('/', fn () => redirect()->route('staff.main_menu'));
-
-    Route::get('/main-menu', [AuthController::class, 'mainMenu'])
-        ->name('staff.main_menu');
-
-});
-
-Route::prefix('user')->middleware(['auth', 'level:2'])->group(function () {
-    // redirect /user -> main_menu
-    Route::get('/', fn () => redirect()->route('user.main_menu'))->name('user.home');
->>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
 
         Route::redirect('/', '/user/main-menu');
 

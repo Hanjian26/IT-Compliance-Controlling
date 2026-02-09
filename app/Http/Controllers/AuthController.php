@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Department;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -110,4 +111,52 @@ return view('main_menu');
 
         return redirect('/login');
     }
+
+    public function storePin(Request $request)
+{
+    $request->validate([
+        'pin' => [
+            'required',
+            'digits:6',
+            'regex:/^[0-9]+$/',
+            'confirmed'
+        ]
+    ], [
+        'pin.required' => 'PIN wajib diisi.',
+        'pin.digits' => 'PIN harus 6 digit.',
+        'pin.confirmed' => 'Konfirmasi PIN tidak cocok.'
+    ]);
+
+    $pin = $request->pin;
+
+    // Cek angka sama semua (111111)
+    if (preg_match('/^(\d)\1{5}$/', $pin)) {
+        return back()->withErrors([
+            'pin' => 'PIN tidak boleh angka yang sama semua.'
+        ]);
+    }
+
+    // Cek angka berurutan
+    $ascending = '0123456789';
+    $descending = '9876543210';
+
+    if (str_contains($ascending, $pin) || str_contains($descending, $pin)) {
+        return back()->withErrors([
+            'pin' => 'PIN tidak boleh berurutan.'
+        ]);
+    }
+
+    $user = auth()->user();
+
+    $user->pin = Hash::make($pin);
+    $user->owned_pin = true;
+    $user->save();
+
+    // redirect sesuai level
+    if ($user->level == 1) {
+        return redirect()->route('admin.main_menu');
+    }
+
+    return redirect()->route('user.main_menu');
+}
 }

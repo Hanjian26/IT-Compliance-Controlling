@@ -27,6 +27,8 @@ class User extends Authenticatable
         'manager_id',
         'level',
         'is_manager',
+        'owned_pin',
+        'pin',
     ];
 
     /* ================= HIDDEN ================= */
