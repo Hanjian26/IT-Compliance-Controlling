@@ -3,7 +3,12 @@
 @section('content')
 
 <h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">History Data</h2>
+<<<<<<< HEAD
 <form method="GET" action="{{ route('admin.track-history.index') }}"
+=======
+
+<form method="GET" action="{{ route('admin.track.history') }}"
+>>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
   style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
   <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
     style="margin-left:45px;width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
@@ -15,12 +20,9 @@
   <a href="{{ route('admin.track-history.index') }}"
     style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">Reset</a>
   @endif
-
 </form>
 
-
-<!-- Tabel -->
-<table style="border-collapse: collapse; width: 100%; text-align: center; margin-left:10px">
+<table style="border-collapse: collapse; width: 100%; text-align: center; margin-left:12px">
   <thead>
     <tr style="background-color: #f2f2f2;">
       <th style="padding: 10px;">No.</th>
@@ -29,6 +31,7 @@
       <th style="padding: 10px;">Nama</th>
       <th style="padding: 10px;">Perihal</th>
       <th style="padding: 10px;">Status</th>
+
     </tr>
   </thead>
   <tbody>
@@ -37,15 +40,15 @@
       <td style="padding: 10px; font-size: 12px;">{{ $data->firstItem() + $key }}</td>
       <td style="padding: 10px; font-size: 12px;">
         {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y H:i:s') }}
+<<<<<<< HEAD
+=======
+      </td>
+>>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
       </td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->nik }}</td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->nama }}</td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->perihal }}</td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->status }}</td>
-      <div style="display: inline-flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
-      </div>
-      </td>
-
     </tr>
     @endforeach
   </tbody>
@@ -58,20 +61,13 @@
       @foreach ($data->links()->elements[0] as $page => $url)
       <li style="display: inline-block;">
         <a href="{{ $url }}"
-          style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">{{
-          $page }}</a>
+          style="text-decoration: none; color: #333; padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px;">
+          {{ $page }}
+        </a>
       </li>
       @endforeach
     </ul>
   </div>
 </div>
-</div>
-</div>
-
-<!-- Script -->
-<script>
-
-
-</script>
 
 @endsection
