@@ -29,7 +29,7 @@ public function index(Request $request)
     }
 
             $data = $query->orderBy('tanggal_pengajuan', 'asc')
-                        ->paginate(5)
+                        ->paginate(10)
                         ->withQueryString(); // agar search tetap saat paging
 
             return view('track_history', compact('data'));
