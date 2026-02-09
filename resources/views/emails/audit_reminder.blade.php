@@ -41,7 +41,7 @@
                 <td style="padding:6px 8px; border-bottom:1px solid #ddd;">{{ $audit->divisi ?? '-' }}</td>
             </tr>
             <tr>
-                <td style="padding:6px 8px; border-bottom:1px solid #ddd;"><strong>Kegiatan</strong></td>
+                <td style="padding:6px 8px; border-bottom:1px solid #ddd;"><strong>Tindak Lanjut</strong></td>
                 <td style="padding:6px 8px; border-bottom:1px solid #ddd;">{{ $audit->kegiatan ?? '-' }}</td>
             </tr>
             <tr>

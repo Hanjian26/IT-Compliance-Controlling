@@ -102,8 +102,8 @@ class MemoKebijakanController extends Controller
         $memo->tanggal_terbit = $request->tanggal_terbit;
         $memo->perihal        = $request->perihal;
         $memo->nomor          = KodeMemoHelper::generate(
-            $request->tipe_memo,
-            $request->tanggal_terbit
+        $request->tipe_memo,
+        $request->tanggal_terbit
         );
 
         if ($request->hasFile('file_dokumen')) {

@@ -76,7 +76,7 @@ $level = $user->level ?? null;
             <tr style="background-color: #f2f2f2;">
                 <th style="padding: 10px;">No.</th>
                 <th style="padding: 10px;">Divisi</th>
-                <th style="padding: 10px;">Kegiatan</th>
+                <th style="padding: 10px;">Tindak Lanjut</th>
                 <th style="padding: 10px;">Target Penyelesaian</th>
                 <th style="padding: 10px;">PIC</th>
                 <th style="padding: 10px;">Auditor</th>
@@ -209,7 +209,7 @@ $level = $user->level ?? null;
             </div>
 
             <div style="margin-bottom: 15px;">
-                <label for="edit_kegiatan">Kegiatan<span style="color: red;">*</span>:</label>
+                <label for="edit_kegiatan">Tindak Lanjut<span style="color: red;">*</span>:</label>
                 <input type="text" name="kegiatan" id="edit_kegiatan" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
             </div>
@@ -349,7 +349,7 @@ $level = $user->level ?? null;
 
 
             <div style="margin-bottom: 15px;">
-                <label for="kegiatan">Kegiatan<span style="color: red;">*</span>:</label>
+                <label for="kegiatan">Tindak Lanjut<span style="color: red;">*</span>:</label>
                 <input type="text" name="kegiatan" id="kegiatan" required
                     style="width: 100%; padding: 8px; box-sizing: border-box;">
             </div>
