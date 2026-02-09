@@ -23,6 +23,7 @@ class Memos extends Model
         'manager_id',
         'status',           // pending | approved | rejected
         'action_type',      // create | update | delete
+        'requested_by',
         'approved_by',
         'approved_at',
         'pending_changes',
@@ -64,9 +65,17 @@ class Memos extends Model
         return $this->status === 'pending';
     }
 
-    public function getNamaPengajuAttribute()
+public function getNamaPengajuAttribute()
 {
-    return $this->creator->nama ?? '-';
+    return $this->requester->nama ?? '-';
+}
+
+
+
+public function requester()
+{
+    // 'requested_by' di memos mengacu ke 'nik' di users
+    return $this->belongsTo(User::class, 'requested_by', 'nik');
 }
 
 
@@ -82,6 +91,7 @@ class Memos extends Model
                 'approved_by',
                 'approved_at',
                 'pending_changes',
+                'requested_by',
             ])
             ->setDescriptionForEvent(
                 fn(string $event) => "Memo {$event}"

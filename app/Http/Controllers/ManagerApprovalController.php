@@ -25,7 +25,10 @@ class ManagerApprovalController extends Controller
         }
 
         $nomorMemo   = $memo->nomor;
-        $pengajuNama = User::where('nik', $memo->user_id)->value('nama');
+        $pengajuNik  = $memo->requested_by ?? $memo->user_id;
+        $pengajuNama = User::where('nik', $pengajuNik)->value('nama');
+
+
 
         switch ($memo->action_type) {
 
@@ -100,64 +103,69 @@ class ManagerApprovalController extends Controller
         return back()->with('success', 'Approval berhasil');
     }
 
-    /**
-     * =========================
-     * REJECT
-     * =========================
-     */
-    public function reject($id)
-    {
-        $memo = Memos::findOrFail($id);
+/**
+ * =========================
+ * REJECT
+ * =========================
+ */
+public function reject($id)
+{
+    $memo = Memos::findOrFail($id);
 
-        if ($memo->status !== 'pending') {
-            abort(400, 'Memo sudah diproses');
-        }
-
-        $pengajuNama = User::where('nik', $memo->user_id)->value('nama');
-        $nomorMemo   = $memo->nomor;
-
-        /**
-         * LOG HARUS DI AWAL
-         */
-        TrackHistoryHelper::log(
-            "menolak pengajuan penambahan oleh {$pengajuNama}",
-            $nomorMemo,
-            'Rejected'
-        );
-
-        switch ($memo->action_type) {
-
-            /**
-             * REJECT CREATE
-             */
-            case 'create':
-                if ($memo->file_dokumen) {
-                    Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
-                }
-
-                $memo->delete();
-                return back()->with('warning', 'Permintaan ditolak');
-
-            /**
-             * REJECT UPDATE
-             * REJECT DELETE
-             */
- case 'update':
-    $memo->update([
-        'pending_changes' => null,
-        'status'          => 'approved', // ⬅️ KEMBALIKAN
-        'action_type'     => null,
-    ]);
-    break;
-
-case 'delete':
-    $memo->update([
-        'status'      => 'approved', // ⬅️ BATAL HAPUS
-        'action_type' => null,
-    ]);
-    break;
-        }
-
-        return back()->with('warning', 'Permintaan ditolak');
+    if ($memo->status !== 'pending') {
+        abort(400, 'Memo sudah diproses');
     }
+
+    $nomorMemo   = $memo->nomor;
+    $pengajuNik  = $memo->requested_by ?? $memo->user_id;
+    $pengajuNama = User::where('nik', $pengajuNik)->value('nama');
+
+    // Tentukan jenis aksi untuk log dan flash message
+    $actionText = match($memo->action_type) {
+        'create' => 'pengajuan penambahan',
+        'update' => 'perubahan memo',
+        'delete' => 'penghapusan memo',
+        default  => 'aksi memo',
+    };
+
+    // Log di awal
+    TrackHistoryHelper::log(
+        "menolak {$actionText} oleh {$pengajuNama}",
+        $nomorMemo,
+        'Rejected'
+    );
+
+    // Handle reject berdasarkan action_type
+    switch ($memo->action_type) {
+
+        // REJECT CREATE
+        case 'create':
+            if ($memo->file_dokumen) {
+                Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
+            }
+            $memo->delete();
+            break;
+
+        // REJECT UPDATE
+        case 'update':
+            $memo->update([
+                'pending_changes' => null,
+                'status'          => 'approved', // rollback ke approved
+                'action_type'     => null,
+            ]);
+            break;
+
+        // REJECT DELETE
+        case 'delete':
+            $memo->update([
+                'status'      => 'approved', // batalkan penghapusan
+                'action_type' => null,
+            ]);
+            break;
+    }
+
+    // Kembalikan response dengan flash message yang spesifik
+    return back()->with('warning', "Permintaan {$actionText} ditolak");
+}
+
 }
