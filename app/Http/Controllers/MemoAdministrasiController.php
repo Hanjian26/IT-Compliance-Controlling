@@ -8,9 +8,14 @@ use App\Models\Memos;
 use Illuminate\Support\Facades\Auth;
 use Spatie\Activitylog\Models\Activity;
 use App\Helpers\KodeMemoHelper;
+use setasign\Fpdi\Tcpdf\Fpdi;
+use App\Helpers\TrackHistoryHelper;
 
 class MemoAdministrasiController extends Controller
 {
+     /* =====================================================
+     * INDEX (APPROVED + PENDING)
+     * ===================================================== */
     public function index(Request $request)
 {
     $user = Auth::user();
@@ -38,28 +43,42 @@ class MemoAdministrasiController extends Controller
     $pendingQuery = Memos::where('tipe_memo', 'Administrasi')
         ->where('status', 'pending');
 
-    // Admin bawahan → hanya memo miliknya
-    if ($user->manager_id && !$user->is_manager) {
-        $pendingQuery->where('user_id', $user->nik);
-    }
+         $pendingQuery = Memos::where('memos.tipe_memo', 'Administrasi')
+            ->where('memos.status', 'pending')
+            ->leftJoin('users as requester', 'memos.requested_by', '=', 'requester.nik')
+            ->select(
+                'memos.*',
+                'requester.nama as nama_pengaju'
+            );
 
-    // Manager → memo bawahan
-    if ($user->is_manager) {
-        $pendingQuery->where('manager_id', $user->nik);
-    }
+        /*
+        |--------------------------------------------------------------------------
+        | RULE VISIBILITY
+        |--------------------------------------------------------------------------
+        | level = 1  → lihat SEMUA pending
+        | manager    → lihat pending bawahan
+        | bawahan    → lihat pending yang dia ajukan
+        */
+        if ($user->level != 1) {
+            if ($user->is_manager) {
+                $pendingQuery->where('memos.manager_id', $user->nik);
+            } else {
+                $pendingQuery->where('memos.requested_by', $user->nik);
+            }
+        }
 
     $pendingData = $pendingQuery
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->orderBy('memos.created_at', 'desc')
+            ->get();
 
     /* ===============================
      * RETURN VIEW
      * =============================== */
     return view('memo_administrasi', [
-        'data'        => $approvedData,   // tabel utama
-        'pendingData' => $pendingData,    // popup pending
-        'isAdmin'     => $user->level == 1,
-        'isManager'   => $user->is_manager
+            'data'        => $approvedData,
+            'pendingData' => $pendingData,
+            'isAdmin'     => $user->level == 1,
+            'isManager'   => $user->is_manager
     ]);
 }
 
@@ -80,10 +99,9 @@ class MemoAdministrasiController extends Controller
     $memo->scope_memo     = $request->scope_memo;
     $memo->tanggal_terbit = $request->tanggal_terbit;
     $memo->perihal        = $request->perihal;
-
-    $memo->nomor = KodeMemoHelper::generate(
-        $request->tipe_memo,
-        $request->tanggal_terbit
+    $memo->nomor          = KodeMemoHelper::generate(
+    $request->tipe_memo,
+    $request->tanggal_terbit
     );
 
     // Upload file
@@ -94,8 +112,9 @@ class MemoAdministrasiController extends Controller
         $memo->file_dokumen = $filename;
     }
 
-    $memo->user_id    = $user->nik;
-    $memo->manager_id = $user->manager_id ?? $user->nik; 
+    $memo->user_id    = $user->nik;              // PEMBUAT
+    $memo->requested_by = $user->nik;            // PENGAJU
+    $memo->manager_id = $user->manager_id ?? $user->nik;
     $memo->action_type = 'create';
 
     // Approval logic
@@ -109,30 +128,41 @@ class MemoAdministrasiController extends Controller
 
     $memo->save();
 
-    return back()->with(
-        'success',
-        $user->manager_id
-            ? 'Memo dikirim dan menunggu approval atasan'
-            : 'Memo berhasil disimpan'
-    );
-}
+     TrackHistoryHelper::log(
+            'mengajukan penambahan memo',
+            $memo->nomor,
+            ucfirst($memo->status)
+        );
+
+        return back()->with(
+            'success',
+            $memo->status === 'pending'
+                ? 'Memo dikirim dan menunggu approval'
+                : 'Memo berhasil disimpan'
+        );
+    }
 
 
-  public function edit($id)
-{
-    $memo = Memos::findOrFail($id);
+ public function edit($id)
+    {
+        $memo = Memos::findOrFail($id);
 
-    return response()->json([
-        'id'             => $memo->id,
-        'tipe_memo'      => $memo->tipe_memo,
-        'scope_memo'     => $memo->scope_memo,
-        'nomor'          => $memo->nomor,
-        'tanggal_terbit' => $memo->tanggal_terbit
-                                ? $memo->tanggal_terbit->format('Y-m-d')
-                                : null,
-        'perihal'        => $memo->perihal,
-    ]);
-}
+        $data = $memo->pending_changes
+            ? array_merge(
+                $memo->only(['tipe_memo','scope_memo','nomor','tanggal_terbit','perihal']),
+                $memo->pending_changes
+            )
+            : $memo->toArray();
+
+        return response()->json([
+            'id'             => $memo->id,
+            'tipe_memo'      => $data['tipe_memo'],
+            'scope_memo'     => $data['scope_memo'],
+            'nomor'          => $memo->nomor,
+            'tanggal_terbit' => Carbon::parse($data['tanggal_terbit'])->format('Y-m-d'),
+            'perihal'        => $data['perihal'],
+        ]);
+    }
 
   
     /* =====================================================
@@ -141,115 +171,96 @@ class MemoAdministrasiController extends Controller
 public function update(Request $request, $id)
 {
     $memo = Memos::findOrFail($id);
-    $user = Auth::user();
+    $user = Auth::user(); // user yang sedang login, misal sandi
 
-    $request->validate([
-        'scope_memo'     => 'required',
-        'tanggal_terbit' => 'required|date',
-        'perihal'        => 'nullable',
-        'file_dokumen'   => 'nullable|mimes:pdf,doc,docx,zip|max:10240',
-    ]);
-
-    /*
-    |--------------------------------------------------------------------------
-    | ADMIN BAWAHAN → REQUEST UPDATE (PENDING)
-    |--------------------------------------------------------------------------
-    */
-    if (!$user->is_manager && !is_null($user->manager_id)) {
-
-        $pendingChanges = [
-            'scope_memo'     => $request->scope_memo,
-            'tanggal_terbit' => $request->tanggal_terbit,
-            'perihal'        => $request->perihal,
-        ];
-
-        // Jika upload file, simpan dulu (BELUM replace file lama)
-        if ($request->hasFile('file_dokumen')) {
-            $file = $request->file('file_dokumen');
-            $filename = time() . '_' . $file->getClientOriginalName();
-            $file->storeAs('dokumen', $filename, 'public');
-
-            $pendingChanges['file_dokumen'] = $filename;
-        }
-
-        $memo->update([
-            'pending_changes' => $pendingChanges,
-            'status'          => 'pending',
-            'action_type'     => 'update',
-        ]);
-
-        return back()->with('info', 'Perubahan menunggu approval atasan');
+    // pastikan memo belum diproses
+    if ($memo->status !== 'approved') {
+        return back()->with('warning', 'Memo sedang dalam proses atau belum bisa diedit');
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | MANAGER → UPDATE LANGSUNG
-    |--------------------------------------------------------------------------
-    */
+    // siapkan perubahan pending
+    $pendingChanges = $request->only([
+        'perihal',
+        'scope_memo',
+        'tanggal_terbit',
+        'file_dokumen'
+    ]);
+
+    // jika ada file baru, simpan di storage
     if ($request->hasFile('file_dokumen')) {
+        // hapus file lama jika ada
         if ($memo->file_dokumen) {
             Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
         }
 
-        $file = $request->file('file_dokumen');
-        $filename = time() . '_' . $file->getClientOriginalName();
-        $file->storeAs('dokumen', $filename, 'public');
-
-        $memo->file_dokumen = $filename;
+        $fileName = $request->file('file_dokumen')->store('dokumen', 'public');
+        $pendingChanges['file_dokumen'] = basename($fileName);
     }
 
+      TrackHistoryHelper::log(
+                'mengajukan perubahan memo',
+                $memo->nomor,
+                'Pending'
+            );
+
+    // update memo dengan pending_changes
     $memo->update([
-        'scope_memo'     => $request->scope_memo,
-        'tanggal_terbit' => $request->tanggal_terbit,
-        'perihal'        => $request->perihal,
-        'status'         => 'approved',
-        'approved_by'    => $user->nik,
-        'approved_at'    => now(),
-        'pending_changes'=> null,
+        'pending_changes' => $pendingChanges,
+        'status'         => 'pending',
+        'action_type'    => 'update',
+        'requested_by'   => $user->nik, // ⬅️ pengaju sekarang
     ]);
 
-    return back()->with('success', 'Memo berhasil diperbarui');
+    return back()->with('success', 'Permintaan perubahan berhasil dikirim ke manager');
 }
 
 /* =====================================================
      * DELETE
      * ===================================================== */
 public function destroy($id)
-{
-    $memo = Memos::findOrFail($id);
-    $user = Auth::user();
+    {
+        $memo = Memos::findOrFail($id);
+        $user = Auth::user();
 
-    // 🔐 Hanya admin level 1
-    if ($user->level !== 1) {
-        abort(403, 'Anda tidak berhak menghapus memo ini');
-    }
-
-    // 👨‍💼 Admin BAWAHAN (punya atasan & bukan manager)
-    if (!$user->is_manager && !is_null($user->manager_id)) {
-
-        // Cegah double request
-        if ($memo->status === 'pending' && $memo->action_type === 'delete') {
-            return back()->with('warning', 'Menghapus Memo sudah menunggu approval');
+        if ($user->level !== 1) {
+            abort(403);
         }
 
-        $memo->update([
-            'status'      => 'pending',
-            'action_type' => 'delete',
-        ]);
+        if (!$user->is_manager && $user->manager_id) {
 
-        return back()->with('info', 'Permintaan hapus menunggu approval atasan');
+            if ($memo->status === 'pending' && $memo->action_type === 'delete') {
+                return back()->with('warning', 'Penghapusan sudah menunggu approval');
+            }
+
+            $memo->update([
+                'status'       => 'pending',
+                'action_type'  => 'delete',
+                'requested_by' => $user->nik,
+            ]);
+
+            TrackHistoryHelper::log(
+                'mengajukan penghapusan memo',
+                $memo->nomor,
+                'Pending'
+            );
+
+            return back()->with('info', 'Permintaan hapus menunggu approval');
+        }
+
+        if ($memo->file_dokumen) {
+            Storage::disk('public')->delete('dokumen/'.$memo->file_dokumen);
+        }
+
+        TrackHistoryHelper::log(
+            'menghapus memo',
+            $memo->nomor,
+            'Approved'
+        );
+
+        $memo->delete();
+
+        return back()->with('success', 'Memo berhasil dihapus');
     }
-
-    // 👑 MANAGER → DELETE FINAL
-    if ($memo->file_dokumen) {
-        Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
-    }
-
-    $memo->delete();
-
-    return back()->with('success', 'Memo berhasil dihapus');
-}
-
 
 public function generateNomor(Request $request)
 {
@@ -267,30 +278,45 @@ public function generateNomor(Request $request)
     ]);
 }
 
-public function pendingList()
-{
-    $user = Auth::user();
+public function downloadPdf($id)
+    {
+        $user = Auth::user();
 
-    $query = Memos::where('status', 'pending');
+        // Ambil PIN plain-text dari kolom 'pin'
+        $pdfPin = $user->pin;
 
-    // Admin bawahan → hanya memo miliknya
-    if ($user->manager_id) {
-        $query->where('user_id', $user->nik);
+        if (!$pdfPin) {
+            abort(403, "Anda belum memiliki PIN untuk membuka PDF");
+        }
+
+        // Ambil record memo
+        $memo = Memos::findOrFail($id);
+
+        // Lokasi file di storage/public/dokumen
+        $sourceFile = storage_path("app/public/dokumen/" . $memo->file_dokumen);
+
+        if (!file_exists($sourceFile)) {
+            abort(404, "File tidak ditemukan");
+        }
+
+        // Load PDF menggunakan FPDI
+        $pdf = new Fpdi();
+        $pageCount = $pdf->setSourceFile($sourceFile);
+
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            $template = $pdf->importPage($pageNo);
+            $size = $pdf->getTemplateSize($template);
+
+            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+            $pdf->useTemplate($template);
+        }
+
+        // Proteksi PDF menggunakan PIN dari user
+        $pdf->SetProtection([], $pdfPin);
+
+        // Kirim file sebagai download
+        return response($pdf->Output($memo->nomor . '.pdf', 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="'.$memo->nomor.'.pdf"');
     }
-
-    // Manager → memo bawahan
-    if ($user->is_manager) {
-        $query->where('manager_id', $user->nik);
-    }
-
-    $data = $query
-        ->orderBy('created_at', 'desc')
-        ->paginate(5);
-
-    return view('memo_pending', [
-        'data' => $data,
-        'isManager' => $user->is_manager
-    ]);
-}
-
 }
