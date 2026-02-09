@@ -3,12 +3,7 @@
 @section('content')
 
 <h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">History Data</h2>
-<<<<<<< HEAD
 <form method="GET" action="{{ route('admin.track-history.index') }}"
-=======
-
-<form method="GET" action="{{ route('admin.track.history') }}"
->>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
   style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
   <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
     style="margin-left:45px;width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
@@ -39,11 +34,8 @@
     <tr>
       <td style="padding: 10px; font-size: 12px;">{{ $data->firstItem() + $key }}</td>
       <td style="padding: 10px; font-size: 12px;">
-        {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y H:i:s') }}
-<<<<<<< HEAD
-=======
-      </td>
->>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
+        {{ \Carbon\Carbon::parse($item->created_at)->format('d-M-Y H:i:s') }}</td>
+
       </td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->nik }}</td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->nama }}</td>

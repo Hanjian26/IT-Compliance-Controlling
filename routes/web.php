@@ -179,6 +179,11 @@ Route::prefix('admin')
             Route::delete('/{id}', [TindakAuditController::class, 'destroy'])->name('destroy');
         });
 
+        Route::resource('track-history', HistoryController::class)->except(['show']);
+
+
+        
+
         // Route::resource('memo-audit', MemoAuditController::class)
         //     ->except(['show', 'destroy']);
         // Route::resource('memo-all', MemoAllController::class)
@@ -225,5 +230,4 @@ Route::prefix('admin')
         */
         
         Route::resource('template-dokumen', TemplateDokumenController::class)->except(['show']);
-        Route::resource('track-history', HistoryController::class)->except(['show']);
     });
