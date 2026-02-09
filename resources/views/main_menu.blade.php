@@ -108,6 +108,17 @@
         placeholder="Konfirmasi PIN" required>
 
       <button type="submit">Simpan PIN</button>
+
+      <p style="margin:0 0 1px 0; line-height:1.2;">
+        <strong>Note:</strong>
+      </p>
+      <ul style="margin:0; padding-left:20px; line-height:1.2; list-style-type:disc;">
+        <li style="margin-bottom:2px; font-size:14px;">PIN hanya berupa angka</li>
+        <li style="margin-bottom:2px; font-size:14px;">Angka berurutan 6 digit tidak diperbolehkan</li>
+        <li style="margin-bottom:2px; font-size:14px;">Angka kembar 6 digit tidak diperbolehkan</li>
+        <li style="margin-bottom:0; font-size:14px;">PIN tidak bisa menggunakan huruf atau simbol</li>
+      </ul>
+
     </form>
   </div>
 
