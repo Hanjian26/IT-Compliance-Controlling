@@ -112,7 +112,7 @@ return view('main_menu');
         return redirect('/login');
     }
 
-    public function storePin(Request $request)
+public function storePin(Request $request)
 {
     $request->validate([
         'pin' => [
@@ -131,28 +131,28 @@ return view('main_menu');
 
     // Cek angka sama semua (111111)
     if (preg_match('/^(\d)\1{5}$/', $pin)) {
-        return back()->withErrors([
-            'pin' => 'PIN tidak boleh angka yang sama semua.'
-        ]);
+        return back()->withErrors(['pin' => 'PIN tidak boleh angka yang sama semua.']);
     }
 
     // Cek angka berurutan
     $ascending = '0123456789';
     $descending = '9876543210';
-
     if (str_contains($ascending, $pin) || str_contains($descending, $pin)) {
-        return back()->withErrors([
-            'pin' => 'PIN tidak boleh berurutan.'
-        ]);
+        return back()->withErrors(['pin' => 'PIN tidak boleh berurutan.']);
     }
 
+    // Ambil user login
     $user = auth()->user();
+    if (!$user) {
+        return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
+    }
 
-    $user->pin = Hash::make($pin);
+    // Simpan PIN sebagai plain-text
+    $user->pin = $pin;
     $user->owned_pin = true;
     $user->save();
 
-    // redirect sesuai level
+    // Redirect sesuai level
     if ($user->level == 1) {
         return redirect()->route('admin.main_menu');
     }

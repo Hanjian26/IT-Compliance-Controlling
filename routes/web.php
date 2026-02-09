@@ -34,6 +34,9 @@ Route::post('/store-pin', [AuthController::class, 'storePin'])
     ->middleware('auth')
     ->name('pin.store');
 
+Route::get('/memo/download/{id}', [MemoKebijakanController::class, 'downloadPdf'])
+    ->name('memo.download');
+
 /*
 |--------------------------------------------------------------------------
 | USER ROUTES (LEVEL 2 – VIEW ONLY)

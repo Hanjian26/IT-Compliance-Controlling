@@ -7,13 +7,13 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Memos;
 use App\Helpers\KodeMemoHelper;
-<<<<<<< HEAD
 use App\Helpers\TrackHistoryHelper;
 use Carbon\Carbon;
-=======
-use App\Models\TrackHistory;
+use setasign\Fpdi\Tcpdf\Fpdi;
 
->>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
+
+
+
 
 class MemoKebijakanController extends Controller
 {
@@ -102,8 +102,8 @@ class MemoKebijakanController extends Controller
         $memo->tanggal_terbit = $request->tanggal_terbit;
         $memo->perihal        = $request->perihal;
         $memo->nomor          = KodeMemoHelper::generate(
-        $request->tipe_memo,
-        $request->tanggal_terbit
+            $request->tipe_memo,
+            $request->tanggal_terbit
         );
 
         if ($request->hasFile('file_dokumen')) {
@@ -113,7 +113,6 @@ class MemoKebijakanController extends Controller
             $memo->file_dokumen = $filename;
         }
 
-<<<<<<< HEAD
         $memo->user_id    = $user->nik;              // PEMBUAT
         $memo->requested_by = $user->nik;            // PENGAJU
         $memo->manager_id = $user->manager_id ?? $user->nik;
@@ -146,41 +145,6 @@ class MemoKebijakanController extends Controller
     /* =====================================================
      * EDIT (AJAX)
      * ===================================================== */
-=======
-        $memo->save();
-        $this->recordHistory($memo, 'menambahkan', 'Masih Develop (Harusnya Pending)');
-
-
-
-        activity('memo_kebijakan')
-            ->causedBy(Auth::user())
-            ->performedOn($memo)
-            ->withProperties([
-                'action' => 'create',
-                'nama' => Auth::user()->nama,
-                'nik' => Auth::user()->nik,
-            ])
-            ->log('Menambahkan memo kebijakan');
-
-        return redirect()->back()->with('success', 'Memo berhasil ditambahkan!');
-    }
-
-   public function destroy($id)
-{
-    $memo = Memos::findOrFail($id);
-    // Hapus file jika ada
-    if ($memo->file_dokumen && Storage::disk('public')->exists('dokumen/' . $memo->file_dokumen)) {
-        Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
-    }
-
-    $memo->delete();
-    $this->recordHistory($memo, 'menghapus', 'Masih Develop (Harusnya Pending)');
-
-
-    return redirect()->route('memo.index')->with('success', 'Dokumen berhasil dihapus.');
-}
-
->>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
     public function edit($id)
     {
         $memo = Memos::findOrFail($id);
@@ -230,24 +194,8 @@ public function update(Request $request, $id)
             Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
         }
 
-<<<<<<< HEAD
         $fileName = $request->file('file_dokumen')->store('dokumen', 'public');
         $pendingChanges['file_dokumen'] = basename($fileName);
-=======
-        $memo->save();
-        $this->recordHistory($memo, 'mengubah', 'Masih Develop (Harusnya Pending)'); // misal $memo->status = 'Pending'
-        activity('memo_kebijakan')
-            ->causedBy(Auth::user())
-            ->performedOn($memo)
-            ->withProperties([
-                'action' => 'update',
-                'nama' => Auth::user()->nama,
-                'nik' => Auth::user()->nik,
-            ])
-            ->log('Memperbarui memo kebijakan');
-
-        return redirect()->route('memo.index')->with('success', 'Memo berhasil diperbarui!');
->>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
     }
 
       TrackHistoryHelper::log(
@@ -267,7 +215,6 @@ public function update(Request $request, $id)
     return back()->with('success', 'Permintaan perubahan berhasil dikirim ke manager');
 }
 
-<<<<<<< HEAD
 
     /* =====================================================
      * DELETE (REQUEST / APPROVE)
@@ -320,28 +267,45 @@ public function update(Request $request, $id)
     /* =====================================================
      * GENERATE NOMOR (AJAX)
      * ===================================================== */
-    public function generateNomor(Request $request)
+public function downloadPdf($id)
     {
-        $request->validate([
-            'tanggal' => 'required|date',
-        ]);
+        $user = Auth::user();
 
-        return response()->json([
-            'nomor' => KodeMemoHelper::generate('Kebijakan', $request->tanggal)
-        ]);
+        // Ambil PIN plain-text dari kolom 'pin'
+        $pdfPin = $user->pin;
+
+        if (!$pdfPin) {
+            abort(403, "Anda belum memiliki PIN untuk membuka PDF");
+        }
+
+        // Ambil record memo
+        $memo = Memos::findOrFail($id);
+
+        // Lokasi file di storage/public/dokumen
+        $sourceFile = storage_path("app/public/dokumen/" . $memo->file_dokumen);
+
+        if (!file_exists($sourceFile)) {
+            abort(404, "File tidak ditemukan");
+        }
+
+        // Load PDF menggunakan FPDI
+        $pdf = new Fpdi();
+        $pageCount = $pdf->setSourceFile($sourceFile);
+
+        for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            $template = $pdf->importPage($pageNo);
+            $size = $pdf->getTemplateSize($template);
+
+            $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+            $pdf->useTemplate($template);
+        }
+
+        // Proteksi PDF menggunakan PIN dari user
+        $pdf->SetProtection([], $pdfPin);
+
+        // Kirim file sebagai download
+        return response($pdf->Output($memo->nomor . '.pdf', 'S'))
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'attachment; filename="'.$memo->nomor.'.pdf"');
     }
-=======
-private function recordHistory($memo, $action, $status)
-{
-    TrackHistory::create([
-        'tanggal_pengajuan' => now()->toDateString(),
-        'nik' => Auth::user()->nik,
-        'nama' => Auth::user()->nama,
-        'perihal' => Auth::user()->nama . " " . $action . " Data Memo Kebijakan No: " . $memo->nomor,
-        'status' => $status, // Pending, Rejected, Approved
-        'created_at' => now(),
-    ]);
-}
-
->>>>>>> cc65200a9547c5b0516d493e2bce8307619226f1
 }
