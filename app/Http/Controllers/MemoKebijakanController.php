@@ -11,10 +11,6 @@ use App\Helpers\TrackHistoryHelper;
 use Carbon\Carbon;
 use setasign\Fpdi\Tcpdf\Fpdi;
 
-
-
-
-
 class MemoKebijakanController extends Controller
 {
     /* =====================================================
@@ -128,11 +124,13 @@ class MemoKebijakanController extends Controller
 
         $memo->save();
 
-        TrackHistoryHelper::log(
-            'mengajukan penambahan memo',
-            $memo->nomor,
-            ucfirst($memo->status)
-        );
+  TrackHistoryHelper::log(
+    'mengajukan penambahan',
+    $memo->tipe_memo,
+    $memo->nomor,
+    ucfirst($memo->status),
+    Auth::user()->nama
+);
 
         return back()->with(
             'success',
@@ -198,18 +196,20 @@ public function update(Request $request, $id)
         $pendingChanges['file_dokumen'] = basename($fileName);
     }
 
-      TrackHistoryHelper::log(
-                'mengajukan perubahan memo',
-                $memo->nomor,
-                'Pending'
-            );
+        TrackHistoryHelper::log(
+            'mengajukan perubahan',
+            $memo->tipe_memo,
+            $memo->nomor,
+            'Pending',
+            Auth::user()->nama
+        );
 
     // update memo dengan pending_changes
     $memo->update([
         'pending_changes' => $pendingChanges,
         'status'         => 'pending',
         'action_type'    => 'update',
-        'requested_by'   => $user->nik, // ⬅️ pengaju sekarang
+        'requested_by'   => $user->nik, //  pengaju sekarang
     ]);
 
     return back()->with('success', 'Permintaan perubahan berhasil dikirim ke manager');
@@ -241,11 +241,12 @@ public function update(Request $request, $id)
             ]);
 
             TrackHistoryHelper::log(
-                'mengajukan penghapusan memo',
+                'mengajukan penghapusan',
+                $memo->tipe_memo,
                 $memo->nomor,
-                'Pending'
+                'Pending',
+                Auth::user()->nama
             );
-
             return back()->with('info', 'Permintaan hapus menunggu approval');
         }
 
@@ -267,6 +268,22 @@ public function update(Request $request, $id)
     /* =====================================================
      * GENERATE NOMOR (AJAX)
      * ===================================================== */
+ public function generateNomor(Request $request)
+{
+    $request->validate([
+        'tanggal' => 'required|date',
+    ]);
+
+    $nomor = KodeMemoHelper::generate(
+        'Kebijakan',
+        $request->tanggal
+    );
+
+    return response()->json([
+        'nomor' => $nomor
+    ]);
+}
+
 public function downloadPdf($id)
     {
         $user = Auth::user();

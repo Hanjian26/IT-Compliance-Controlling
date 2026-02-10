@@ -389,13 +389,13 @@ function generateNomorFromTanggalEdit() {
     if (!tgl) return;
 
     fetch("{{ route('admin.memo.administrasi.generate_nomor') }}?tanggal=" + tgl)
+
         .then(res => res.json())
         .then(data => {
             document.getElementById('edit_nomor').value = data.nomor;
         })
         .catch(err => console.error(err));
 }
-
 
   function closePopup() {
     document.getElementById('popupForm').style.display = 'none';
@@ -405,7 +405,7 @@ function generateNomorFromTanggalEdit() {
     document.getElementById('editForm').style.display = 'none';
   }
 
-  function editMemo(id) {
+function editMemo(id) {
   fetch(`/admin/memo-administrasi/${id}/edit`, { headers: { 'X-Requested-With': 'XMLHttpRequest' }})
     .then(res => res.json())
     .then(data => {
@@ -429,41 +429,44 @@ function openPendingPopup() {
 function closePendingPopup() {
     document.getElementById('pendingPopup').style.display = 'none';
 }
-  function confirmDelete() {
-    return confirm('Apakah Anda yakin ingin menghapus file ini?');
-  }
-     // Hilang setelah 3 detik
-    setTimeout(() => {
-      const alert = document.getElementById('success-alert');
-      if (alert) {
-        alert.style.transition = "opacity 0.5s ease"; // animasi
-        alert.style.opacity = 0;
-        setTimeout(() => alert.remove(), 500); // hapus dari DOM setelah fade out
-      }
-    }, 3000);
 
-    
-  document.addEventListener('DOMContentLoaded', function() {
-  // Daftar semua input tanggal di halaman
-  const dateInputs = document.querySelectorAll('input[type="date"]');
+function confirmDelete() {
+return confirm('Apakah Anda yakin ingin menghapus file ini?');
+}
 
-  dateInputs.forEach(input => {
-    // Blokir input manual, biar hanya pakai date picker
-    input.addEventListener('keydown', e => e.preventDefault());
-    input.addEventListener('paste', e => e.preventDefault());
+// Hilang setelah 3 detik
+setTimeout(() => {
+const alert = document.getElementById('success-alert');
+if (alert) {
+alert.style.transition = "opacity 0.5s ease"; // animasi
+alert.style.opacity = 0;
+setTimeout(() => alert.remove(), 500); // hapus dari DOM setelah fade out
+}
+}, 3000);
 
-    // Paksa buka date picker ketika input diklik
-    input.addEventListener('click', () => {
-      try {
-        // Cara paling stabil untuk Chrome, Edge, dan Opera
-        input.showPicker();
-      } catch (err) {
-        // Safari / Firefox tidak mendukung showPicker, fallback dengan fokus
-        input.focus();
-      }
-    });
-  });
+
+document.addEventListener('DOMContentLoaded', function() {
+// Daftar semua input tanggal di halaman
+const dateInputs = document.querySelectorAll('input[type="date"]');
+
+dateInputs.forEach(input => {
+// Blokir input manual, biar hanya pakai date picker
+input.addEventListener('keydown', e => e.preventDefault());
+input.addEventListener('paste', e => e.preventDefault());
+
+// Paksa buka date picker ketika input diklik
+input.addEventListener('click', () => {
+try {
+// Cara paling stabil untuk Chrome, Edge, dan Opera
+input.showPicker();
+} catch (err) {
+// Safari / Firefox tidak mendukung showPicker, fallback dengan fokus
+input.focus();
+}
 });
+});
+});
+
 
 </script>
 

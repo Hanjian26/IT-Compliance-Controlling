@@ -10,6 +10,8 @@ use Spatie\Activitylog\Models\Activity;
 use App\Helpers\KodeMemoHelper;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use App\Helpers\TrackHistoryHelper;
+use Carbon\Carbon;
+
 
 class MemoAdministrasiController extends Controller
 {
@@ -128,11 +130,13 @@ class MemoAdministrasiController extends Controller
 
     $memo->save();
 
-     TrackHistoryHelper::log(
-            'mengajukan penambahan memo',
-            $memo->nomor,
-            ucfirst($memo->status)
-        );
+    TrackHistoryHelper::log(
+    'mengajukan penambahan',
+    $memo->tipe_memo,
+    $memo->nomor,
+    ucfirst($memo->status),
+    Auth::user()->nama
+    );
 
         return back()->with(
             'success',
@@ -143,7 +147,7 @@ class MemoAdministrasiController extends Controller
     }
 
 
- public function edit($id)
+   public function edit($id)
     {
         $memo = Memos::findOrFail($id);
 
@@ -167,6 +171,9 @@ class MemoAdministrasiController extends Controller
   
     /* =====================================================
      * UPDATE
+     * ===================================================== */
+/* =====================================================
+     * UPDATE (REQUEST / APPROVE)
      * ===================================================== */
 public function update(Request $request, $id)
 {
@@ -197,24 +204,26 @@ public function update(Request $request, $id)
         $pendingChanges['file_dokumen'] = basename($fileName);
     }
 
-      TrackHistoryHelper::log(
-                'mengajukan perubahan memo',
-                $memo->nomor,
-                'Pending'
-            );
+       TrackHistoryHelper::log(
+            'mengajukan perubahan',
+            $memo->tipe_memo,
+            $memo->nomor,
+            'Pending',
+            Auth::user()->nama
+        );
 
     // update memo dengan pending_changes
     $memo->update([
         'pending_changes' => $pendingChanges,
         'status'         => 'pending',
         'action_type'    => 'update',
-        'requested_by'   => $user->nik, // ⬅️ pengaju sekarang
+        'requested_by'   => $user->nik, //  pengaju sekarang
     ]);
 
     return back()->with('success', 'Permintaan perubahan berhasil dikirim ke manager');
 }
 
-/* =====================================================
+    /* =====================================================
      * DELETE
      * ===================================================== */
 public function destroy($id)
@@ -239,9 +248,11 @@ public function destroy($id)
             ]);
 
             TrackHistoryHelper::log(
-                'mengajukan penghapusan memo',
+                'mengajukan penghapusan',
+                $memo->tipe_memo,
                 $memo->nomor,
-                'Pending'
+                'Pending',
+                Auth::user()->nama
             );
 
             return back()->with('info', 'Permintaan hapus menunggu approval');

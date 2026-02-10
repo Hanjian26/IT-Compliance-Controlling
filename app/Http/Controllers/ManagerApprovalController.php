@@ -44,9 +44,11 @@ class ManagerApprovalController extends Controller
                 ]);
 
                 TrackHistoryHelper::log(
-                    "menyetujui pengajuan penambahan oleh {$pengajuNama}",
-                    $nomorMemo,
-                    'Approved'
+                'menyetujui',
+                $memo->tipe_memo,
+                $memo->nomor,
+                'Approved',
+                $memo->nama_pengaju
                 );
                 break;
 
@@ -74,11 +76,14 @@ class ManagerApprovalController extends Controller
                     ]
                 ));
 
-                TrackHistoryHelper::log(
-                    "menyetujui perubahan oleh {$pengajuNama}",
-                    $nomorMemo,
-                    'Approved'
+           TrackHistoryHelper::log(
+            'menyetujui perubahan',
+            $memo->tipe_memo,
+            $nomorMemo,
+            'Approved',
+            $pengajuNama
                 );
+
                 break;
 
             /**
@@ -87,9 +92,11 @@ class ManagerApprovalController extends Controller
             case 'delete':
 
                 TrackHistoryHelper::log(
-                    "menyetujui penghapusan oleh {$pengajuNama}",
-                    $nomorMemo,
-                    'Approved'
+                'menyetujui penghapusan',
+                $memo->tipe_memo,
+                $nomorMemo,
+                'Approved',
+                $pengajuNama
                 );
 
                 if ($memo->file_dokumen) {
@@ -123,17 +130,19 @@ public function reject($id)
     // Tentukan jenis aksi untuk log dan flash message
     $actionText = match($memo->action_type) {
         'create' => 'pengajuan penambahan',
-        'update' => 'perubahan memo',
-        'delete' => 'penghapusan memo',
+        'update' => 'perubahan',
+        'delete' => 'penghapusan',
         default  => 'aksi memo',
     };
 
     // Log di awal
-    TrackHistoryHelper::log(
-        "menolak {$actionText} oleh {$pengajuNama}",
-        $nomorMemo,
-        'Rejected'
-    );
+        TrackHistoryHelper::log(
+            "menolak {$actionText}",
+            $memo->tipe_memo,
+            $nomorMemo,
+            'Rejected',
+            $pengajuNama
+        );
 
     // Handle reject berdasarkan action_type
     switch ($memo->action_type) {
