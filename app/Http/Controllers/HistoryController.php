@@ -28,6 +28,21 @@ class HistoryController extends Controller
             });
         }
 
+        // Filter tanggal & waktu
+    // Filter range tanggal
+    if ($request->filled('start_date') && $request->filled('end_date')) {
+        $query->whereDate('created_at', '>=', $request->start_date)
+              ->whereDate('created_at', '<=', $request->end_date);
+    } elseif ($request->filled('start_date')) {
+        $query->whereDate('created_at', '>=', $request->start_date);
+    } elseif ($request->filled('end_date')) {
+        $query->whereDate('created_at', '<=', $request->end_date);
+    }
+
+        $data = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        return view('track_history', compact('data'));
+
         $data = $query->orderBy('tanggal_pengajuan', 'asc')
                       ->paginate(10)
                       ->withQueryString();

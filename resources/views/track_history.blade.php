@@ -4,16 +4,30 @@
 
 <h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">History Data</h2>
 <form method="GET" action="{{ route('admin.track-history.index') }}"
-  style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
+  style="margin-bottom: 10px; margin-left:60px; display: flex; justify-content: flex-start; gap: 10px;">
+
+  <!-- Pencarian teks -->
   <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
-    style="margin-left:45px;width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+    style="width: 200px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+
+  <!-- Filter tanggal -->
+  <input type="date" name="start_date" value="{{ request('start_date') }} min=" 2000-01-01" max="2099-12-31"
+    onkeydown="return false" style=" padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+  <span style="margin-top: 8px;">-</span>
+  <input type="date" name="end_date" value="{{ request('end_date') }} min=" 2000-01-01" max="2099-12-31"
+    onkeydown="return false" style=" padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+
+  <!-- Tombol submit -->
   <button type="submit"
     style="background-color: #2196F3; color: white; padding: 8px 14px; border: none; border-radius: 4px; cursor: pointer; font-size: 13px;">
-    Cari
+    Filter
   </button>
-  @if(request('search'))
+
+  @if(request()->hasAny(['search','start_date','end_date']))
   <a href="{{ route('admin.track-history.index') }}"
-    style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">Reset</a>
+    style="background-color: #9e9e9e; color: white; padding: 8px 14px; text-decoration: none; border-radius: 4px; font-size: 13px;">
+    Reset
+  </a>
   @endif
 </form>
 
@@ -62,4 +76,44 @@
   </div>
 </div>
 
+<script>
+  // Hilang setelah 3 detik
+setTimeout(() => {
+    const alert = document.getElementById('success-alert');
+    if (alert) {
+        alert.style.transition = "opacity 0.5s ease"; // animasi
+        alert.style.opacity = 0;
+        setTimeout(() => alert.remove(), 500); // hapus dari DOM setelah fade out
+    }
+}, 3000);
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Daftar semua input tanggal di halaman
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+
+    dateInputs.forEach(input => {
+        // Blokir input manual, biar hanya pakai date picker
+        input.addEventListener('keydown', e => e.preventDefault());
+        input.addEventListener('paste', e => e.preventDefault());
+
+        // Paksa buka date picker ketika input diklik
+        input.addEventListener('click', () => {
+            try {
+                // Cara paling stabil untuk Chrome, Edge, dan Opera
+                input.showPicker();
+            } catch (err) {
+                // Safari / Firefox tidak mendukung showPicker, fallback dengan fokus
+                input.focus();
+            }
+        });
+    });
+});
+</script>
+@if (session('success'))
+<div id="success-alert" style="position: fixed; bottom: 20px; right: 20px; background-color: #4CAF50; 
+              color: white; padding: 12px 20px; border-radius: 5px; z-index: 9999;">
+  {{ session('success') }}
+</div>
+@endif
 @endsection
