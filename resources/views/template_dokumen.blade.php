@@ -5,6 +5,8 @@
 @php
 $user = Auth::user();
 $level = $user->level ?? null;
+$levelMap = [1 => 'Admin', 2 => 'User'];
+$levelName = $levelMap[$level] ?? 'Unknown';
 @endphp
 <h2 style="text-decoration: underline; margin-bottom: 10px; margin-left:60px">Template Dokumen</h2>
 
@@ -31,13 +33,13 @@ $level = $user->level ?? null;
       <th style="padding: 10px;">Nama File</th>
       <th style="padding: 10px;">Tanggal Terbit</th>
       <th style="padding: 10px;">Perihal</th>
-
       <th style="padding: 10px;">Aksi</th>
 
     </tr>
   </thead>
   <tbody>
     @foreach ($data as $key => $item)
+    @if($item->visibility == 'public' || ($item->visibility == 'itcc' && $level == 1))
     <tr>
       <td style="padding: 10px; font-size: 12px;">{{ $data->firstItem() + $key }}</td>
       <td style="padding: 10px; font-size: 12px;">{{ $item->nama_file }}</td>
@@ -54,6 +56,14 @@ $level = $user->level ?? null;
             <img width="18" height="18" src="https://img.icons8.com/ios/50/visible--v1.png" alt="lihat-icon"
               style="display: block;" />
             <!-- <span style="font-size: 12px;">Lihat</span> -->
+          </a>
+
+
+          <a href="{{ asset('storage/dokumen/'.$item->file_dokumen)}}" style="display: inline-flex; align-items: center; gap: 5px;
+                    text-decoration: none; color: inherit;">
+            <img width="18" height="18" padding-top:30px;
+              src="https://img.icons8.com/material-rounded/24/download--v1.png" alt="download--v1"
+              style="display: block;" />
           </a>
 
           <!-- Edit -->
@@ -77,6 +87,7 @@ $level = $user->level ?? null;
               <!-- <span>Hapus</span> -->
             </button>
           </form>
+          @endif
           @endif
 
         </div>
@@ -110,12 +121,23 @@ $level = $user->level ?? null;
       </div>
       <div style="margin-bottom: 15px;">
         <label for="edit_tanggal_terbit">Tanggal:</label>
-        <input type="date" name="tanggal_terbit" id="edit_tanggal_terbit" required style="width: 100%; padding: 8px;">
+        <input type="date" name="tanggal_terbit" id="edit_tanggal_terbit" required lang="id" min="2000-01-01"
+          max="2099-12-31" onkeydown="return false" style="width:100%; padding:8px;" autocomplete="off">
       </div>
-      <div style="margin-bottom: 15px;">
+      <div style=" margin-bottom: 15px;">
         <label for="edit_perihal">Perihal:</label>
         <textarea name="perihal" id="edit_perihal" required rows="3" style="width: 100%; padding: 8px;"></textarea>
       </div>
+      <div style="margin-bottom: 15px;">
+        <label for="edit_visibility">Peruntukan:</label>
+        <select name="visibility" id="edit_visibility" required style="width: 104%; padding: 8px;">
+          <option value="">-- Pilih Peruntukan --</option>
+          <option value="itcc">ITCC</option>
+          <option value="public">Public</option>
+        </select>
+      </div>
+
+
       <div style="margin-bottom: 20px;">
         <label for="edit_file_dokumen">Ganti Dokumen (PDF):</label>
         <input type="file" name="file_dokumen" id="file_dokumen" accept=".pdf,.doc,.docx,.zip"
@@ -154,8 +176,18 @@ $level = $user->level ?? null;
       </div>
       <div style="margin-bottom: 15px;">
         <label for="tanggal_terbit">Tanggal Terbit:</label>
-        <input type="date" name="tanggal_terbit" id="tanggal_terbit" required style="width: 100%; padding: 8px;">
+        <input type="date" name="tanggal_terbit" id="tanggal_terbit" required lang="id" min="2000-01-01"
+          max="2099-12-31" onkeydown="return false" style="width:100%; padding:8px;" autocomplete="off">
       </div>
+      <div style="margin-bottom: 15px;">
+        <label for="visibility">Peruntukan:</label>
+        <select name="visibility" id="visibility" required style="width: 104%; padding: 8px;">
+          <option value="">-- Pilih Peruntukan --</option>
+          <option value="itcc">ITCC</option>
+          <option value="public">Public</option>
+        </select>
+      </div>
+
       <div style="margin-bottom: 15px;">
         <label for="perihal">Perihal:</label>
         <textarea name="perihal" id="perihal" required rows="3" style="width: 100%; padding: 8px;"></textarea>
@@ -203,7 +235,7 @@ function editMemo(id) {
         document.getElementById('edit_nama_file').value = data.nama_file;
         document.getElementById('edit_tanggal_terbit').value = data.tanggal_terbit;
         document.getElementById('edit_perihal').value = data.perihal;
-
+        document.getElementById('edit_visibility').value = data.visibility;
         const form = document.getElementById('editMemoForm');
       form.action = `/admin/template-dokumen/${id}`;
       document.getElementById('editForm').style.display = 'flex';
@@ -215,16 +247,7 @@ function editMemo(id) {
   function confirmDelete() {
     return confirm('Apakah Anda yakin ingin menghapus file ini?');
   }
-</script>
 
-
-@if (session('success'))
-<div id="success-alert" style="position: fixed; bottom: 20px; right: 20px; background-color: #4CAF50; 
-              color: white; padding: 12px 20px; border-radius: 5px; z-index: 9999;">
-  {{ session('success') }}
-</div>
-
-<script>
   // Hilang setelah 3 detik
     setTimeout(() => {
       const alert = document.getElementById('success-alert');
@@ -234,7 +257,36 @@ function editMemo(id) {
         setTimeout(() => alert.remove(), 500); // hapus dari DOM setelah fade out
       }
     }, 3000);
-</script>
-@endif
 
+    document.addEventListener('DOMContentLoaded', function() {
+    // Daftar semua input tanggal di halaman
+    const dateInputs = document.querySelectorAll('input[type="date"]');
+
+    dateInputs.forEach(input => {
+        // Blokir input manual, biar hanya pakai date picker
+        input.addEventListener('keydown', e => e.preventDefault());
+        input.addEventListener('paste', e => e.preventDefault());
+
+        // Paksa buka date picker ketika input diklik
+        input.addEventListener('click', () => {
+            try {
+                // Cara paling stabil untuk Chrome, Edge, dan Opera
+                input.showPicker();
+            } catch (err) {
+                // Safari / Firefox tidak mendukung showPicker, fallback dengan fokus
+                input.focus();
+            }
+        });
+    });
+});
+</script>
+
+
+@if (session('success'))
+<div id="success-alert" style="position: fixed; bottom: 20px; right: 20px; background-color: #4CAF50; 
+              color: white; padding: 12px 20px; border-radius: 5px; z-index: 9999;">
+  {{ session('success') }}
+</div>
+
+@endif
 @endsection

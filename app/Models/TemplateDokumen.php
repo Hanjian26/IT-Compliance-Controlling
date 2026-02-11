@@ -13,7 +13,7 @@ class TemplateDokumen extends Model
     protected $table = 'template_dokumen';
 
     protected $fillable = [
-        'nama_file','tanggal_terbit', 'file_dokumen', 'perihal',
+        'nama_file','tanggal_terbit', 'file_dokumen', 'perihal', 'visibility'
     ];
 
     public $timestamps = false;

@@ -12,7 +12,18 @@ class TemplateDokumenController extends Controller
 {
     public function index()
     {
-        $data = TemplateDokumen::orderBy('tanggal_terbit', 'asc')->paginate(5);
+        $user = Auth::user();
+        $level = $user->level ?? null;
+
+        $query = TemplateDokumen::orderBy('tanggal_terbit', 'asc');
+
+        if ($level == 2) {
+            // user level 2 hanya bisa lihat dokumen public
+            $query->where('visibility', 'public');
+        }
+
+        // level 1 bisa lihat semua dokumen (itcc + public)
+        $data = $query->paginate(5);
 
         // Logging lihat daftar
         activity()
@@ -33,12 +44,14 @@ class TemplateDokumenController extends Controller
             'tanggal_terbit' => 'required|date',
             'perihal' => 'required|string',
             'file_dokumen' => 'nullable|mimes:pdf,doc,docx,zip|max:10240',
+            'visibility' => 'required|in:itcc,public',
         ]);
 
         $memo = new TemplateDokumen();
         $memo->nama_file = $request->nama_file;
         $memo->tanggal_terbit = $request->tanggal_terbit;
         $memo->perihal = $request->perihal;
+        $memo->visibility = $request->visibility;
 
         if ($request->hasFile('file_dokumen')) {
             $file = $request->file('file_dokumen');
@@ -110,16 +123,16 @@ class TemplateDokumenController extends Controller
         'tanggal_terbit' => 'required|date',
         'perihal' => 'required|string',
         'file_dokumen' => 'nullable|mimes:pdf,doc,docx,zip|max:10240',
+        'visibility' => 'required|in:itcc,public',
     ]);
 
-    // ✅ Ambil data lama
-    $memo = TemplateDokumen::findOrFail($id); 
 
+    $memo = TemplateDokumen::findOrFail($id); 
     $memo->nama_file = $request->nama_file;
     $memo->tanggal_terbit = $request->tanggal_terbit;
     $memo->perihal = $request->perihal;
+    $memo->visibility = $request->visibility;
 
-    // ✅ Ganti file jika ada upload baru
     if ($request->hasFile('file_dokumen')) {
         if ($memo->file_dokumen && Storage::disk('public')->exists('dokumen/' . $memo->file_dokumen)) {
             Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);

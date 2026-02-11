@@ -39,14 +39,18 @@ Route::post('/store-pin', [AuthController::class, 'storePin'])
 Route::get('/memo/download/{id}', [MemoKebijakanController::class, 'downloadPdf'])
     ->name('memo.download');
 
-    Route::get('/memo/download/{id}', [MemoAdministrasiController::class, 'downloadPdf'])
+Route::get('/memo/download/{id}', [MemoAdministrasiController::class, 'downloadPdf'])
     ->name('memo.download');
 
-    Route::get('/memo/download/{id}', [MemoPermintaanDataController::class, 'downloadPdf'])
+Route::get('/memo/download/{id}', [MemoPermintaanDataController::class, 'downloadPdf'])
     ->name('memo.download');
 
-    Route::get('/memo/download/{id}', [MemoPenemuanController::class, 'downloadPdf'])
+Route::get('/memo/download/{id}', [MemoPenemuanController::class, 'downloadPdf'])
     ->name('memo.download');
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
