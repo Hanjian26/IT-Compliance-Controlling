@@ -83,6 +83,15 @@
               <!-- <span style="font-size: 12px;">Lihat</span> -->
             </a>
 
+            <!-- Sesuaikan routenya dengan route download yang sudah dibuat -->
+            <a href="{{ route('memo.download', $item->id) }}" style="display: inline-flex; align-items: center; gap: 5px;
+                    text-decoration: none; color: inherit;">
+
+              <img width="18" height="18" padding-top:30px;
+                src="https://img.icons8.com/material-rounded/24/download--v1.png" alt="download--v1"
+                style="display: block;" />
+            </a>
+
             <!-- Edit -->
             <a href="javascript:void(0);" onclick="editMemo({{ $item->id }})" title="Edit"
               style="display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: inherit;">

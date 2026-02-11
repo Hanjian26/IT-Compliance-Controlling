@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\LaporanHasilAuditModel;
 use App\Models\Department;
 use Illuminate\Support\Facades\Auth;
+use setasign\Fpdi\Tcpdf\Fpdi;
 
 class LaporanHasilAuditController extends Controller
 {
@@ -169,4 +170,48 @@ class LaporanHasilAuditController extends Controller
 
         return redirect()->route('audit-lha.index')->with('success', 'Laporan Hasil Audit berhasil diperbarui!');
     }
+
+    // public function downloadPdf($id)
+    // {
+    //     $user = Auth::user();
+
+    //     // Ambil PIN plain-text dari kolom 'pin'
+    //     $pdfPin = $user->pin;
+
+    //     if (!$pdfPin) {
+    //         abort(403, "Anda belum memiliki PIN untuk membuka PDF");
+    //     }
+
+    //     // Ambil record memo
+    //     $lha = LaporanHasilAuditModel::findOrFail($id);
+
+    //     // Lokasi file di public
+    //     $sourceFile = storage_path("app/public/" . $lha->file_lha);
+
+    //     if (!file_exists($sourceFile)) {
+    //         abort(404, "File tidak ditemukan");
+    //     }
+
+    //     // Load PDF menggunakan FPDI
+    //     $pdf = new Fpdi();
+    //     $pageCount = $pdf->setSourceFile($sourceFile);
+
+    //     for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+    //         $template = $pdf->importPage($pageNo);
+    //         $size = $pdf->getTemplateSize($template);
+
+    //         $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+    //         $pdf->useTemplate($template);
+    //     }
+
+    //     // Proteksi PDF menggunakan PIN dari user
+    //     $pdf->SetProtection([], $pdfPin);
+
+    //     // Kirim file sebagai download
+    //     // dd($lha->id);
+    //     $filename = preg_replace('/[^A-Za-z0-9_\-]/', '_', $lha->id) . '.pdf';
+    //     return response($pdf->Output($filename, 'S'))
+    //         ->header('Content-Type', 'application/pdf')
+    //         ->header('Content-Disposition', "attachment; filename=\"$filename\"");
+    // }
 }

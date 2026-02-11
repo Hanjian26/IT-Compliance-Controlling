@@ -48,6 +48,9 @@ Route::get('/memo/download/{id}', [MemoPermintaanDataController::class, 'downloa
 Route::get('/memo/download/{id}', [MemoPenemuanController::class, 'downloadPdf'])
     ->name('memo.download');
 
+    // Route::get('/memo/download/{id}', [LaporanHasilAuditController::class, 'downloadPdf'])
+    // ->name('memo.download');
+
 
 
 

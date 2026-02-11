@@ -63,8 +63,8 @@ $levelName = $levelMap[$level] ?? 'Unknown';
       <thead>
         <tr style="background:#f2f2f2;">
           <th style="padding: 10px;">No</th>
-          <th style="padding: 10px;">Nama Pengaju</th>
-          <th style="padding: 10px;">Tanggal Pengajuan</th>
+          <th style="padding: 10px;">Nama</th>
+          <th style="padding: 10px;">Tanggal</th>
           <th style="padding: 10px;">Nomor</th>
           <th style="padding: 10px;">Perihal</th>
           <th style="padding: 10px;">Permintaan</th>
