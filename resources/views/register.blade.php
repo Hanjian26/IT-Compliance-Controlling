@@ -123,16 +123,20 @@
         <option value="">-- Pilih Atasan --</option>
         @foreach($manager_id as $mgr_id)
         <option value="{{ $mgr_id->nik }}">{{ $mgr_id->nama }}</option>
-        <option value="">Tidak ada atasan</option>
         @endforeach
+        <option value="">Tidak ada atasan</option>
       </select>
 
-      <select name="level" id="level" required>
-        <option value="">-- Pilih Level --</option>
+      <select name="level" required>
+        <option value="">Pilih Akses Level</option>
         <option value="1">Admin</option>
-        <option value="1">Manager</option>
-        <option value="1">Supervisor</option>
         <option value="2">User</option>
+      </select>
+
+      <select name="role" required>
+        <option value="">Pilih Role</option>
+        <option value="manager">Manager</option>
+        <option value="staff">Staff</option>
       </select>
 
 

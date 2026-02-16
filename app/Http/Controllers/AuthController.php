@@ -74,7 +74,7 @@ return view('main_menu');
     /* =========================
      * REGISTER PROCESS
      * ========================= */
-  public function register(Request $request)
+public function register(Request $request)
 {
     $request->validate([
         'nik'        => 'required|unique:users,nik',
@@ -84,16 +84,20 @@ return view('main_menu');
         'password'   => 'required|min:6',
         'level'      => 'required|in:1,2',
         'manager_id' => 'nullable|exists:users,nik',
+        'role'       => 'required|in:manager,staff',
     ]);
+
+    $isManager = ($request->role === 'manager') ? 1 : 0;
 
     User::create([
         'nik'        => $request->nik,
         'nama'       => $request->nama,
-        'department' => $request->department, // ← 19
+        'department' => $request->department,
         'email'      => $request->email,
         'password'   => bcrypt($request->password),
         'level'      => $request->level,
         'manager_id' => $request->manager_id,
+        'is_manager' => $isManager,
     ]);
 
     return redirect('/login')->with('success', 'User berhasil dibuat');
@@ -116,7 +120,7 @@ public function storePin(Request $request)
 {
     $request->validate([
         'pin' => [
-            'required',
+            'nullable',
             'digits:6',
             'regex:/^[0-9]+$/',
             'confirmed'
