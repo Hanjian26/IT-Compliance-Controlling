@@ -70,7 +70,7 @@ class MemoPenemuanController extends Controller
         }
 
     $pendingData = $pendingQuery
-            ->orderBy('memos.created_at', 'desc')
+            ->orderBy('memos.created_at', 'asc')
             ->get();
 
     /* ===============================

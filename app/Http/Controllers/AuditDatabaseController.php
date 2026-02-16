@@ -90,7 +90,7 @@ class AuditDatabaseController extends Controller
             ])
             ->log('Menghapus Jadwal Audit Backup Restore Database');
 
-        return redirect()->route('audit.brdb')->with('success', 'Jadwal Audit Backup Restore berhasil dihapus.');
+        return redirect()->route('admin.audit.brdb.index')->with('success', 'Jadwal Audit Backup Restore berhasil dihapus.');
     }
 
     public function edit($id)
@@ -134,6 +134,6 @@ class AuditDatabaseController extends Controller
             ])
             ->log('Memperbarui Jadwal Audit Backup Restore Database');
 
-        return redirect()->route('audit.brdb')->with('success', 'Jadwal Audit Backup Restore Database berhasil diperbarui!');
+        return redirect()->route('admin.audit.brdb.index')->with('success', 'Jadwal Audit Backup Restore Database berhasil diperbarui!');
     }
 }

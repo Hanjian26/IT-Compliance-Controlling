@@ -116,7 +116,7 @@ class LaporanHasilAuditController extends Controller
             ])
             ->log('Menghapus data laporan hasil audit');
 
-        return redirect()->route('audit-lha.index')->with('success', 'Data laporan hasil audit berhasil dihapus.');
+        return redirect()->route('admin.audit.laporan-hasil-akhir.index')->with('success', 'Data laporan hasil audit berhasil dihapus.');
     }
 
     public function edit($id)
@@ -168,7 +168,7 @@ class LaporanHasilAuditController extends Controller
             ])
             ->log('Memperbarui Laporan Hasil Audit');
 
-        return redirect()->route('audit-lha.index')->with('success', 'Laporan Hasil Audit berhasil diperbarui!');
+        return redirect()->route('admin.audit.laporan-hasil-akhir.index')->with('success', 'Laporan Hasil Audit berhasil diperbarui!');
     }
 
     // public function downloadPdf($id)

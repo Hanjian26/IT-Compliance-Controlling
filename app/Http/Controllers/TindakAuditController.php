@@ -120,7 +120,7 @@ public function index(Request $request)
     ->log('User menghapus TLHA Audit');
 
 
-        return redirect()->route('audit.tlha')->with('success', 'Data TLHA berhasil dihapus.');
+        return redirect()->route('admin.audit.tlha.index')->with('success', 'Data TLHA berhasil dihapus.');
     }
 
      public function edit($id)
@@ -179,7 +179,7 @@ public function index(Request $request)
     ->log('User memperbarui TLHA Audit');
 
 
-    return redirect()->route('audit.tlha')->with('success', 'TLHA Audit berhasil diperbarui!');
+    return redirect()->route('admin.audit.tlha.index')->with('success', 'TLHA Audit berhasil diperbarui!');
 }
 
 }
