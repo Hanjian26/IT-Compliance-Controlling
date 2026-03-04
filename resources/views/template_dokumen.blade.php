@@ -33,7 +33,11 @@ $levelName = $levelMap[$level] ?? 'Unknown';
       <th style="padding: 10px;">Nama File</th>
       <th style="padding: 10px;">Tanggal Terbit</th>
       <th style="padding: 10px;">Perihal</th>
+      @if($level == 1 && Auth::user()->is_manager)
       <th style="padding: 10px;">Aksi</th>
+      @else
+      <th style="padding: 10px;">Download</th>
+      @endif
 
     </tr>
   </thead>
@@ -50,13 +54,14 @@ $levelName = $levelMap[$level] ?? 'Unknown';
       <td style="padding: 10px; font-size: 11px;">
         <div style="display: inline-flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
 
+          {{--
           <!-- Lihat -->
           <a href="{{ asset('storage/dokumen/'.$item->file_dokumen) }}" target="_blank"
             style="display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: inherit;">
             <img width="18" height="18" src="https://img.icons8.com/ios/50/visible--v1.png" alt="lihat-icon"
               style="display: block;" />
             <!-- <span style="font-size: 12px;">Lihat</span> -->
-          </a>
+          </a> --}}
 
 
           <a href="{{ asset('storage/dokumen/'.$item->file_dokumen)}}" style="display: inline-flex; align-items: center; gap: 5px;

@@ -123,8 +123,8 @@
         <select name="scope_memo" id="edit_scope" required
           style="width: 104%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
           <option value="" disabled selected>-- Pilih Scope --</option>
-          <option value="Internal">Internal</option>
-          <option value="Eksternal">Eksternal</option>
+          <option value="Compliance">Compliance</option>
+          <option value="Controlling">Controlling</option>
         </select>
       </div>
 
@@ -188,8 +188,8 @@
         <select name="scope_memo" id="scope_memo" required
           style="width: 104%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
           <option value="" disabled selected>-- Pilih Scope --</option>
-          <option value="Internal">Internal</option>
-          <option value="Eksternal">Eksternal</option>
+          <option value="Compliance">Compliance</option>
+          <option value="Controlling">Controlling</option>
         </select>
       </div>
 

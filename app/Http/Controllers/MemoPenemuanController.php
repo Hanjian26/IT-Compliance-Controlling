@@ -178,49 +178,57 @@ class MemoPenemuanController extends Controller
 public function update(Request $request, $id)
 {
     $memo = Memos::findOrFail($id);
-    $user = Auth::user(); // user yang sedang login, misal sandi
+    $user = Auth::user();
 
-    // pastikan memo belum diproses
     if ($memo->status !== 'approved') {
         return back()->with('warning', 'Memo sedang dalam proses atau belum bisa diedit');
     }
 
-    // siapkan perubahan pending
-    $pendingChanges = $request->only([
+    $data = $request->only([
         'perihal',
         'scope_memo',
-        'tanggal_terbit',
-        'file_dokumen'
+        'tanggal_terbit'
     ]);
 
-    // jika ada file baru, simpan di storage
     if ($request->hasFile('file_dokumen')) {
-        // hapus file lama jika ada
         if ($memo->file_dokumen) {
             Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
         }
 
         $fileName = $request->file('file_dokumen')->store('dokumen', 'public');
-        $pendingChanges['file_dokumen'] = basename($fileName);
+        $data['file_dokumen'] = basename($fileName);
     }
 
-       TrackHistoryHelper::log(
+    if ($user->manager_id) {
+        $memo->update([
+            'pending_changes' => $data,
+            'status'         => 'pending',
+            'action_type'    => 'update',
+            'requested_by'   => $user->nik,
+        ]);
+
+        TrackHistoryHelper::log(
             'mengajukan perubahan',
             $memo->tipe_memo,
             $memo->nomor,
             'Pending',
-            Auth::user()->nama
+            $user->nama
         );
 
-    // update memo dengan pending_changes
-    $memo->update([
-        'pending_changes' => $pendingChanges,
-        'status'         => 'pending',
-        'action_type'    => 'update',
-        'requested_by'   => $user->nik, //  pengaju sekarang
-    ]);
+        return back()->with('success', 'Permintaan perubahan dikirim ke manager');
+    } else {
+        $memo->update($data);
 
-    return back()->with('success', 'Permintaan perubahan berhasil dikirim ke manager');
+        TrackHistoryHelper::log(
+            'mengubah memo',
+            $memo->tipe_memo,
+            $memo->nomor,
+            'Approved',
+            $user->nama
+        );
+
+        return back()->with('success', 'Memo berhasil diperbarui');
+    }
 }
 
     /* =====================================================
@@ -263,9 +271,11 @@ public function destroy($id)
         }
 
         TrackHistoryHelper::log(
-            'menghapus memo',
-            $memo->nomor,
-            'Approved'
+           'menghapus memo',
+        $memo->tipe_memo,
+        $memo->nomor,
+        'Approved',
+        Auth::user()->nama
         );
 
         $memo->delete();

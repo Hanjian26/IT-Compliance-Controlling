@@ -153,7 +153,11 @@ $levelName = $levelMap[$level] ?? 'Unknown';
       <th style="padding: 10px;">Nomor</th>
       <th style="padding: 10px;">Tanggal Terbit</th>
       <th style="padding: 10px;">Perihal</th>
+      @if($level == 1 && Auth::user()->is_manager)
       <th style="padding: 10px;">Aksi</th>
+      @else
+      <th style="padding: 10px;">Download</th>
+      @endif
     </tr>
   </thead>
   <tbody>
@@ -173,12 +177,12 @@ $levelName = $levelMap[$level] ?? 'Unknown';
         <div style="display: inline-flex; justify-content: center; gap: 10px; flex-wrap: wrap; align-items: center;">
 
           <!-- Lihat -->
-          <a href="{{ asset('storage/dokumen/'.$item->file_dokumen) }}" target="_blank"
+          {{-- <a href="{{ asset('storage/dokumen/'.$item->file_dokumen) }}" target="_blank"
             style="display: inline-flex; align-items: center; gap: 5px; text-decoration: none; color: inherit;">
             <img width="18" height="18" src="https://img.icons8.com/ios/50/visible--v1.png" alt="lihat-icon"
               style="display: block;" />
             <!-- <span style="font-size: 12px;">Lihat</span> -->
-          </a>
+          </a> --}}
           <a href="{{ route('memo.download', $item->id) }}" style="display: inline-flex; align-items: center; gap: 5px;
             text-decoration: none; color: inherit;">
 
@@ -256,8 +260,8 @@ $levelName = $levelMap[$level] ?? 'Unknown';
         <select name="scope_memo" id="edit_scope" required
           style="width: 104%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
           <option value="" disabled selected>-- Pilih Scope --</option>
-          <option value="Internal">Internal</option>
-          <option value="Eksternal">Eksternal</option>
+          <option value="Compliance">Compliance</option>
+          <option value="Controlling">Controlling</option>
         </select>
       </div>
 
@@ -321,8 +325,8 @@ $levelName = $levelMap[$level] ?? 'Unknown';
         <select name="scope_memo" id="scope_memo" required
           style="width: 104%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
           <option value="" disabled selected>-- Pilih Scope --</option>
-          <option value="Internal">Internal</option>
-          <option value="Eksternal">Eksternal</option>
+          <option value="Compliance">Compliance</option>
+          <option value="Controlling">Controlling</option>
         </select>
       </div>
 

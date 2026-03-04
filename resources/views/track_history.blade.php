@@ -7,15 +7,15 @@
   style="margin-bottom: 10px; margin-left:60px; display: flex; justify-content: flex-start; gap: 10px;">
 
   <!-- Pencarian teks -->
-  <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
+  <input type="text" name="search" placeholder="Cari data by perihal" value="{{ request('search') }}"
     style="width: 200px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
 
   <!-- Filter tanggal -->
-  <input type="date" name="start_date" value="{{ request('start_date') }} min=" 2000-01-01" max="2099-12-31"
+  {{-- <input type="date" name="start_date" value="{{ request('start_date') }} min=" 2000-01-01" max="2099-12-31"
     onkeydown="return false" style=" padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
   <span style="margin-top: 8px;">-</span>
   <input type="date" name="end_date" value="{{ request('end_date') }} min=" 2000-01-01" max="2099-12-31"
-    onkeydown="return false" style=" padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
+    onkeydown="return false" style=" padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;"> --}}
 
   <!-- Tombol submit -->
   <button type="submit"
