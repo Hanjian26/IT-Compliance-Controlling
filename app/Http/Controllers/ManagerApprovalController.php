@@ -28,8 +28,6 @@ class ManagerApprovalController extends Controller
         $pengajuNik  = $memo->requested_by ?? $memo->user_id;
         $pengajuNama = User::where('nik', $pengajuNik)->value('nama');
 
-
-
         switch ($memo->action_type) {
 
             /**
@@ -76,13 +74,13 @@ class ManagerApprovalController extends Controller
                     ]
                 ));
 
-           TrackHistoryHelper::log(
+        TrackHistoryHelper::log(
             'menyetujui perubahan',
             $memo->tipe_memo,
-            $nomorMemo,
+            $memo->nomor,
             'Approved',
-            $pengajuNama
-                );
+            $memo->nama_pengaju
+        );
 
                 break;
 
@@ -91,14 +89,15 @@ class ManagerApprovalController extends Controller
              */
             case 'delete':
 
-                TrackHistoryHelper::log(
+            $namaPengaju = $memo->requester ? $memo->requester->nama : null;
+
+            TrackHistoryHelper::log(
                 'menyetujui penghapusan',
                 $memo->tipe_memo,
-                $nomorMemo,
+                $memo->nomor,
                 'Approved',
-                $pengajuNama
-                );
-
+                $memo->nama_pengaju
+            );
                 if ($memo->file_dokumen) {
                     Storage::disk('public')->delete('dokumen/' . $memo->file_dokumen);
                 }
@@ -126,6 +125,7 @@ public function reject($id)
     $nomorMemo   = $memo->nomor;
     $pengajuNik  = $memo->requested_by ?? $memo->user_id;
     $pengajuNama = User::where('nik', $pengajuNik)->value('nama');
+    $namaPengaju = $memo->requester ? $memo->requester->nama : null;
 
     // Tentukan jenis aksi untuk log dan flash message
     $actionText = match($memo->action_type) {
@@ -137,11 +137,11 @@ public function reject($id)
 
     // Log di awal
         TrackHistoryHelper::log(
-            "menolak {$actionText}",
-            $memo->tipe_memo,
-            $nomorMemo,
-            'Rejected',
-            $pengajuNama
+        "menolak {$actionText} yang diajukan oleh {$pengajuNama}",
+        $memo->tipe_memo,
+        $nomorMemo,
+        'Rejected',
+        $pengajuNama
         );
 
     // Handle reject berdasarkan action_type

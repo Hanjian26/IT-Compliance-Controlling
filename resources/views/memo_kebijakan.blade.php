@@ -28,7 +28,7 @@ $levelName = $levelMap[$level] ?? 'Unknown';
 
 <form method="GET" action="{{ $level == 1 ? route('admin.memo.kebijakan.index') : route('user.memo.kebijakan') }}"
   style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
-  <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
+  <input type="text" name="search" placeholder="Masukan kata kunci" value="{{ request('search') }}"
     style="width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
 
 

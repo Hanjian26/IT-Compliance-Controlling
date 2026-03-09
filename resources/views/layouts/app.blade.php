@@ -178,8 +178,7 @@
     {{-- Sidebar --}}
     <aside class="sidebar">
         <div class="logo">
-            <img src="{{ asset('indomaret.png') }}?v=2" alt="Logo" class="logo-icon"
-                style="width: 100px; height: 30px;">
+            <img src="{{ asset('itc.png') }}?v=2" alt="Logo" class="logo-icon" style="width: 100px; height: auto;">
 
             <span class="logo-text">IT Compliance & Controlling</span>
         </div>

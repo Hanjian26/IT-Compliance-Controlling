@@ -130,13 +130,28 @@ class MemoPenemuanController extends Controller
 
     $memo->save();
 
+if ($user->manager_id) {
+
+    // STAFF → Perlu approval
     TrackHistoryHelper::log(
-    'mengajukan penambahan',
-    $memo->tipe_memo,
-    $memo->nomor,
-    ucfirst($memo->status),
-    Auth::user()->nama
+        'mengajukan penambahan',
+        $memo->tipe_memo,
+        $memo->nomor,
+        'Pending',
+    
     );
+
+} else {
+
+    // MANAGER → Langsung approved
+    TrackHistoryHelper::log(
+        'menambahkan',
+        $memo->tipe_memo,
+        $memo->nomor,
+        'Approved',
+ 
+    );
+}
 
         return back()->with(
             'success',
@@ -220,7 +235,7 @@ public function update(Request $request, $id)
         $memo->update($data);
 
         TrackHistoryHelper::log(
-            'mengubah memo',
+            'mengubah',
             $memo->tipe_memo,
             $memo->nomor,
             'Approved',
@@ -271,7 +286,7 @@ public function destroy($id)
         }
 
         TrackHistoryHelper::log(
-           'menghapus memo',
+        'menghapus',
         $memo->tipe_memo,
         $memo->nomor,
         'Approved',

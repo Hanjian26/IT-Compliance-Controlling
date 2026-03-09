@@ -18,7 +18,8 @@ class TrackHistoryHelper
 
         $perihal = "{$user->nama} {$aksi} Memo {$tipeMemo} No: {$nomorMemo}";
 
-        if ($namaPengaju) {
+        // Jika aksi adalah approval, tampilkan pengaju
+        if (str_contains($aksi, 'menyetujui') && $namaPengaju) {
             $perihal .= " yang diajukan oleh {$namaPengaju}";
         }
 

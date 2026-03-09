@@ -27,7 +27,7 @@ $level = $user->level ?? null;
 <form method="GET" action="{{ route('admin.audit.laporan-hasil-akhir.index') }}"
     style="margin-bottom: 10px; margin-left:15px; display: flex; justify-content: flex-start; gap: 10px;">
 
-    <input type="text" name="search" placeholder="Cari data..." value="{{ request('search') }}"
+    <input type="text" name="search" placeholder="Masukan kata kunci" value="{{ request('search') }}"
         style="width: 250px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
 
     <button type="submit"

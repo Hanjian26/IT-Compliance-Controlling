@@ -15,20 +15,25 @@ class HistoryController extends Controller
     {
         $query = TrackHistory::query();
 
-        if ($request->filled('search')) {
-            $search = $request->search;
+if ($request->filled('search')) {
+    $search = $request->search;
 
-            $query->where(function ($q) use ($search) {
-                $q->where('id', 'LIKE', "%{$search}%")
-                  ->orWhere('tanggal_pengajuan', 'LIKE', "%{$search}%")
-                  ->orWhere('nik', 'LIKE', "%{$search}%")
-                  ->orWhere('nama', 'LIKE', "%{$search}%")
-                  ->orWhere('perihal', 'LIKE', "%{$search}%")
-                  ->orWhere('status', 'LIKE', "%{$search}%");
-            });
-        }
+    $query->where(function ($q) use ($search) {
+        $q->where('id', 'LIKE', "%{$search}%")
+          ->orWhere('tanggal_pengajuan', 'LIKE', "%{$search}%")
+          ->orWhere('nik', 'LIKE', "%{$search}%")
+          ->orWhere('nama', 'LIKE', "%{$search}%")
+          ->orWhere('perihal', 'LIKE', "%{$search}%")
+          ->orWhere('status', 'LIKE', "%{$search}%");
+    });
+}
 
-        // Filter tanggal & waktu
+// FILTER TAHUN
+if ($request->filled('year')) {
+    $query->whereYear('created_at', $request->year);
+}
+
+    // Filter tanggal & waktu
     // Filter range tanggal
     if ($request->filled('start_date') && $request->filled('end_date')) {
         $query->whereDate('created_at', '>=', $request->start_date)

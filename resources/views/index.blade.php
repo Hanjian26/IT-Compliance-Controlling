@@ -57,7 +57,7 @@
     .login-container img {
       display: block;
       margin: 0 auto 0px auto;
-      width: 350px;
+      width: 200px;
       height: auto;
     }
 
@@ -102,7 +102,7 @@
 <body>
 
   <div class="login-container">
-    <img src="{{ asset('indomaret.png') }}" alt="Logo">
+    <img src="{{ asset('itc.png') }}" alt="Logo">
 
     <h2>IT COMPLIANCE & CONTROLLING</h2>
 

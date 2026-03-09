@@ -6,8 +6,20 @@
 <form method="GET" action="{{ route('admin.track-history.index') }}"
   style="margin-bottom: 10px; margin-left:60px; display: flex; justify-content: flex-start; gap: 10px;">
 
+  <select name="year" style="padding:8px; border:1px solid #ccc; border-radius:4px; font-size:13px;">
+
+    <option value="">-- Tahun --</option>
+
+    @for ($y = date('Y'); $y >= 2020; $y--)
+    <option value="{{ $y }}" {{ request('year')==$y ? 'selected' : '' }}>
+      {{ $y }}
+    </option>
+    @endfor
+
+  </select>
+
   <!-- Pencarian teks -->
-  <input type="text" name="search" placeholder="Cari data by perihal" value="{{ request('search') }}"
+  <input type="text" name="search" placeholder="Keyword" value="{{ request('search') }}"
     style="width: 200px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;">
 
   <!-- Filter tanggal -->
@@ -35,7 +47,7 @@
   <thead>
     <tr style="background-color: #f2f2f2;">
       <th style="padding: 10px;">No.</th>
-      <th style="padding: 10px;">Tanggal Aksi</th>
+      <th style="padding: 10px;">Tanggal</th>
       <th style="padding: 10px;">NIK</th>
       <th style="padding: 10px;">Nama</th>
       <th style="padding: 10px;">Perihal</th>
